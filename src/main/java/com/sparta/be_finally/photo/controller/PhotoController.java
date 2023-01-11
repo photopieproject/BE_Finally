@@ -23,7 +23,7 @@ import java.io.IOException;
 public class PhotoController {
     private final KakaoService kakaoService;
 
-    @ApiOperation(value = "카카오톡 메시지 보내기")
+    /*@ApiOperation(value = "카카오톡 메시지 보내기")
     @GetMapping("/kakaoMessage")
     public void kakaoMessage(@RequestParam String code, HttpServletResponse response) throws IOException {
         // code: 카카오 서버로부터 받은 인가 코드
@@ -37,6 +37,6 @@ public class PhotoController {
         // 친구 목록 조회
         String getFriendList = kakaoService.requestFriendList(createToken,10);
 
-    }
+    }*/
 
 }
