@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ee.photopie"))
+                .apis(RequestHandlerSelectors.basePackage("com.sparta.be_finally"))
                 .paths(PathSelectors.any())
                 .build().apiInfo(apiInfo());
     }
