@@ -20,4 +20,5 @@ public class RoomResponseDto {
         this.nickName = room.getUser().getNickname();
         this.roomCode = room.getRoomCode();
     }
+
 }
