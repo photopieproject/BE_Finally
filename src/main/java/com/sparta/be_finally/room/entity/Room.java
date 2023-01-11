@@ -27,4 +27,5 @@ public class Room {
         this.roomCode = (int)(Math.random()*100000);
         this.user = user;
     }
+
 }
