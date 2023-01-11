@@ -111,7 +111,7 @@ public class KakaoService {
           User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
           // 4. JWT 토큰 반환
-          String createToken = jwtUtil.createToken(kakaoUser.getUserId());
+          String createToken = jwtUtil.createToken(kakaoUser.getNickname());
           response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 
           // 강제로그인
