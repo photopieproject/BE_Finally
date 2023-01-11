@@ -33,7 +33,7 @@ public class UserController {
     private final UserService userService;
     private final KakaoService kakaoService;
     private DefaultMessageService messageService;
-    private final GoogleService googleService;
+    private final GoogleService googleService; //
 
     @ApiOperation(value = "회원가입 id 중복체크")
     @GetMapping("/id-check/{userId}")
