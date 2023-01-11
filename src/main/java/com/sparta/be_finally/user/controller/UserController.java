@@ -27,7 +27,7 @@ import java.util.Random;
 @Api(tags = {"User API"})
 @Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
