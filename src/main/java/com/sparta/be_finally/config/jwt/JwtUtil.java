@@ -33,7 +33,7 @@ public class JwtUtil {
      // 토큰 만료시간
      private static final long TOKEN_TIME = 60 * 60 * 10 * 1000L;
 
-     @Value ("${jwt_secret_key}")
+     @Value ("${JWT_SECRET_KEY}")
      private String secretKey;
      private Key key;
      // 암호화 알고리즘
