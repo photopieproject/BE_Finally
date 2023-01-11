@@ -46,7 +46,7 @@ public class KakaoService {
      @Value ("${kakao.api.key}")
      private String KAKAO_REST_API_KEY;
 
-     public String kakaoLoginCheck(String code, HttpServletResponse response) throws IOException {
+     /*public String kakaoLoginCheck(String code, HttpServletResponse response) throws IOException {
           // 1. "인가 코드"로 "액세스 토큰" 요청
           String accessToken = getToken(code);
 
@@ -97,7 +97,7 @@ public class KakaoService {
           }
           log.info(this.getClass().getName() + "...request Kakao Freind List End");
           return returnMessageLog;
-     }
+     }*/
 
      public LoginResponseDto kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
           log.info("kakaoLogin service!!!!!!!");
@@ -130,9 +130,9 @@ public class KakaoService {
           MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
           body.add("grant_type", "authorization_code");
           body.add("client_id", KAKAO_REST_API_KEY);
-          //body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/user/kakao/callback");
+          body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/user/kakao/callback");
           //body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
-          body.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
+          //body.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
           body.add("code", code);
 
           // HTTP 요청 보내기
