@@ -50,7 +50,7 @@ public class UserController {
     @ApiOperation(value = "로그인")
     @PostMapping("/login")
     public PrivateResponseBody login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        return new PrivateResponseBody(userService.login(loginRequestDto, response));
+        return new PrivateResponseBody(UserStatusCode.USER_LOGIN_SUCCESS,userService.login(loginRequestDto, response));
     }
     @ApiOperation(value = "카카오톡 로그인")
     @GetMapping("/kakao/callback")

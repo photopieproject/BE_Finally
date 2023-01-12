@@ -1,6 +1,7 @@
 package com.sparta.be_finally.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sparta.be_finally.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +23,15 @@ public class LoginResponseDto {
      public LoginResponseDto(String nickname, String userId) {
           this.nickname = nickname;
           this.userId = userId;
+     }
+
+     public static class commonLogin {
+          private String nickname;
+          private String userId;
+
+          public commonLogin(User user) {
+               this.nickname = user.getNickname();
+               this.userId = user.getUserId();
+          }
      }
 }
