@@ -18,6 +18,8 @@ public class Room {
     private int roomCode;
     private int frame;
 
+    private int userCount = 4;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
