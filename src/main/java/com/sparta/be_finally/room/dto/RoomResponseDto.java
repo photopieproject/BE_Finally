@@ -11,13 +11,13 @@ import lombok.Setter;
 public class RoomResponseDto {
     private Long id;
     private String roomName;
-    private String nickName;
+    private String nickname;
     private int roomCode;
 
     public RoomResponseDto(Room room) {
         this.id = room.getId();
         this.roomName = room.getRoomName();
-        this.nickName = room.getUser().getNickname();
+        this.nickname = room.getUser().getNickname();
         this.roomCode = room.getRoomCode();
     }
 
