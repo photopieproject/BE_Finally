@@ -5,6 +5,7 @@ import com.sparta.be_finally.config.errorcode.UserStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.jwt.JwtUtil;
 import com.sparta.be_finally.user.dto.LoginRequestDto;
+import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
@@ -46,7 +47,7 @@ public class UserService {
     }
 
     //로그인
-    public StatusCode login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public LoginResponseDto.commonLogin login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         // 사용자 확인
         User user = userRepository.findByUserId(loginRequestDto.getUserId()).orElseThrow(
                 () -> new RestApiException(UserStatusCode.NO_USER)
@@ -60,7 +61,7 @@ public class UserService {
         // header 에 토큰추가
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUserId()));
 
-        return UserStatusCode.USER_LOGIN_SUCCESS;
+        return new LoginResponseDto.commonLogin(user);
     }
 
 
