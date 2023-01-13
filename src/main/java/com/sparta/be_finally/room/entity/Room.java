@@ -14,9 +14,13 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @Column(nullable = false)
     private String roomName;
     private int roomCode;
     private int frame;
+
+    private int userCount = 4;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
