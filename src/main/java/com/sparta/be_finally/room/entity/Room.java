@@ -22,9 +22,12 @@ public class Room {
 
     private int userCount = 4;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+
 
     public Room(RoomRequestDto roomRequestDto, User user) {
         this.roomName = roomRequestDto.getRoomName();
