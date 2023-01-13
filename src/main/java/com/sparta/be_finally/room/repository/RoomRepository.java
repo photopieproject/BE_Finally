@@ -10,7 +10,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     Optional<Room> findByIdAndRoomCode(Long roomid, int roomCode);
 
-    Optional <Room> findByRoomCodeAndUser(int roomCode, User user);
+    Optional <Room> findByRoomCode(int roomCode);
 
     boolean existsByIdAndUserId(Long roomid, Long id);
 
