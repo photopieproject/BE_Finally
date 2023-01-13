@@ -32,14 +32,17 @@ public class RoomService {
 
     //방 입장 하기
     @Transactional
-    public PrivateResponseBody roomEnter(int roomCode) {
+    public PrivateResponseBody<RoomResponseDto> roomEnter(int roomCode) {
+
         User user = SecurityUtil.getCurrentUser();
         Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
         );
 
-        if (room.getRoomCode() == roomCode) {
-            return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM,room.getId());
+        if (room.getRoomCode() == roomCode ) {
+            if(userRepository.existsByUserId(user.getUserId())){
+            }
+            return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM, new RoomResponseDto(room));
         } else {
             return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
         }
