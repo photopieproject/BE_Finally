@@ -25,7 +25,7 @@ public class RoomController {
 
     //방 입장
 
-    @PostMapping("/room/{roomCode}")
+    @GetMapping ("/room/{roomCode}")
     public PrivateResponseBody roomEnter(@PathVariable int roomCode) {
         return roomService.roomEnter(roomCode);
     }
