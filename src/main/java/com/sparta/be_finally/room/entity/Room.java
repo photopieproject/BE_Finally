@@ -30,6 +30,7 @@ public class Room {
         this.roomName = roomRequestDto.getRoomName();
         this.roomCode = (int)(Math.random()*100000);
         this.user = user;
+        this.userCount--;
     }
 
 }

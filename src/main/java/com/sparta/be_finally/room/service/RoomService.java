@@ -28,7 +28,7 @@ public class RoomService {
         return new RoomResponseDto(room);
     }
 
-    //방 입장 하기
+    // 방 입장 하기
     @Transactional
     public PrivateResponseBody roomEnter(Long roomid, RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
         User user = SecurityUtil.getCurrentUser();
