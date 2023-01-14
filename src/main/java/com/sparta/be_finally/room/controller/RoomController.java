@@ -15,16 +15,15 @@ import java.awt.*;
 @Api(tags = {"Room API"})
 @Slf4j
 @RestController
-@RequestMapping("/api/photo/room")
+@RequestMapping("/api/photo")
 @RequiredArgsConstructor
 public class RoomController {
     private final RoomService roomService;
 
-    @PostMapping("/")
+    @PostMapping("/room")
     public PrivateResponseBody createRoom(@RequestBody RoomRequestDto roomRequestDto) {
         return roomService.createRoom(roomRequestDto);
     }
-
 
     //방 입장
     @PostMapping("/room/roomCode")
@@ -40,7 +39,7 @@ public class RoomController {
 
 
     // 프레임 선택
-    @PutMapping("/{roomId}")
+    @PutMapping("/room/{roomId}")
     public PrivateResponseBody choiceFrame(@PathVariable Long roomId, @RequestBody FrameRequestDto frameRequestDto) {
         return roomService.choiceFrame(roomId, frameRequestDto);
     }
