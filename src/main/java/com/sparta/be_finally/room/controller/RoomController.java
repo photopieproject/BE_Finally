@@ -22,7 +22,7 @@ public class RoomController {
 
     @PostMapping("/")
     public PrivateResponseBody createRoom(@RequestBody RoomRequestDto roomRequestDto) {
-        return new PrivateResponseBody(CommonStatusCode.SUCCESS_ROOM, roomService.createRoom(roomRequestDto));
+        return roomService.createRoom(roomRequestDto);
     }
 
 

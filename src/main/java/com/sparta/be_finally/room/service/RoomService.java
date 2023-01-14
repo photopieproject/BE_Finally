@@ -24,11 +24,14 @@ public class RoomService {
     private final UserRepository userRepository;
 
     @Transactional
-    public RoomResponseDto createRoom(RoomRequestDto roomRequestDto) {
+    public PrivateResponseBody<RoomResponseDto> createRoom(RoomRequestDto roomRequestDto) {
         User user = SecurityUtil.getCurrentUser();
+        if(roomRequestDto.getRoomName().isEmpty()){
+            return new PrivateResponseBody<>(CommonStatusCode.CREATE_ROOM_NAME);
+        }
         Room room = roomRepository.save(new Room(roomRequestDto, user));
+        return new PrivateResponseBody<>(CommonStatusCode.CREATE_ROOM, new RoomResponseDto(room));
 
-        return new RoomResponseDto(room);
     }
 
     // 방 입장 하기
