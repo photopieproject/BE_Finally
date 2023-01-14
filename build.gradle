@@ -80,12 +80,7 @@ dependencies {
 	implementation('org.webjars:sockjs-client:1.1.2')
 	implementation('org.webjars:stomp-websocket:2.3.3-1')
 	implementation('org.webjars:webjars-locator:0.30')
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> 0854bebf7f625b623a685db6d0cfc18c122df290
 }
 
 tasks.named('test') {

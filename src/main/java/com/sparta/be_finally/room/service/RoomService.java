@@ -32,10 +32,10 @@ public class RoomService {
 
     // 방 입장 하기
     @Transactional
-    public PrivateResponseBody<RoomResponseDto> roomEnter(Long roomid , RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
+    public PrivateResponseBody<RoomResponseDto> roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
 
         User user = SecurityUtil.getCurrentUser();
-        Room room = roomRepository.findByIdAndRoomCode(roomid, roomCodeRequestDto.getRoomCode()).orElseThrow(
+        Room room = roomRepository.findByRoomCode(roomCodeRequestDto.getRoomCode()).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
         );
 

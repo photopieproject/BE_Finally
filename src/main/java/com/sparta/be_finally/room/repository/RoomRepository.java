@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
 
-    Optional <Room> findByIdAndRoomCode(Long roomid,int roomCode);
+    Optional <Room> findByRoomCode(int roomCode);
 
     Optional <Room> deleteByUser(User user);
 
