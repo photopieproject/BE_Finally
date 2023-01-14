@@ -65,10 +65,10 @@ public class RoomService {
     @Transactional
     public PrivateResponseBody choiceFrame(Long roomId, FrameRequestDto frameRequestDto) {
         User user = SecurityUtil.getCurrentUser();
-        if (!roomRepository.existsByIdAndUserId(roomId, user)){
+        if (!roomRepository.existsByIdAndUserId(roomId, user.getId())){
             return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME);
         }
-        Room room = roomRepository.findByIdAndFrameAndUser(roomId, frameRequestDto, user);
+        Room room = roomRepository.findById(roomId).orElse(null);
         room.updateFrame(frameRequestDto);
 
         return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME);
