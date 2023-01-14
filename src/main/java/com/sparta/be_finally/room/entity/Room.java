@@ -20,6 +20,7 @@ public class Room {
 
     private int userCount;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

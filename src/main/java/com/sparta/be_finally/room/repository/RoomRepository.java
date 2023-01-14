@@ -17,4 +17,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     boolean existsByRoomCode(int roomCode);
 
     boolean existsByRoomCodeAndUserNull(int roomCode);
+
 }
