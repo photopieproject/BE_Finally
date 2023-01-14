@@ -13,12 +13,14 @@ public class RoomResponseDto {
     private String roomName;
     private String nickname;
     private int roomCode;
+    private int userCount;
 
     public RoomResponseDto(Room room) {
         this.id = room.getId();
         this.roomName = room.getRoomName();
         this.nickname = room.getUser().getNickname();
         this.roomCode = room.getRoomCode();
+//        this.userCount
     }
 
 }
