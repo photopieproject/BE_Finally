@@ -21,22 +21,5 @@ import java.io.IOException;
 @RequestMapping("/api/photo")
 @RequiredArgsConstructor
 public class PhotoController {
-    private final KakaoService kakaoService;
-
-    /*@ApiOperation(value = "카카오톡 메시지 보내기")
-    @GetMapping("/kakaoMessage")
-    public void kakaoMessage(@RequestParam String code, HttpServletResponse response) throws IOException {
-        // code: 카카오 서버로부터 받은 인가 코드
-        String createToken = kakaoService.kakaoLoginCheck(code, response);
-
-        // Cookie 생성 및 직접 브라우저에 Set
-        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, createToken.substring(7));
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
-        // 친구 목록 조회
-        String getFriendList = kakaoService.requestFriendList(createToken,10);
-
-    }*/
 
 }
