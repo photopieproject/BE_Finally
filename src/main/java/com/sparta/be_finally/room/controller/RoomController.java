@@ -26,14 +26,15 @@ public class RoomController {
     //방 입장
 
 
-    @GetMapping("/room/{roomCode}")
-    public PrivateResponseBody roomEnter(@PathVariable int roomCode) {
-        return roomService.roomEnter(roomCode);
+    @PostMapping("/room/{roomid}")
+    public PrivateResponseBody roomEnter(@PathVariable Long roomid, @RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
+        return roomService.roomEnter(roomid, roomCodeRequestDto);
     }
-}
 
-//    @DeleteMapping("/room/{roomid}/exit")
-//    public PrivateResponseBody roomExit(@PathVariable Long roomid){
-//        return roomService.roomExit(roomid);
+
+    //방 나가기
+//    @GetMapping("/room/{roomCode}/exit")
+//    public PrivateResponseBody roomExit(@PathVariable int roomCode){
+//        return roomService.roomExit(roomCode);
 //    }
-//}
+}

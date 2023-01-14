@@ -32,48 +32,40 @@ public class RoomService {
 
     //방 입장 하기
     @Transactional
-    public PrivateResponseBody<RoomResponseDto> roomEnter(int roomCode) {
+    public PrivateResponseBody<RoomResponseDto> roomEnter(Long roomid , RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
 
         User user = SecurityUtil.getCurrentUser();
-        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+        Room room = roomRepository.findByIdAndRoomCode(roomid, roomCodeRequestDto.getRoomCode()).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
         );
 
-        if (room.getRoomCode() == roomCode ) {
-            if(userRepository.existsByUserId(user.getUserId())){
+        if (room.getRoomCode() == roomCodeRequestDto.getRoomCode()) {
+            if (userRepository.existsByUserId(user.getUserId())) {
             }
             return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM, new RoomResponseDto(room));
         } else {
             return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
         }
     }
-}
-
-
-//        if (roomCodeRequestDto.getRoomCode() == room.getRoomCode()) {
-//            if (userRepository.existsByUserId(user.getUserId())) {
-//                return new PrivateResponseBody<>(CommonStatusCode.SUCESS_ENTER);
-//            } else {
-//                return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
-//            }
-//        }
-//        return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
-
 
 
 //    @Transactional
-//    public PrivateResponseBody roomExit(Long roomid) {
+//    public PrivateResponseBody roomExit(int roomCode) {
 //        //방 나가기
 //        User user = SecurityUtil.getCurrentUser();
-//        if (roomRepository.existsByIdAndUserIsNull(roomid)) {
-//            roomRepository.deleteById(roomid);
-//            return new PrivateResponseBody<>(CommonStatusCode.SUCCESS_ROOM_TOTAL_EXIT);
-//        } else {
-//            roomRepository.deleteById(user.getId());
-//            return new PrivateResponseBody<>(CommonStatusCode.SUCCESS_ROOM_EXIT);
+//        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+//                () -> new RestApiException(CommonStatusCode.INCORRECT_ROOM_CODE)
+//        );
+//        if (roomCode == room.getRoomCode()) {
+//            roomRepository.deleteByUser(user);
 //        }
-//     }
-//
+//        return new PrivateResponseBody<>(CommonStatusCode.SUCCESS_ROOM_EXIT);
+//         }
+    }
+
+
+
+
 
 
 
