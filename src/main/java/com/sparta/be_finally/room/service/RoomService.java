@@ -4,6 +4,7 @@ import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.util.SecurityUtil;
+import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.room.dto.RoomResponseDto;
 import com.sparta.be_finally.room.entity.Room;
@@ -48,7 +49,6 @@ public class RoomService {
         }
     }
 
-
 //    @Transactional
 //    public PrivateResponseBody roomExit(int roomCode) {
 //        //방 나가기
@@ -61,13 +61,19 @@ public class RoomService {
 //        }
 //        return new PrivateResponseBody<>(CommonStatusCode.SUCCESS_ROOM_EXIT);
 //         }
+
+    @Transactional
+    public PrivateResponseBody choiceFrame(Long roomId, FrameRequestDto frameRequestDto) {
+        User user = SecurityUtil.getCurrentUser();
+        if (!roomRepository.existsByIdAndUserId(roomId, user)){
+            return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME);
+        }
+        Room room = roomRepository.findByIdAndFrameAndUser(roomId, frameRequestDto, user);
+        room.updateFrame(frameRequestDto);
+
+        return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME);
     }
-
-
-
-
-
-
+}
 
 
 

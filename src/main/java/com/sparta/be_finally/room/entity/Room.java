@@ -1,5 +1,6 @@
 package com.sparta.be_finally.room.entity;
 
+import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.user.entity.User;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class Room {
     @Column(nullable = false)
     private String roomName;
     private int roomCode;
-    private int frame;
+    private int frame = 0;
 
     private int userCount = 4;
 
@@ -35,6 +36,10 @@ public class Room {
         this.roomCode = (int)(Math.random()*100000);
         this.user = user;
         this.userCount--;
+    }
+
+    public void updateFrame(FrameRequestDto frameRequestDto) {
+        this.frame = frameRequestDto.getFrame();
     }
 
 }

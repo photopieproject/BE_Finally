@@ -16,7 +16,6 @@ public class RoomRequestDto {
         this.roomName = room.getRoomName();
     }
 
-
     @Getter
     @Setter
     @NoArgsConstructor
