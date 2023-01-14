@@ -26,9 +26,9 @@ public class RoomController {
     //방 입장
 
 
-    @PostMapping("/room/{roomid}")
-    public PrivateResponseBody roomEnter(@PathVariable Long roomid, @RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
-        return roomService.roomEnter(roomid, roomCodeRequestDto);
+    @PostMapping("/room/roomCode")
+    public PrivateResponseBody roomEnter(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
+        return roomService.roomEnter(roomCodeRequestDto);
     }
 
 

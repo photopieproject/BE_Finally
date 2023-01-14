@@ -46,6 +46,9 @@ public class WebSecurityConfig {
 //               .antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
                .antMatchers("/api/user/**").permitAll()
                .antMatchers("/api/doc").permitAll()
+               .antMatchers("/socket").permitAll()
+               .antMatchers("/").permitAll()
+
 
                .antMatchers("/swagger-ui/**").permitAll() //스웨거 권한설정 X
                .antMatchers("/swagger-resources/**").permitAll() //스웨거 권한설정 X
