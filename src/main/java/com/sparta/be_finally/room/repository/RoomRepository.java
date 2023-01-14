@@ -1,6 +1,7 @@
 package com.sparta.be_finally.room.repository;
 
 import com.sparta.be_finally.room.dto.RoomRequestDto;
+import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     boolean existsByRoomCode(int roomCode);
 
     boolean existsByRoomCodeAndUserNull(int roomCode);
+
+    boolean existsByIdAndUserId(Long id, Long userId);
+
+
 
 }

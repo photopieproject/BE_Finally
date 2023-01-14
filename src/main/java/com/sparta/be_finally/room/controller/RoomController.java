@@ -2,12 +2,15 @@ package com.sparta.be_finally.room.controller;
 
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
+import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.room.service.RoomService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.*;
 
 @Api(tags = {"Room API"})
 @Slf4j
@@ -22,14 +25,11 @@ public class RoomController {
         return roomService.createRoom(roomRequestDto);
     }
 
-
     //방 입장
-
     @PostMapping("/room/roomCode")
     public PrivateResponseBody roomEnter(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
         return roomService.roomEnter(roomCodeRequestDto);
     }
-
 
     //방 나가기
 //    @GetMapping("/room/{roomCode}/exit")
@@ -38,5 +38,13 @@ public class RoomController {
 //    }
 
 
+<<<<<<< HEAD
 
+=======
+    // 프레임 선택
+    @PutMapping("/room/{roomId}")
+    public PrivateResponseBody choiceFrame(@PathVariable Long roomId, @RequestBody FrameRequestDto frameRequestDto) {
+        return roomService.choiceFrame(roomId, frameRequestDto);
+    }
+>>>>>>> 7730391f003497bba0e52321e3a641f4f742fcfd
 }
