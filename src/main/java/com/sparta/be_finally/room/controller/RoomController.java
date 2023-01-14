@@ -2,6 +2,7 @@ package com.sparta.be_finally.room.controller;
 
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
+import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.room.service.RoomService;
 import io.swagger.annotations.Api;
@@ -9,24 +10,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
+
 @Api(tags = {"Room API"})
 @Slf4j
 @RestController
-@RequestMapping("/api/photo")
+@RequestMapping("/api/photo/room")
 @RequiredArgsConstructor
 public class RoomController {
     private final RoomService roomService;
 
-    @PostMapping("/room")
+    @PostMapping("/")
     public PrivateResponseBody createRoom(@RequestBody RoomRequestDto roomRequestDto) {
-        return new PrivateResponseBody(CommonStatusCode.SUCESS_ROOM, roomService.createRoom(roomRequestDto));
+        return new PrivateResponseBody(CommonStatusCode.SUCCESS_ROOM, roomService.createRoom(roomRequestDto));
     }
 
-
-    //방 입장
-
-    @PostMapping("/room/{roomid}/enter")
+    // 방 입장
+    @PostMapping("/{roomid}/enter")
     public PrivateResponseBody roomEnter(@PathVariable Long roomid, @RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
         return roomService.roomEnter(roomid,roomCodeRequestDto);
-    }//
+    }
+
+    // 프레임 선택
+    @PutMapping("/{roomId}")
+    public PrivateResponseBody choiceFrame(@PathVariable Long roomId, @RequestBody FrameRequestDto frameRequestDto) {
+        return roomService.choiceFrame(roomId, frameRequestDto);
+    }
 }
