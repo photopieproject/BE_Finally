@@ -14,6 +14,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 // 클라이언트로부터 메시지를 받으면 자신을 제외한 다른 모든 클라이언트에게 메시지를 보낸다.
 @Component
 public class SocketHandler extends TextWebSocketHandler {
+
+    // 모든 클라이언트를 추적 할 수 있도록 수신 된 세션을 세션 List에 추가
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 
     @Override
