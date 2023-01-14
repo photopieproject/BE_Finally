@@ -25,7 +25,6 @@ public class RoomController {
         return new PrivateResponseBody(CommonStatusCode.SUCCESS_ROOM, roomService.createRoom(roomRequestDto));
     }
 
-
     //방 입장
     @PostMapping("/room/roomCode")
     public PrivateResponseBody roomEnter(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
