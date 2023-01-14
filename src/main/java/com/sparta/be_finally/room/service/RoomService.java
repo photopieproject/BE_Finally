@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
+
 @Service
 @RequiredArgsConstructor
 public class RoomService {
@@ -30,31 +32,42 @@ public class RoomService {
 
     // 방 입장 하기
     @Transactional
-    public PrivateResponseBody roomEnter(Long roomid, RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
+    public PrivateResponseBody<RoomResponseDto> roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
+
         User user = SecurityUtil.getCurrentUser();
-        Room room = roomRepository.findByIdAndRoomCode(roomid, roomCodeRequestDto.getRoomCode()).orElseThrow(
+        Room room = roomRepository.findByRoomCode(roomCodeRequestDto.getRoomCode()).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
         );
 
-        // 방번호가 같고, 유저가 있는 경우 room.getUser().equals7(user)
-
-//            if (roomCodeRequestDto.getRoomCode() == room.getRoomCode() && userRepository.existsByUserId(user.getUserId())) {
-//                return new PrivateResponseBody<>(RoomStatusCode.SUCESS_ENTER);
-//            } else {
-//                return new PrivateResponseBody<>(RoomStatusCode.FAIL_NUMBER);
-//            }
-//        }
-
-
-        if (roomCodeRequestDto.getRoomCode() == room.getRoomCode()) {
+        if (room.getRoomCode() == roomCodeRequestDto.getRoomCode()) {
             if (userRepository.existsByUserId(user.getUserId())) {
-                return new PrivateResponseBody<>(CommonStatusCode.SUCESS_ENTER);
-            } else {
-                return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
             }
+            return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM, new RoomResponseDto(room));
+        } else {
+            return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
         }
-        return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
     }
-}
+
+
+//    @Transactional
+//    public PrivateResponseBody roomExit(int roomCode) {
+//        //방 나가기
+//        User user = SecurityUtil.getCurrentUser();
+//        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+//                () -> new RestApiException(CommonStatusCode.INCORRECT_ROOM_CODE)
+//        );
+//        if (roomCode == room.getRoomCode()) {
+//            roomRepository.deleteByUser(user);
+//        }
+//        return new PrivateResponseBody<>(CommonStatusCode.SUCCESS_ROOM_EXIT);
+//         }
+    }
+
+
+
+
+
+
+
 
 

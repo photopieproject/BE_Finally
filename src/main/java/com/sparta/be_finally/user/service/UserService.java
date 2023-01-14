@@ -28,7 +28,6 @@ public class UserService {
         if (userRepository.existsByUserId(requestDto.getUserId())) {
             throw new RestApiException(UserStatusCode.OVERLAPPED_USERID);
         }
-
         // 패스워드 암호화
         String password = passwordEncoder.encode(requestDto.getPassword());
 

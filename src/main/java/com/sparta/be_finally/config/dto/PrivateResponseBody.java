@@ -1,6 +1,7 @@
 package com.sparta.be_finally.config.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.errorcode.StatusCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class PrivateResponseBody<T> {
           this.statusMsg = statusCode.getStatusMsg();
           this.data = data;
      }
+
 
 
 }
