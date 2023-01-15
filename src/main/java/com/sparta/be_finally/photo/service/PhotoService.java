@@ -1,4 +1,4 @@
 package com.sparta.be_finally.photo.service;
 
-public class service {
+public class PhotoService {
 }
