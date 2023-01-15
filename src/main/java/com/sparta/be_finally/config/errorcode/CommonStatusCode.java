@@ -9,12 +9,10 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum CommonStatusCode implements StatusCode {
      OK("정상", HttpStatus.OK.value()),
+     CREATE_ROOM_NAME("방 이름을 입력해주세요",HttpStatus.BAD_REQUEST.value()),
      CREATE_ROOM("방 개설 완료", HttpStatus.OK.value()),
      ENTRANCE_ROOM("방 입장 완료", HttpStatus.OK.value()),
      INCORRECT_ROOM_CODE("잘못된 방코드 입니다.",HttpStatus.BAD_REQUEST.value()),
-     SUCCESS_ROOM("방 만들기 성공", HttpStatus.OK.value()),
-
-     SUCCESS_ENTER("방 입장 성공", HttpStatus.OK.value()),
 
      FAIL_ROOM("방 만들기 실패", HttpStatus.BAD_REQUEST.value()),
      FAIL_ENTER("방 입장 실패", HttpStatus.BAD_REQUEST.value()),
