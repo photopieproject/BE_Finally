@@ -1,3 +1,4 @@
+/*
 package com.sparta.be_finally.config.handler;
 
 import org.springframework.stereotype.Component;
@@ -35,3 +36,4 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 }
 
+*/
