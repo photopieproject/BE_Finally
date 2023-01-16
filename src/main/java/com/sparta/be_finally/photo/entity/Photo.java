@@ -22,4 +22,21 @@ public class Photo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
+
+    public Photo(Room room, String photo_one_imgUrl) {
+        this.room = room;
+        this.photo_one = photo_one_imgUrl;
+    }
+
+    public void photo_two_update(String photo_two_imgUrl) {
+        this.photo_two = photo_two_imgUrl;
+    }
+
+    public void photo_three_update(String photo_three_imgUrl) {
+        this.photo_three = photo_three_imgUrl;
+    }
+
+    public void photo_four_update(String photo_four_imgUrl) {
+        this.photo_four = photo_four_imgUrl;
+    }
 }

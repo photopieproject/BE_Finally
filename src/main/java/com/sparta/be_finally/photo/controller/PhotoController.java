@@ -1,15 +1,16 @@
 package com.sparta.be_finally.photo.controller;
 ;
+import com.sparta.be_finally.config.dto.PrivateResponseBody;
+import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.jwt.JwtUtil;
+import com.sparta.be_finally.photo.dto.PhotoRequestDto;
+import com.sparta.be_finally.photo.service.PhotoService;
 import com.sparta.be_finally.user.service.KakaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PhotoController {
     private final KakaoService kakaoService;
+    private final PhotoService photoService;
 
     /*@ApiOperation(value = "카카오톡 메시지 보내기")
     @GetMapping("/kakaoMessage")
@@ -39,4 +41,9 @@ public class PhotoController {
 
     }*/
 
+    @ApiOperation(value = "사진 촬영 후 이미지 저장")
+    @PostMapping("/room/{roomId}/shoot")
+    public PrivateResponseBody photoShoot(@PathVariable Long roomId, @ModelAttribute PhotoRequestDto photoRequestDto) {
+        return new PrivateResponseBody<>(photoService.photoShoot(roomId, photoRequestDto));
+    }
 }
