@@ -1,5 +1,6 @@
 package com.sparta.be_finally.room.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.user.entity.User;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -39,7 +41,6 @@ public class Room {
 
 
 
-
     public Room(RoomRequestDto roomRequestDto, User user) {
         this.roomName = roomRequestDto.getRoomName();
         this.roomCode = (int)(Math.random()*100000);
@@ -48,6 +49,15 @@ public class Room {
         this.userCount ++;
         this.expireDate = LocalDateTime.now().plusHours(VALID_HOUR);
     }
+
+    public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
+        this.roomCode = roomCodeRequestDto.getRoomCode();
+        this.user = user;
+    }
+    public Room(User user) {
+        this.user = user;
+    }
+
 
     public void enter() {
         this.userCount++;
@@ -65,3 +75,6 @@ public class Room {
     }
 
 }
+
+
+

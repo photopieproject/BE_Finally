@@ -7,10 +7,13 @@ import com.sparta.be_finally.user.entity.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
+
+    HashMap<Long, Integer> map = new HashMap<>();
 
 
     Optional <Room> findByRoomCode(int roomCode);
