@@ -28,8 +28,6 @@ public class PhotoService {
 
     @Transactional
     public StatusCode photoShoot(Long roomId, PhotoRequestDto photoRequestDto) {
-        User user = SecurityUtil.getCurrentUser();
-
         // 1. roomId 존재 여부 확인
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
@@ -41,22 +39,24 @@ public class PhotoService {
         Photo photo = photoRepository.findByRoomId(roomId).orElse(null);
 
         // 3. photoRequestDto 에 있는 파일 S3에 업로드
-        if (!photoRequestDto.getPhoto_one().isEmpty() && !photoRequestDto.getPhoto_one().getContentType().isEmpty()) {
+        if (photoRequestDto.getPhoto_one() != null && !photoRequestDto.getPhoto_one().getContentType().isEmpty()) {
             String photo_one_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_one());
             photoRepository.saveAndFlush(new Photo(room, photo_one_imgUrl));
 
-        } else if (!photoRequestDto.getPhoto_two().isEmpty() && !photoRequestDto.getPhoto_two().getContentType().isEmpty()) {
+        } else if (photoRequestDto.getPhoto_two() != null && !photoRequestDto.getPhoto_two().getContentType().isEmpty()) {
             String photo_two_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_two());
             photo.photo_two_update(photo_two_imgUrl);
 
-        } else if (!photoRequestDto.getPhoto_three().isEmpty() && !photoRequestDto.getPhoto_three().getContentType().isEmpty()) {
+        } else if (photoRequestDto.getPhoto_three() != null && !photoRequestDto.getPhoto_three().getContentType().isEmpty()) {
             String photo_three_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_three());
             photo.photo_three_update(photo_three_imgUrl);
 
-        } else if (!photoRequestDto.getPhoto_four().isEmpty() && !photoRequestDto.getPhoto_four().getContentType().isEmpty()) {
+        } else if (photoRequestDto.getPhoto_four() != null && !photoRequestDto.getPhoto_four().getContentType().isEmpty()) {
             String photo_four_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_four());
             photo.photo_four_update(photo_four_imgUrl);
 
+        } else {
+            throw new RestApiException(CommonStatusCode.SHOOT_PHOTO_FAIL);
         }
 
         return CommonStatusCode.SHOOT_PHOTO_SUCCESS;
