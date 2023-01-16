@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,12 +18,17 @@ public class RoomResponseDto {
     private int roomCode;
     private int userCount;
 
+    private  LocalDateTime expireDate;
+
+
     public RoomResponseDto(Room room) {
         this.id = room.getId();
         this.roomName = room.getRoomName();
         this.nickname = room.getUser().getNickname();
         this.roomCode = room.getRoomCode();
-//        this.userCount
+        this.userCount = room.getUserCount();
+        this.expireDate = room.getExpireDate();
+
     }
 
 }
