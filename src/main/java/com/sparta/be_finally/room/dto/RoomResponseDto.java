@@ -23,7 +23,7 @@ public class RoomResponseDto {
 
     private LocalDateTime expireDate;
 
-    private HashMap<Integer, Long> userList;
+    //private HashMap<Integer, Long> userList;
 
 
     public RoomResponseDto(Room room) {
@@ -55,6 +55,6 @@ public class RoomResponseDto {
         this.roomCode = room.getRoomCode();
         this.userCount = room.getUserCount();
         this.expireDate = room.getExpireDate();
-        this.userList = new HashMap<Integer, Long>(roomCodeRequestDto.getRoomCode(),user.getId());
+       // this.userList = new HashMap<Integer, Long>(roomCodeRequestDto.getRoomCode(),user.getId());
     }
     }

@@ -51,6 +51,11 @@ public class Room {
     }
 
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
+        this.roomCode = roomCodeRequestDto.getRoomCode();
+        this.user = user;
+    }
+    public Room(User user) {
+        this.user = user;
     }
 
 

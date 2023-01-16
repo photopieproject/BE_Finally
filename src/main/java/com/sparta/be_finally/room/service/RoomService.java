@@ -13,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -41,29 +45,21 @@ public class RoomService {
         Room room = roomRepository.findByRoomCode(roomCodeRequestDto.getRoomCode()).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
         );
+        HashMap<Long,Integer> userlist = new HashMap<>();
 
 
         //입장 가능 인원 확인
         if (roomCodeRequestDto.getRoomCode() == room.getRoomCode()) {
-            if (room.getUserCount() < 4) {
+            if (room.getUserCount() <4) {
                 room.enter();
-                roomRepository.save(new Room(roomCodeRequestDto, user));
-                return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM);
+                userlist.put(user.getId(), roomCodeRequestDto.getRoomCode());
+            } if (userlist.containsKey(user.getId())){
+                return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM,new RoomResponseDto(room));
             }
-            return new PrivateResponseBody<>(CommonStatusCode.FAIL_MAN_ENTER);
+                return new PrivateResponseBody<>(CommonStatusCode.FAIL_MAN_ENTER);
         }
         return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
     }
-
-
-
-
-
-
-
-
-
-
 
 
         @Transactional
