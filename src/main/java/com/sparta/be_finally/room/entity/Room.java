@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -30,13 +31,14 @@ public class Room {
     private int frame = 0;
     private int userCount =0;
 
+
+
     @NotNull
     private LocalDateTime expireDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
 
 
 
@@ -48,6 +50,7 @@ public class Room {
         this.userCount ++;
         this.expireDate = LocalDateTime.now().plusHours(VALID_HOUR);
     }
+
 
     public void enter() {
         this.userCount++;
@@ -65,3 +68,6 @@ public class Room {
     }
 
 }
+
+
+
