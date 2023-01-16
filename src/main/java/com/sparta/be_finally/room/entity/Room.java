@@ -1,5 +1,6 @@
 package com.sparta.be_finally.room.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.user.entity.User;
@@ -31,8 +32,6 @@ public class Room {
     private int frame = 0;
     private int userCount =0;
 
-
-
     @NotNull
     private LocalDateTime expireDate;
 
@@ -49,6 +48,9 @@ public class Room {
         this.user = user;
         this.userCount ++;
         this.expireDate = LocalDateTime.now().plusHours(VALID_HOUR);
+    }
+
+    public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
     }
 
 
