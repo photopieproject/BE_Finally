@@ -21,7 +21,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping("/room")
-    public PrivateResponseBody createRoom(@RequestBody RoomRequestDto roomRequestDto) {
+    public PrivateResponseBody<?> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
         return roomService.createRoom(roomRequestDto);
     }
 
@@ -38,9 +38,11 @@ public class RoomController {
 //    }
 
 
+
     // 프레임 선택
     @PutMapping("/room/{roomId}")
     public PrivateResponseBody choiceFrame(@PathVariable Long roomId, @RequestBody FrameRequestDto frameRequestDto) {
         return roomService.choiceFrame(roomId, frameRequestDto);
     }
+
 }

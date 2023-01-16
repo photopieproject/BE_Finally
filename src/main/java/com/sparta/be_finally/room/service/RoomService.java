@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,59 +24,75 @@ public class RoomService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PrivateResponseBody<RoomResponseDto> createRoom(RoomRequestDto roomRequestDto) {
+    public PrivateResponseBody<?> createRoom(RoomRequestDto roomRequestDto) {
         User user = SecurityUtil.getCurrentUser();
-        if(roomRequestDto.getRoomName().isEmpty()){
+        if (roomRequestDto.getRoomName().isEmpty()) {
             return new PrivateResponseBody<>(CommonStatusCode.CREATE_ROOM_NAME);
+        } else {
+            Room room = roomRepository.save(new Room(roomRequestDto, user));
+            return new PrivateResponseBody<>(CommonStatusCode.CREATE_ROOM, new RoomResponseDto(room));
         }
-        Room room = roomRepository.save(new Room(roomRequestDto, user));
-        return new PrivateResponseBody<>(CommonStatusCode.CREATE_ROOM, new RoomResponseDto(room));
-
     }
 
+
+    //    public void enter(String id) {
+//        Room room = roomRepository.findById(id)
+//                .orElseThrow(() -> new CustomException(NOT_FOUND_CHAT_ROOM));
+//        room.enter();
+    //}
     // 방 입장 하기
     @Transactional
-    public PrivateResponseBody<RoomResponseDto> roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
+    public PrivateResponseBody<?> roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
 
         User user = SecurityUtil.getCurrentUser();
         Room room = roomRepository.findByRoomCode(roomCodeRequestDto.getRoomCode()).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
         );
 
-        if (room.getRoomCode() == roomCodeRequestDto.getRoomCode()) {
-            if (userRepository.existsByUserId(user.getUserId())) {
+       // room.getRoomCode() == roomCodeRequestDto.getRoomCode() &&
+        if (!roomRepository.existsByUserId(user.getId())) {
+            if (room.getUserCount() < 4 && !roomRepository.existsById(user.getId())) {
+                room.enter();
+                return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM, new RoomResponseDto(room));
+            } else {
+                if (roomRepository.existsById(user.getId())) {
+                    return new PrivateResponseBody<>(CommonStatusCode.REGISTERED_USER);
+                } else {
+                if (room.getUserCount() == 4) {
+                    return new PrivateResponseBody<>(CommonStatusCode.FAIL_MAN_ENTER);
+                    }
+                }
             }
-            return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM, new RoomResponseDto(room));
-        } else {
-            return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
+        }
+        return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
+    }
+
+
+
+        @Transactional
+        public PrivateResponseBody choiceFrame (Long roomId, FrameRequestDto frameRequestDto){
+            User user = SecurityUtil.getCurrentUser();
+            if (!roomRepository.existsByIdAndUserId(roomId, user.getId())) {
+                return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME);
+            }
+            Room room = roomRepository.findById(roomId).orElse(null);
+            room.updateFrame(frameRequestDto);
+
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME);
         }
     }
 
-//    @Transactional
-//    public PrivateResponseBody roomExit(int roomCode) {
-//        //방 나가기
-//        User user = SecurityUtil.getCurrentUser();
-//        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
-//                () -> new RestApiException(CommonStatusCode.INCORRECT_ROOM_CODE)
-//        );
-//        if (roomCode == room.getRoomCode()) {
-//            roomRepository.deleteByUser(user);
-//        }
-//        return new PrivateResponseBody<>(CommonStatusCode.SUCCESS_ROOM_EXIT);
-//         }
 
-    @Transactional
-    public PrivateResponseBody choiceFrame(Long roomId, FrameRequestDto frameRequestDto) {
-        User user = SecurityUtil.getCurrentUser();
-        if (!roomRepository.existsByIdAndUserId(roomId, user.getId())){
-            return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME);
-        }
-        Room room = roomRepository.findById(roomId).orElse(null);
-        room.updateFrame(frameRequestDto);
 
-        return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME);
-    }
-}
+
+
+
+
+
+
+
+
+
 
 
 

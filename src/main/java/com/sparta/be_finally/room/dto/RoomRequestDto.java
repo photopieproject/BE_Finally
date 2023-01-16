@@ -21,6 +21,8 @@ public class RoomRequestDto {
     @NoArgsConstructor
     public static class RoomCodeRequestDto {
         private int roomCode;
+
+
     }
 
 }
