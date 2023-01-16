@@ -12,13 +12,13 @@ public enum CommonStatusCode implements StatusCode {
      CREATE_ROOM_NAME("방 이름을 입력해주세요",HttpStatus.BAD_REQUEST.value()),
      CREATE_ROOM("방 개설 완료", HttpStatus.OK.value()),
      ENTRANCE_ROOM("방 입장 완료", HttpStatus.OK.value()),
+     REGISTERED_USER("방에 등록된 사용자 입니다", HttpStatus.OK.value()),
      INCORRECT_ROOM_CODE("잘못된 방코드 입니다.",HttpStatus.BAD_REQUEST.value()),
-
      FAIL_ROOM("방 만들기 실패", HttpStatus.BAD_REQUEST.value()),
      FAIL_ENTER("방 입장 실패", HttpStatus.BAD_REQUEST.value()),
-
+     FAIL_MAN_ENTER("인원이 초과되어 입장이 불가합니다",HttpStatus.BAD_REQUEST.value()),
      FAIL_NUMBER("방 코드가 틀렸습니다",HttpStatus.BAD_REQUEST.value()),
-     FAIL_ENTER2("방 코드 또는 방이 있는지 확인하세요",HttpStatus.BAD_REQUEST.value()),
+     FAIL_ENTER2("존재하지 않는 방입니다",HttpStatus.BAD_REQUEST.value()),
      SUCCESS_ROOM_EXIT("방 나가기 완료", HttpStatus.OK.value()),
      SUCCESS_ROOM_TOTAL_EXIT("방 나가기 완료", HttpStatus.OK.value()),
      CHOICE_FRAME("프레임 선택 완료", HttpStatus.OK.value()),
