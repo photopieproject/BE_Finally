@@ -18,6 +18,7 @@ public class RoomResponseDto {
     private Long id;
     private String roomName;
     private String nickname;
+
     private int roomCode;
     private int userCount;
 
