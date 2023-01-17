@@ -40,6 +40,10 @@ public class Room {
     private User user;
 
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<RoomParticipant> roomParticipants = new ArrayList<>();
+
+
 
     public Room(RoomRequestDto roomRequestDto, User user) {
         this.roomName = roomRequestDto.getRoomName();
@@ -54,9 +58,7 @@ public class Room {
         this.roomCode = roomCodeRequestDto.getRoomCode();
         this.user = user;
     }
-    public Room(User user) {
-        this.user = user;
-    }
+
 
 
     public void enter() {

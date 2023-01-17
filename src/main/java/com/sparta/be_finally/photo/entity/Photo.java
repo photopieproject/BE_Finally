@@ -13,7 +13,7 @@ public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
+    
     private String photo_one;
     private String photo_two;
     private String photo_three;
@@ -39,4 +39,5 @@ public class Photo {
     public void photo_four_update(String photo_four_imgUrl) {
         this.photo_four = photo_four_imgUrl;
     }
+
 }
