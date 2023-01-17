@@ -4,9 +4,7 @@ import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.util.SecurityUtil;
-import com.sparta.be_finally.room.dto.FrameRequestDto;
-import com.sparta.be_finally.room.dto.RoomRequestDto;
-import com.sparta.be_finally.room.dto.RoomResponseDto;
+import com.sparta.be_finally.room.dto.*;
 import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.room.repository.RoomRepository;
 import com.sparta.be_finally.user.entity.User;
@@ -15,13 +13,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 public class RoomService {
     public final RoomRepository roomRepository;
     private final UserRepository userRepository;
+
 
     @Transactional
     public PrivateResponseBody<?> createRoom(RoomRequestDto roomRequestDto) {
@@ -35,11 +37,6 @@ public class RoomService {
     }
 
 
-    //    public void enter(String id) {
-//        Room room = roomRepository.findById(id)
-//                .orElseThrow(() -> new CustomException(NOT_FOUND_CHAT_ROOM));
-//        room.enter();
-    //}
     // 방 입장 하기
     @Transactional
     public PrivateResponseBody<?> roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
@@ -48,25 +45,21 @@ public class RoomService {
         Room room = roomRepository.findByRoomCode(roomCodeRequestDto.getRoomCode()).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
         );
+        HashMap<Long,Integer> userlist = new HashMap<>();
 
-       // room.getRoomCode() == roomCodeRequestDto.getRoomCode() &&
-        if (!roomRepository.existsByUserId(user.getId())) {
-            if (room.getUserCount() < 4 && !roomRepository.existsById(user.getId())) {
+
+        //입장 가능 인원 확인
+        if (roomCodeRequestDto.getRoomCode() == room.getRoomCode()) {
+            if (room.getUserCount() <4) {
                 room.enter();
-                return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM, new RoomResponseDto(room));
-            } else {
-                if (roomRepository.existsById(user.getId())) {
-                    return new PrivateResponseBody<>(CommonStatusCode.REGISTERED_USER);
-                } else {
-                if (room.getUserCount() == 4) {
-                    return new PrivateResponseBody<>(CommonStatusCode.FAIL_MAN_ENTER);
-                    }
-                }
+                userlist.put(user.getId(), roomCodeRequestDto.getRoomCode());
+            } if (userlist.containsKey(user.getId())){
+                return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM,new RoomResponseDto(room));
             }
+                return new PrivateResponseBody<>(CommonStatusCode.FAIL_MAN_ENTER);
         }
         return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
     }
-
 
 
         @Transactional
@@ -81,6 +74,9 @@ public class RoomService {
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME);
         }
     }
+
+
+
 
 
 

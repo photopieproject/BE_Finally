@@ -5,12 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
+
 
 @Setter
 @Getter
 @NoArgsConstructor
 public class RoomRequestDto {
+
     private String roomName;
+
+
 
     public RoomRequestDto(Room room){
         this.roomName = room.getRoomName();

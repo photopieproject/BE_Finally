@@ -1,13 +1,10 @@
 package com.sparta.be_finally.user.entity;
 
-import com.sparta.be_finally.room.dto.RoomResponseDto;
-import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 
 @Getter
 @Entity (name = "users")
@@ -31,6 +28,8 @@ public class User{
 
     @Column(nullable = true, unique = true)
     private String googleId;
+
+
 
 
     public User(SignupRequestDto requestDto, String password) {

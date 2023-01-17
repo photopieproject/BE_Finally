@@ -21,7 +21,7 @@ public class SchedulerService {
 
     private final RoomRepository roomRepository;
 
-    @Scheduled(cron = "0 0 * * * *") // 매시 0분에
+    @Scheduled(cron = "0 0 0/1 * * *")// 1시간마다
     public void runAfterTenSecondsRepeatTenSeconds() {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
