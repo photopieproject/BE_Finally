@@ -49,12 +49,12 @@ public class UserService {
     public LoginResponseDto.commonLogin login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         // 사용자 확인
         User user = userRepository.findByUserId(loginRequestDto.getUserId()).orElseThrow(
-                () -> new RestApiException(UserStatusCode.NO_USER)
+                () -> new RestApiException(UserStatusCode.WRONG_LOGININFO)
         );
 
         // 비밀번호 확인
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-            throw new RestApiException(UserStatusCode.WRONG_PASSWORD);
+            throw new RestApiException(UserStatusCode.WRONG_LOGININFO);
         }
 
         // header 에 토큰추가

@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RoomService {
-    public final RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
     private final UserRepository userRepository;
 
 
