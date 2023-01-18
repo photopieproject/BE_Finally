@@ -40,6 +40,10 @@ public class Room {
     private User user;
 
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<RoomParticipant> roomParticipants = new ArrayList<>();
+
+
 
     public Room(RoomRequestDto roomRequestDto, User user) {
         this.roomName = roomRequestDto.getRoomName();
@@ -47,16 +51,14 @@ public class Room {
         //UUID.randomUUID().toString();
         this.user = user;
         this.userCount ++;
-        this.expireDate = LocalDateTime.now().plusHours(VALID_HOUR);
+        this.expireDate = LocalDateTime.now().plusHours(VALID_HOUR).withNano(0);
     }
 
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
         this.roomCode = roomCodeRequestDto.getRoomCode();
         this.user = user;
     }
-    public Room(User user) {
-        this.user = user;
-    }
+
 
 
     public void enter() {

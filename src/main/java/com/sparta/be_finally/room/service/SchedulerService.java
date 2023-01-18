@@ -5,10 +5,10 @@ import com.sparta.be_finally.config.S3.AwsS3Service;
 import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.entity.Room;
+
 import com.sparta.be_finally.room.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.asm.Advice;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -27,12 +27,14 @@ public class SchedulerService {
     private final PhotoRepository photoRepository;
     private final AwsS3Service awsS3Service;
 
-    @Scheduled(cron = "0 0 0/1 * * *")// 1시간마다
+    @Scheduled(fixedRate = 3600000)
+            //(cron = "0 0 0/1 * * *")// 1시간마다
+            //(fixedRate = 10000) // 10 초
     public void runAfterTenSecondsRepeatTenSeconds() {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
         List<Room> roomList = roomRepository.findAll();
-        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.now().withNano(0);
 
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {
@@ -54,6 +56,8 @@ public class SchedulerService {
                 roomRepository.deleteById(room.getId());
             }
         }
+
+
     }
 }
 
