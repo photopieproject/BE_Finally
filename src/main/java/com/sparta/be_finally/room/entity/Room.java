@@ -35,7 +35,7 @@ public class Room {
     private int userCount =0;
 
     @NotNull
-    private ZonedDateTime expireDate;
+    private LocalDateTime expireDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -53,7 +53,8 @@ public class Room {
         //UUID.randomUUID().toString();
         this.user = user;
         this.userCount ++;
-        this.expireDate = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0).plusMinutes(VALID_HOUR);
+        this.expireDate =LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
+                //ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0).plusMinutes(VALID_HOUR);
               //  LocalDateTime.now().plusMinutes(VALID_HOUR).withNano(0);
     }
 

@@ -37,7 +37,7 @@ public class SchedulerService {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
         List<Room> roomList = roomRepository.findAll();
-        ZonedDateTime time = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
+        LocalDateTime time = LocalDateTime.now().withNano(0);
 
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {
