@@ -3,6 +3,7 @@ package com.sparta.be_finally.photo.controller;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.jwt.JwtUtil;
+import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.service.PhotoService;
 import com.sparta.be_finally.user.service.KakaoService;
@@ -43,7 +44,15 @@ public class PhotoController {
 
     @ApiOperation(value = "사진 촬영 후 이미지 저장")
     @PostMapping("/room/{roomId}/shoot")
-    public PrivateResponseBody photoShoot(@PathVariable Long roomId, @ModelAttribute PhotoRequestDto photoRequestDto) {
-        return new PrivateResponseBody<>(photoService.photoShoot(roomId, photoRequestDto));
+    public PrivateResponseBody photoShootSave(@PathVariable Long roomId, @ModelAttribute PhotoRequestDto photoRequestDto) {
+        return new PrivateResponseBody(photoService.photoShootSave(roomId, photoRequestDto));
     }
+
+    @ApiOperation(value = "사진 촬영")
+    @GetMapping("/room/{roomId}")
+    public FrameResponseDto photoShoot(@PathVariable Long roomId) {
+        return new FrameResponseDto(photoService.photoShoot(roomId));
+    }
+
+
 }
