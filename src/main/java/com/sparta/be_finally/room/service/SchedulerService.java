@@ -43,15 +43,17 @@ public class SchedulerService {
 
                 Photo photos = photoRepository.findByRoomId(room.getId()).orElse(null);
 
-                List<String> photo_url = new ArrayList<>();
-                photo_url.add(photos.getPhoto_one().split(".com/")[1]);
-                photo_url.add(photos.getPhoto_two().split(".com/")[1]);
-                photo_url.add(photos.getPhoto_three().split(".com/")[1]);
-                photo_url.add(photos.getPhoto_four().split(".com/")[1]);
+                if (photos != null) {
+                    List<String> photo_url = new ArrayList<>();
+                    photo_url.add(photos.getPhoto_one().split(".com/")[1]);
+                    photo_url.add(photos.getPhoto_two().split(".com/")[1]);
+                    photo_url.add(photos.getPhoto_three().split(".com/")[1]);
+                    photo_url.add(photos.getPhoto_four().split(".com/")[1]);
 
-                //S3 - 이미지 삭제 처리
-                for (String photo : photo_url) {
-                    awsS3Service.deleteFile(photo);
+                    //S3 - 이미지 삭제 처리
+                    for (String photo : photo_url) {
+                        awsS3Service.deleteFile(photo);
+                    }
                 }
 
                 roomRepository.deleteById(room.getId());
