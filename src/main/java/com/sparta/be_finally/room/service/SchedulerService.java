@@ -21,7 +21,7 @@ public class SchedulerService {
 
     private final RoomRepository roomRepository;
 
-    @Scheduled(cron = "0 0 0/1 * * *")// 1시간마다
+    @Scheduled(fixedRate = 180000)// 1시간마다
     public void runAfterTenSecondsRepeatTenSeconds() {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
@@ -33,7 +33,7 @@ public class SchedulerService {
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {
                 //room.setDeleted(true);
-                roomRepository.deleteById(room.getId());
+                roomRepository.deleteAll();
             }
         }
     }
