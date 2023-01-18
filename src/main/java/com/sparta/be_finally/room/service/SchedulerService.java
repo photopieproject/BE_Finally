@@ -30,7 +30,7 @@ public class SchedulerService {
     @Scheduled(fixedRate = 1800000)
             //(fixedRate = 1800000)//
             //(cron = "0 0 0/1 * * *")// 1시간마다
-            //(fixedRate = 30000) // 10 초
+            //(fixedRate = 30000) // 30 초
     public void runAfterTenSecondsRepeatTenSeconds() {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
@@ -56,7 +56,7 @@ public class SchedulerService {
                     }
                 }
 
-                roomRepository.deleteById(room.getId());
+                roomRepository.deleteAll();
             }
         }
 
