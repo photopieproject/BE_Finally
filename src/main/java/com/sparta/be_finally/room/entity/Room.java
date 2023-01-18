@@ -51,7 +51,7 @@ public class Room {
         //UUID.randomUUID().toString();
         this.user = user;
         this.userCount ++;
-        this.expireDate = LocalDateTime.now().plusHours(VALID_HOUR).withNano(0);
+        this.expireDate = LocalDateTime.now().plusSeconds(VALID_HOUR).withNano(0);
     }
 
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {

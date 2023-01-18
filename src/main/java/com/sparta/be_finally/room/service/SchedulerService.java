@@ -27,9 +27,10 @@ public class SchedulerService {
     private final PhotoRepository photoRepository;
     private final AwsS3Service awsS3Service;
 
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 30000)
+            //(fixedRate = 3600000)
             //(cron = "0 0 0/1 * * *")// 1시간마다
-            //(fixedRate = 10000) // 10 초
+            //(fixedRate = 30000) // 10 초
     public void runAfterTenSecondsRepeatTenSeconds() {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
