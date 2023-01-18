@@ -1,10 +1,10 @@
 package com.sparta.be_finally.room.service;
 
 import com.sparta.be_finally.room.entity.Room;
+
 import com.sparta.be_finally.room.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.asm.Advice;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,9 @@ public class SchedulerService {
 
     private final RoomRepository roomRepository;
 
-    @Scheduled(cron = "0 0 0/1 * * *")// 1시간마다
+    @Scheduled(fixedRate = 10000) // 10 초
+            //(cron = "0 0 0/1 * * *")// 1시간마다
+            //(fixedRate = 10000) // 10 초
     public void runAfterTenSecondsRepeatTenSeconds() {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
@@ -36,6 +38,7 @@ public class SchedulerService {
                 roomRepository.deleteById(room.getId());
             }
         }
+
     }
 }
 
