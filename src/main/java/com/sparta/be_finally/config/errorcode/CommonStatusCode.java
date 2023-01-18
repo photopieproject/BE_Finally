@@ -30,7 +30,7 @@ public enum CommonStatusCode implements StatusCode {
      INVALID_PARAMETER("Invalid parameter included",HttpStatus.BAD_REQUEST.value()),
      INTERNAL_SERVER_ERROR("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value()),
      DELETE_USER("회원 탈퇴 성공", HttpStatus.OK.value());
-     
+
      private final String StatusMsg;
      private final int statusCode;
      

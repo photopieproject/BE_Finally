@@ -5,17 +5,23 @@ import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.errorcode.StatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.util.SecurityUtil;
+import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.room.repository.RoomRepository;
 import com.sparta.be_finally.user.entity.User;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.Session;
+import io.openvidu.java.client.SessionProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.validation.constraints.Null;
 
 @Service
@@ -25,9 +31,23 @@ public class PhotoService {
     private final AwsS3Service awsS3Service;
     private final PhotoRepository photoRepository;
     private final RoomRepository roomRepository;
+    private OpenVidu openVidu;
+
+    // OpenVidu 서버가 수신하는 URL
+    @Value("${openvidu.url}")
+    private String OPENVIDU_URL;
+
+    // OpenVidu 서버와 공유되는 비밀
+    @Value("${openvidu.secret}")
+    private String OPENVIDU_SECRET;
+
+    @PostConstruct
+    public OpenVidu openVidu() {
+        return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+    }
 
     @Transactional
-    public StatusCode photoShoot(Long roomId, PhotoRequestDto photoRequestDto) {
+    public StatusCode photoShootSave(Long roomId, PhotoRequestDto photoRequestDto) {
         // 1. roomId 존재 여부 확인
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
@@ -60,5 +80,22 @@ public class PhotoService {
         }
 
         return CommonStatusCode.SHOOT_PHOTO_SUCCESS;
+    }
+
+    @Transactional
+    public int photoShoot(Long roomId) {
+        User user = SecurityUtil.getCurrentUser();
+
+        // 1. roomId 존재 여부 확인
+        Room room = roomRepository.findById(roomId).orElseThrow(
+                () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
+        );
+
+        // 2. 입장한 방 - 선택한 프레임 번호
+        int frameNum = room.getFrame();
+
+
+
+        return frameNum;
     }
 }
