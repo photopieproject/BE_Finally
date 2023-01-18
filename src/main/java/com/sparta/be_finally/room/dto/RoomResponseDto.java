@@ -23,7 +23,7 @@ public class RoomResponseDto {
     private int roomCode;
     private int userCount;
 
-    private ZonedDateTime expireDate;
+    private LocalDateTime expireDate;
 
     //private HashMap<Integer, Long> userList;
 
