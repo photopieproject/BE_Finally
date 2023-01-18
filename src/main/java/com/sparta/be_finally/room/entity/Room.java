@@ -11,6 +11,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,7 @@ public class Room {
     private int userCount =0;
 
     @NotNull
-    private LocalDateTime expireDate;
+    private ZonedDateTime expireDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -51,7 +53,8 @@ public class Room {
         //UUID.randomUUID().toString();
         this.user = user;
         this.userCount ++;
-        this.expireDate = LocalDateTime.now().plusMinutes(VALID_HOUR).withNano(0);
+        this.expireDate = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
+              //  LocalDateTime.now().plusMinutes(VALID_HOUR).withNano(0);
     }
 
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {

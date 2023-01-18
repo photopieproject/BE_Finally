@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +37,7 @@ public class SchedulerService {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
         List<Room> roomList = roomRepository.findAll();
-        LocalDateTime time = LocalDateTime.now().withNano(0);
+        ZonedDateTime time = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
 
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {

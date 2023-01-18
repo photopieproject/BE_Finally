@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class RoomResponseDto {
     private int roomCode;
     private int userCount;
 
-    private LocalDateTime expireDate;
+    private ZonedDateTime expireDate;
 
     //private HashMap<Integer, Long> userList;
 
