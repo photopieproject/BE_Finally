@@ -53,7 +53,7 @@ public class Room {
         //UUID.randomUUID().toString();
         this.user = user;
         this.userCount ++;
-        this.expireDate = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
+        this.expireDate = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0).plusMinutes(VALID_HOUR);
               //  LocalDateTime.now().plusMinutes(VALID_HOUR).withNano(0);
     }
 
