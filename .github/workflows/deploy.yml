@@ -60,7 +60,7 @@ jobs:
           mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret
 
           #       shell: bash
-      
+
 
 
       # Error Gradle Script ‘/Home/Runner/Work/*/Gradlew’ Is Not Executable 에러 해결가능?
