@@ -62,38 +62,7 @@ public class RoomService {
         }
     }
 
-        //public PrivateResponseBody<?> roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
-
-//        User user = SecurityUtil.getCurrentUser();
-//        Room room = roomRepository.findByRoomCode(roomCodeRequestDto.getRoomCode()).orElseThrow(
-//                () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
-//        );
-//       HashMap<Long, Integer> userlist = new HashMap<>();
-//        RoomParticipant roomParticipant = participantRepository.findBy()
-//
-
-        //입장 가능 인원 확인
-
-//        if (roomCodeRequestDto.getRoomCode() == room.getRoomCode()){
-//            //방 만들기를 한 유저가 아니라면
-//            if(!room.getUser().getUserId().isEmpty()){
-//
-//            }
-//        }
-
-
-//
-//        if (roomCodeRequestDto.getRoomCode() == room.getRoomCode()) {
-//            if (room.getUserCount() <4) {
-//                room.enter();
-//                userlist.put(user.getId(), roomCodeRequestDto.getRoomCode());
-//            } if (userlist.containsKey(user.getId())){
-//                return new PrivateResponseBody<>(CommonStatusCode.ENTRANCE_ROOM,new RoomResponseDto(room));
-//            }
-//                return new PrivateResponseBody<>(CommonStatusCode.FAIL_MAN_ENTER);
-//        }
-//        return new PrivateResponseBody<>(CommonStatusCode.FAIL_NUMBER);
-//    }
+    
 
 
         @Transactional

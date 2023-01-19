@@ -35,12 +35,6 @@ public class RoomController {
         return roomService.roomEnter(roomCodeRequestDto);
     }
 
-    //방 나가기
-//    @GetMapping("/room/{roomCode}/exit")
-//    public PrivateResponseBody roomExit(@PathVariable int roomCode){
-//        return roomService.roomExit(roomCode);
-//    }
-
 
 
     // 프레임 선택

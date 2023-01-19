@@ -36,7 +36,7 @@ public class SchedulerService {
             //(fixedRate = 30000) // 30 초
 
     public void runAfterTenSecondsRepeatTenSeconds() {
-        //log.info("10초후 실행 -> time:" + LocalDateTime.now());
+
 
         List<Room> roomList = roomRepository.findAll();
         LocalDateTime time = LocalDateTime.now().withNano(0);

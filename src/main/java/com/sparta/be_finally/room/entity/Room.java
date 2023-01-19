@@ -55,8 +55,6 @@ public class Room {
         this.userCount ++;
 
         this.expireDate =LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
-                //ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0).plusMinutes(VALID_HOUR);
-              //  LocalDateTime.now().plusMinutes(VALID_HOUR).withNano(0);
 
     }
 
@@ -70,12 +68,6 @@ public class Room {
     public void enter() {
         this.userCount++;
     }
-//    public void exit() {
-//        this.userCount--;
-//        if (userCount < 0) {
-//            userCount = 0;
-//        }
-//    }
 
 
     public void updateFrame(FrameRequestDto frameRequestDto) {
