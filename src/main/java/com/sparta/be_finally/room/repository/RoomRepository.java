@@ -13,26 +13,12 @@ import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
-    HashMap<Long, Integer> map = new HashMap<>();
-
 
     Optional <Room> findByRoomCode(int roomCode);
 
-    List<Room> findAllByUser(User user);
 
-
-    Optional <Room> deleteByUser(User user);
-
-    boolean existsByRoomCode(int roomCode);
-
-    boolean existsByRoomCodeAndUserNull(int roomCode);
-
-    boolean existsByUserNull();
-
-    boolean existsByUserId(Long userId);
 
     boolean existsByIdAndUserId(Long id, Long userId);
 
 
-    List<Room> findAllById(Long id);
 }

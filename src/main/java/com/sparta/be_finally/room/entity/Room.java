@@ -11,6 +11,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +53,11 @@ public class Room {
         //UUID.randomUUID().toString();
         this.user = user;
         this.userCount ++;
-        this.expireDate = LocalDateTime.now().plusMinutes(VALID_HOUR).withNano(0);
+
+        this.expireDate =LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
+                //ZonedDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0).plusMinutes(VALID_HOUR);
+              //  LocalDateTime.now().plusMinutes(VALID_HOUR).withNano(0);
+
     }
 
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {

@@ -25,7 +25,7 @@ public class RoomController {
         return roomService.createRoom(roomRequestDto);
     }
 
-    //방 입장
+    //방 입장//
     @PostMapping("/room/roomCode")
     public PrivateResponseBody roomEnter(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
         return roomService.roomEnter(roomCodeRequestDto);
