@@ -46,8 +46,6 @@ public class RoomService {
 
     @Transactional
     public PrivateResponseBody<?> roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) {
-
-
         Room room = roomRepository.findByRoomCode(roomCodeRequestDto.getRoomCode()).orElseThrow(
                 () -> new RestApiException(CommonStatusCode.FAIL_ENTER2));
         User user = SecurityUtil.getCurrentUser();

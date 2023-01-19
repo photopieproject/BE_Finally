@@ -50,9 +50,19 @@ dependencies {
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	// openvidu 의존성 추가
-	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.18.0'
+	//WebRtc의존성 추가
+	implementation 'org.webjars.bower:webrtc-adapter:7.4.0'
 
+	//Kurento (미디어서버) 관련 의존성 추가
+	implementation 'org.kurento:kurento-client:6.16.5'
+	implementation 'org.kurento:kurento-utils-js:6.15.0'
+
+	//Openvidu 의존성 추가
+	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.18.0'
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+	//Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
