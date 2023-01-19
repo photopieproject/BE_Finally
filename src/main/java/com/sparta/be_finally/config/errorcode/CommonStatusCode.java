@@ -15,6 +15,8 @@ public enum CommonStatusCode implements StatusCode {
      REGISTERED_USER("방에 등록된 사용자 입니다", HttpStatus.OK.value()),
      FAIL_ROOM("방 만들기 실패", HttpStatus.BAD_REQUEST.value()),
      FAIL_ENTER("방 입장 실패", HttpStatus.BAD_REQUEST.value()),
+     FAIL_ENTER_OPENVIDU("Openvidu에 존재하지 않는 방 입니다.",HttpStatus.BAD_REQUEST.value()),
+     DELETE_ROOM_OPENVIDU("Openvidu Session delete",HttpStatus.BAD_REQUEST.value()),
 
      SHOOT_PHOTO_SUCCESS("사진 촬영 성공",HttpStatus.OK.value()),
      SHOOT_PHOTO_FAIL("사진을 촬영해주세요.",HttpStatus.BAD_REQUEST.value()),

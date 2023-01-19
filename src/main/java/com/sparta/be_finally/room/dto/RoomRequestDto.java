@@ -12,10 +12,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 public class RoomRequestDto {
-
     private String roomName;
-
-
 
     public RoomRequestDto(Room room){
         this.roomName = room.getRoomName();
@@ -25,11 +22,8 @@ public class RoomRequestDto {
     @Setter
     @NoArgsConstructor
     public static class RoomCodeRequestDto {
-        private int roomCode;
-
-
+        private String roomCode;
     }
-
 }
 
 

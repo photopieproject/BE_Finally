@@ -41,10 +41,28 @@ public class PhotoService {
     @Value("${openvidu.secret}")
     private String OPENVIDU_SECRET;
 
-    /*@PostConstruct
+    @PostConstruct
     public OpenVidu openVidu() {
         return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }*/
+    }
+
+    //사진 촬영 준비
+    @Transactional
+    public int photoShoot(Long roomId) {
+        User user = SecurityUtil.getCurrentUser();
+
+        // 1. roomId 존재 여부 확인
+        Room room = roomRepository.findById(roomId).orElseThrow(
+                () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
+        );
+
+        // 2. 입장한 방 - 선택한 프레임 번호
+        int frameNum = room.getFrame();
+
+
+
+        return frameNum;
+    }
 
     @Transactional
     public StatusCode photoShootSave(Long roomId, PhotoRequestDto photoRequestDto) {
@@ -80,23 +98,5 @@ public class PhotoService {
         }
 
         return CommonStatusCode.SHOOT_PHOTO_SUCCESS;
-    }
-
-    @Transactional
-    public int photoShoot(Long roomId) {
-        User user = SecurityUtil.getCurrentUser();
-
-        // 1. roomId 존재 여부 확인
-        Room room = roomRepository.findById(roomId).orElseThrow(
-                () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
-        );
-
-
-        // 2. 입장한 방 - 선택한 프레임 번호
-        int frameNum = room.getFrame();
-
-
-
-        return frameNum;
     }
 }

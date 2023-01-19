@@ -45,6 +45,9 @@ public class SchedulerService {
             if (time.isAfter(room.getExpireDate())) {
                 //room.setDeleted(true);
 
+                //Openvidu에서 세션 삭제 (room delete)
+
+
                 Photo photos = photoRepository.findByRoomId(room.getId()).orElse(null);
 
                 if (photos != null) {
@@ -58,14 +61,12 @@ public class SchedulerService {
                     for (String photo : photo_url) {
                         awsS3Service.deleteFile(photo);
                     }
+                    photoRepository.delete(photos);
                 }
 
-
-                roomRepository.deleteAll();
+                roomRepository.delete(room);
             }
         }
-
-
     }
 }
 

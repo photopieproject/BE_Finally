@@ -1,6 +1,7 @@
 package com.sparta.be_finally.user.entity;
 
 import com.sparta.be_finally.user.dto.SignupRequestDto;
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,9 +29,7 @@ public class User{
 
     @Column(nullable = true, unique = true)
     private String googleId;
-
-
-
+    private String token;
 
     public User(SignupRequestDto requestDto, String password) {
         this.userId = requestDto.getUserId();
@@ -50,5 +49,9 @@ public class User{
         this.googleId = googleId;
         this.nickname = nickname;
         this.password = encodedPassword;
+    }
+
+    public void update(String token) {
+        this.token = token;
     }
 }

@@ -2,9 +2,7 @@ package com.sparta.be_finally.room.dto;
 
 import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.user.entity.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -14,47 +12,17 @@ import java.util.Map;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
 public class RoomResponseDto {
     private Long id;
     private String roomName;
     private String nickname;
 
-    private int roomCode;
+    private String roomCode;
     private int userCount;
+    private String sessionId;
+    private String token;
 
     private LocalDateTime expireDate;
 
-
-
-    public RoomResponseDto(Room room) {
-        this.id = room.getId();
-        this.roomName = room.getRoomName();
-        this.nickname = room.getUser().getNickname();
-        this.roomCode = room.getRoomCode();
-        this.userCount = room.getUserCount();
-        this.expireDate = room.getExpireDate();
-
-    }
-
-    public RoomResponseDto(Room room, User user) {
-        this.id = room.getId();
-        this.roomName = room.getRoomName();
-        this.nickname = room.getUser().getNickname();
-        this.roomCode = room.getRoomCode();
-        this.userCount = room.getUserCount();
-        this.expireDate = room.getExpireDate();
-
-
-    }
-
-    public RoomResponseDto(Room room, RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
-        this.id = room.getId();
-        this.roomName = room.getRoomName();
-        this.nickname = room.getUser().getNickname();
-        this.roomCode = room.getRoomCode();
-        this.userCount = room.getUserCount();
-        this.expireDate = room.getExpireDate();
-
-    }
-    }
+}
