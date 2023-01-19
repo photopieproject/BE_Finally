@@ -29,10 +29,12 @@ public class SchedulerService {
     private final PhotoRepository photoRepository;
     private final AwsS3Service awsS3Service;
 
+
     @Scheduled(fixedRate = 1800000)
             //(fixedRate = 1800000)//
             //(cron = "0 0 0/1 * * *")// 1시간마다
             //(fixedRate = 30000) // 30 초
+
     public void runAfterTenSecondsRepeatTenSeconds() {
         //log.info("10초후 실행 -> time:" + LocalDateTime.now());
 
@@ -57,6 +59,7 @@ public class SchedulerService {
                         awsS3Service.deleteFile(photo);
                     }
                 }
+
 
                 roomRepository.deleteAll();
             }
