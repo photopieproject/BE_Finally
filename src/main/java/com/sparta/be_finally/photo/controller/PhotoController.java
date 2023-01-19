@@ -42,16 +42,16 @@ public class PhotoController {
 
     }*/
 
-    @ApiOperation(value = "사진 촬영 후 이미지 저장")
-    @PostMapping("/room/{roomId}/shoot")
-    public PrivateResponseBody photoShootSave(@PathVariable Long roomId, @ModelAttribute PhotoRequestDto photoRequestDto) {
-        return new PrivateResponseBody(photoService.photoShootSave(roomId, photoRequestDto));
-    }
-
     @ApiOperation(value = "사진 촬영")
     @GetMapping("/room/{roomId}")
     public FrameResponseDto photoShoot(@PathVariable Long roomId) {
         return new FrameResponseDto(photoService.photoShoot(roomId));
+    }
+
+    @ApiOperation(value = "사진 촬영 후 이미지 저장")
+    @PostMapping("/room/{roomId}/shoot")
+    public PrivateResponseBody photoShootSave(@PathVariable Long roomId, @ModelAttribute PhotoRequestDto photoRequestDto) {
+        return new PrivateResponseBody(photoService.photoShootSave(roomId, photoRequestDto));
     }
 
 

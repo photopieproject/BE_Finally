@@ -20,6 +20,10 @@ import java.awt.*;
 public class RoomController {
     private final RoomService roomService;
 
+    // 오픈비두 과정
+    // 1. 세션 : 참가자가 연결하여 오디오 및 비디오 스트림을 보내고 받을 수 있는 가상 공간 (= 사진 촬영 방)
+    // 2.
+
     @PostMapping("/room")
     public PrivateResponseBody<?> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
         return roomService.createRoom(roomRequestDto);
