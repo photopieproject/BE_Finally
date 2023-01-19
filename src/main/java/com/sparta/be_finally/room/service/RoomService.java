@@ -42,6 +42,8 @@ public class RoomService {
     @Value("${openvidu.secret}")
     private String OPENVIDU_SECRET;
 
+    // 어플리케이션 실행시 Bean 으로 등록
+    // OpenVidu 객체를 활용해 spring은 OpenVidu 서버와 통신이 가능해짐
     @PostConstruct
     public OpenVidu openVidu() {
         return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
@@ -107,8 +109,11 @@ public class RoomService {
 
         } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) == null && room.getUserCount() < 4){
             // 방 첫 입장
-            // Openvidu room 입장 전, session 여부 확인
-            if (!roomRepository.existsByIdAndSessionId(room.getId(),room.getSessionId())) {
+            // Openvidu room 입장 전, Openvidu sessionId 존재 여부 확인
+            Session session = validator.getSession(room.getSessionId());
+
+            // session = null 이라면?
+            if (!roomRepository.existsBySessionId(session.getSessionId())) {
                 throw new RestApiException(CommonStatusCode.FAIL_ENTER_OPENVIDU);
             }
 
@@ -117,8 +122,6 @@ public class RoomService {
                     .type(ConnectionType.WEBRTC)
                     .data(user.getNickname())
                     .build();
-
-            Session session = validator.getSession(room.getSessionId());
 
             //토큰 생성 후 입장한 유저에 token update
             user.update(session.createConnection(connectionProperties).getToken());
@@ -143,12 +146,9 @@ public class RoomService {
         // 방 코드로 방 조회
         Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
 
-        if (!roomRepository.existsByIdAndSessionId(room.getId(),room.getSessionId())) {
-            throw new RestApiException(CommonStatusCode.FAIL_ENTER_OPENVIDU);
-        }
-
         Session session = validator.getSession(room.getSessionId());
 
+        // session = null 이라면?
         //Openvidu session 삭제 (방 종료) 아마도..?
         session.close();
     }

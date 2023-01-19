@@ -5,6 +5,7 @@ import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.errorcode.StatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.util.SecurityUtil;
+import com.sparta.be_finally.config.validator.Validator;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.entity.Photo;
@@ -29,6 +30,7 @@ import javax.validation.constraints.Null;
 @RequiredArgsConstructor
 public class PhotoService {
     private final AwsS3Service awsS3Service;
+    private final Validator validator;
     private final PhotoRepository photoRepository;
     private final RoomRepository roomRepository;
     private OpenVidu openVidu;
@@ -52,9 +54,7 @@ public class PhotoService {
         User user = SecurityUtil.getCurrentUser();
 
         // 1. roomId 존재 여부 확인
-        Room room = roomRepository.findById(roomId).orElseThrow(
-                () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
-        );
+        Room room = validator.existsRoom(roomId);
 
         // 2. 입장한 방 - 선택한 프레임 번호
         int frameNum = room.getFrame();
@@ -67,9 +67,7 @@ public class PhotoService {
     @Transactional
     public StatusCode photoShootSave(Long roomId, PhotoRequestDto photoRequestDto) {
         // 1. roomId 존재 여부 확인
-        Room room = roomRepository.findById(roomId).orElseThrow(
-                () -> new RestApiException(CommonStatusCode.FAIL_ENTER2)
-        );
+        Room room = validator.existsRoom(roomId);
 
         // 2. Photo 테이블 - room_id 에서 촬영한 사진 조회
         //    사진을 한 컷 이상 찍은 상태 : isExist 에 정보 저장 됨

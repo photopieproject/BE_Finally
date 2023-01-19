@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Optional<Room> findByRoomCode(String roomCode);
     boolean existsByIdAndUserId(Long id, Long userId);
-    boolean existsByIdAndSessionId(Long id, String sessionId);
     boolean existsByRoomCode(String roomcode);
+    boolean existsByRoomId(Long roomId);
+    Optional<Room> findByRoomId(Long roomId);
+    boolean existsBySessionId(String sessionId);
 }
