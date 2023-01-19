@@ -30,9 +30,15 @@ public class Room {
     @Column(nullable = false)
     private String roomName;
 
-    private int roomCode;
+    private String roomCode;
     private int frame = 0;
     private int userCount =0;
+
+    // Openvidu 의 roomId 이라고 생각하면 됨
+    private String sessionId;
+
+    // room의 입장 코드라고 생각하면 됨 (토큰이 일치해야 룸 입장이 가능함)
+    private String token;
 
     @NotNull
     private LocalDateTime expireDate;
@@ -41,34 +47,28 @@ public class Room {
     @JoinColumn(name = "user_id")
     private User user;
 
-
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
-
-
-
-    public Room(RoomRequestDto roomRequestDto, User user) {
-        this.roomName = roomRequestDto.getRoomName();
-        this.roomCode = (int)(Math.random()*100000);
-        //UUID.randomUUID().toString();
-        this.user = user;
-        this.userCount ++;
-
-        this.expireDate =LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
-
-    }
 
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
         this.roomCode = roomCodeRequestDto.getRoomCode();
         this.user = user;
     }
 
-
+    public Room(RoomRequestDto roomRequestDto, User user, String sessionId, String token) {
+        this.roomName = roomRequestDto.getRoomName();
+        //this.roomCode = (int)(Math.random()*100000);
+        this.roomCode = UUID.randomUUID().toString().substring(0, 5);
+        this.user = user;
+        this.userCount ++;
+        this.sessionId = sessionId;
+        this.token = token;
+        this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
+    }
 
     public void enter() {
         this.userCount++;
     }
-
 
     public void updateFrame(FrameRequestDto frameRequestDto) {
         this.frame = frameRequestDto.getFrame();
