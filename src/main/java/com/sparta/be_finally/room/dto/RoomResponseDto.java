@@ -9,11 +9,13 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.DoubleStream;
 
 @Getter
 @Setter
 @Builder
 public class RoomResponseDto {
+
     private Long id;
     private String roomName;
     private String nickname;
@@ -24,5 +26,4 @@ public class RoomResponseDto {
     private String token;
 
     private LocalDateTime expireDate;
-
 }
