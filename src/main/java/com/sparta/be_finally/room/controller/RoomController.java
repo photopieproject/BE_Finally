@@ -42,7 +42,7 @@ public class RoomController {
     // 방 종료 (Openvidu session만 삭제, DB는 24시간 후에 삭제 됨)
     @DeleteMapping("/room/roomCode")
     public PrivateResponseBody roomExit(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
-        roomService.roomExit(roomCodeRequestDto);
+        //roomService.roomExit(roomCodeRequestDto);
         return new PrivateResponseBody(CommonStatusCode.DELETE_ROOM_OPENVIDU);
     }
 

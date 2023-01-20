@@ -66,6 +66,16 @@ public class Room {
         this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
     }
 
+    //추후 삭제
+    public Room(RoomRequestDto roomRequestDto, User user) {
+        this.roomName = roomRequestDto.getRoomName();
+        //this.roomCode = (int)(Math.random()*100000);
+        this.roomCode = UUID.randomUUID().toString().substring(0, 5);
+        this.user = user;
+        this.userCount ++;
+        this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
+    }
+
     public void enter() {
         this.userCount++;
     }
