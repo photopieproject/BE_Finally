@@ -1,6 +1,5 @@
 package com.sparta.be_finally.room.service;
 
-import com.sparta.be_finally.config.controller.OpenviduController;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
@@ -20,11 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
