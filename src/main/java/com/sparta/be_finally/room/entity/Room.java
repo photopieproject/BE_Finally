@@ -39,7 +39,7 @@ public class Room {
 
     // room의 입장 코드라고 생각하면 됨
     // 입장하는 user 마다 다른 token 값이 발급 되므로 추후 삭제!
-    private String token;
+    //private String token;
 
     @NotNull
     private LocalDateTime expireDate;
@@ -56,14 +56,13 @@ public class Room {
         this.user = user;
     }
 
-    public Room(RoomRequestDto roomRequestDto, User user, String sessionId, String token) {
+    public Room(RoomRequestDto roomRequestDto, User user, String sessionId) {
         this.roomName = roomRequestDto.getRoomName();
         //this.roomCode = (int)(Math.random()*100000);
         this.roomCode = UUID.randomUUID().toString().substring(0, 5);
         this.user = user;
         this.userCount ++;
         this.sessionId = sessionId;
-        this.token = token;
         this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
     }
 
