@@ -1,0 +1,24 @@
+# 프로젝트의 어떤 파일들을 EC2의 어떤 경로에 복사할지 설정 가능하고, 배포 프로세스 이후에 수행할 스크립트를 지정하여 자동으로 서버를 띄울 수도 있다.
+version: 0.0
+os: linux
+
+files: # 배포 파일에 대한 설정
+  - source:  / # 인스턴스에 복사할 디렉터리 경로
+    destination: /home/ubuntu/app # 인스턴스에서 파일이 복사되는 위치
+    overwrite: yes # 복사할 위치에 파일이 있는 경우 대체
+
+permissions: # files 섹션에서 복사한 파일에 대한 권한 설정
+  - object: / # 권한이 지정되는 파일 또는 디렉터리
+    pattern: "**" # 매칭되는 패턴에만 권한 부여
+    owner: ubuntu # object의 소유자
+    group: ubuntu # object의 그룹 이름
+
+hooks: # 배포 이후에 수행할 스크립트를 지정할 수 있다.
+  AfterInstall:
+    - location: scripts/stop.sh # hooks에서 실행할 스크립트 위치
+      timeout: 60 # 스크립트 실행에 허용되는 최대 시간이며, 넘으면 배포 실패로 간주됨
+      runas: ubuntu # 스크립트를 실행하는 사용자
+  ApplicationStart:
+    - location: scripts/start.sh
+      timeout: 60
+      runas: ubuntu

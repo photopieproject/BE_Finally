@@ -37,20 +37,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-          #    - name: make application.properties
-          #      run: |
-          #        echo ">> mkdir & touch"
-          #        mkdir -p ./src/main/resources
-          #        cd ./src/main/resources
-          #        touch ./application.properties
-          #        touch ./application-aws.properties
-          #        echo ">> copy application.properties"
-          #        echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./application.properties
-          #        echo "server.port=8080" >> ./application.properties
-          #        echo ">> copy application-aws.properties"
-          #        echo "${{ secrets.APPLICATION_AWS_PROPERTIES }}" >> ./application-aws.properties
-          #        echo "server.port=8080" >> ./application-aws.properties
-          #        shell: bash
+      - name: make application.properties
+        run: |
+          echo ">> mkdir & touch"
+          mkdir -p ./src/main/resources
+          cd ./src/main/resources
+          touch ./application.properties
+          touch ./application-security.properties
+          echo ">> copy application.properties"
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./application.properties
+          echo "server.port=8080" >> ./application.properties
+          echo ">> copy application-security.properties"
+          echo "${{ secrets.APPLICATION_SECURITY_PROPERTIES }}" >> ./application-security.properties
+          echo "server.port=8080" >> ./application-security.properties
 
       - name: Setup MySQL
         uses: samin/mysql-action@v1
@@ -61,6 +60,8 @@ jobs:
           mysql password: ${{ secrets.MYSQL_PASSWORD }} # github Secret
 
           #       shell: bash
+
+
 
       # Error Gradle Script ‘/Home/Runner/Work/*/Gradlew’ Is Not Executable 에러 해결가능?
       - name: Run chmod to make gradlew executable
@@ -121,3 +122,4 @@ jobs:
         run : chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
+        #
