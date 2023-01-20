@@ -32,6 +32,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomParticipantRepository roomParticipantRepository;
     private final Validator validator;
+    /*
     private OpenVidu openVidu;
 
     // OpenVidu 서버가 수신하는 URL
@@ -47,7 +48,7 @@ public class RoomService {
     @PostConstruct
     public OpenVidu openVidu() {
         return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }
+    }*/
 
     // 방 생성시 세션(Openvidu room) 초기화
     @Transactional
@@ -68,7 +69,7 @@ public class RoomService {
                     .data(serverData)
                     .build();
 
-            // 새로운 openvidu 세션 생성
+            /*// 새로운 openvidu 세션 생성
             Session session = openVidu.createSession();
 
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
@@ -79,6 +80,10 @@ public class RoomService {
 
             // 방장 token update (토큰이 있어야 방에 입장 가능)
             user.update(token);
+            */
+
+            // 방 생성 (openvidu 서버 연결 후 삭제하면 됨)
+            Room room = roomRepository.save(new Room(roomRequestDto,user));
 
             // 방장 방 입장 처리
             roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room,user));
@@ -88,8 +93,8 @@ public class RoomService {
                     .nickname(user.getNickname())
                     .roomCode(room.getRoomCode())
                     .userCount(room.getUserCount())
-                    .sessionId(session.getSessionId())
-                    .token(token)
+                    //.sessionId(session.getSessionId())
+                    //.token(token)
                     .expireDate(room.getExpireDate())
                     .build();
         }
@@ -109,7 +114,8 @@ public class RoomService {
 
         } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) == null && room.getUserCount() < 4){
             // 방 첫 입장
-            // Openvidu room 입장 전, Openvidu sessionId 존재 여부 확인
+
+            /*// Openvidu room 입장 전, Openvidu sessionId 존재 여부 확인
             Session session = getSession(room.getSessionId());
 
             // session = null 이라면?
@@ -125,6 +131,7 @@ public class RoomService {
 
             //토큰 생성 후 입장한 유저에 token update
             user.update(session.createConnection(connectionProperties).getToken());
+            */
 
             // 방 입장 인원수 +1 업데이트
             room.enter();
@@ -141,6 +148,8 @@ public class RoomService {
             throw new RestApiException(CommonStatusCode.FAIL_MAN_ENTER);
         }
     }
+
+    /*
     @Transactional
     public void roomExit(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         // 방 코드로 방 조회
@@ -169,7 +178,7 @@ public class RoomService {
             }
         }
         return session;
-    }
+    } */
 
     @Transactional
     public PrivateResponseBody choiceFrame (Long roomId, FrameRequestDto frameRequestDto){
