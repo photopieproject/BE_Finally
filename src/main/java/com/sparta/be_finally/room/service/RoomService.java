@@ -110,7 +110,7 @@ public class RoomService {
         } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) == null && room.getUserCount() < 4){
             // 방 첫 입장
             // Openvidu room 입장 전, Openvidu sessionId 존재 여부 확인
-            Session session = validator.getSession(room.getSessionId());
+            Session session = getSession(room.getSessionId());
 
             // session = null 이라면?
             if (!roomRepository.existsBySessionId(session.getSessionId())) {
@@ -146,11 +146,29 @@ public class RoomService {
         // 방 코드로 방 조회
         Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
 
-        Session session = validator.getSession(room.getSessionId());
+        Session session = getSession(room.getSessionId());
 
         // session = null 이라면?
         //Openvidu session 삭제 (방 종료) 아마도..?
         session.close();
+    }
+
+    private Session getSession(String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
+        //오픈비두에 활성화된 세션을 모두 가져와 리스트에 담는다.
+        //활성화된 session의 sessionId들을 room에서 get한 sessionId(입장할 채팅방의 sessionId)와 비교
+        //같을 경우 해당 session으로 새로운 토큰을 생성한다.
+        openVidu.fetch();
+
+        List<Session> activeSessionList = openVidu.getActiveSessions();
+
+        Session session = null;
+
+        for (Session getSession : activeSessionList) {
+            if (getSession.getSessionId().equals(sessionId)) {
+                session = getSession;
+            }
+        }
+        return session;
     }
 
     @Transactional
