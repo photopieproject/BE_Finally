@@ -28,26 +28,17 @@ public class SchedulerService {
     private final RoomRepository roomRepository;
     private final PhotoRepository photoRepository;
     private final AwsS3Service awsS3Service;
-
-
     @Scheduled(fixedRate = 1800000)
             //(fixedRate = 1800000)//
             //(cron = "0 0 0/1 * * *")// 1시간마다
             //(fixedRate = 30000) // 30 초
 
     public void runAfterTenSecondsRepeatTenSeconds() {
-
-
         List<Room> roomList = roomRepository.findAll();
         LocalDateTime time = LocalDateTime.now().withNano(0);
 
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {
-                //room.setDeleted(true);
-
-                //Openvidu에서 세션 삭제 (room delete)
-
-
                 Photo photos = photoRepository.findByRoomId(room.getId()).orElse(null);
 
                 if (photos != null) {

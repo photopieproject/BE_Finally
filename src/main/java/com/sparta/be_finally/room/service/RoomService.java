@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -109,16 +110,8 @@ public class RoomService {
         // 방 나간 후 재입장 처리
         if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) != null) {
 
-            //serverData 및 역할을 사용하여 connectionProperties 객체를 빌드합니다.
-            ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
-                    .type(ConnectionType.WEBRTC)
-                    .data(user.getNickname())
-                    .build();
-
-            String token = session.createConnection(connectionProperties).getToken();
-
-            // 토큰 생성 후 입장한 유저에 token update
-            userRepository.update(user.getId(),token);
+            // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
+            String token = validator.getToken(session, user);
 
             return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
                                             RoomResponseDto.builder()
@@ -135,16 +128,8 @@ public class RoomService {
         } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) == null && room.getUserCount() < 4){
             // 방 첫 입장
 
-            //serverData 및 역할을 사용하여 connectionProperties 객체를 빌드합니다.
-            ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
-                    .type(ConnectionType.WEBRTC)
-                    .data(user.getNickname())
-                    .build();
-
-            String token = session.createConnection(connectionProperties).getToken();
-
-            // 토큰 생성 후 입장한 유저에 token update
-            userRepository.update(user.getId(),token);
+            // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
+            String token = validator.getToken(session, user);
 
             // 방 입장 인원수 +1 업데이트
             room.enter();
@@ -177,9 +162,12 @@ public class RoomService {
 
         Session session = getSession(room.getSessionId());
 
-        // room - sessionId 값을 null 로 변경
-
         // room_participant - roomId로 등록된 데이터 삭제 처리
+        List<RoomParticipant> participants = roomParticipantRepository.findAllByRoomId(room.getId());
+
+        for (RoomParticipant participant : participants) {
+            roomParticipantRepository.delete(participant);
+        }
 
         // Openvidu session 삭제 (방 종료)
         session.close();
