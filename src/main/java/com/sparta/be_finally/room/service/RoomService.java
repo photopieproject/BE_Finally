@@ -81,9 +81,6 @@ public class RoomService {
             // 방장 token update (토큰이 있어야 방에 입장 가능)
             userRepository.update(user.getId(),token);
 
-            // 방 생성 (openvidu 서버 연결 후 삭제하면 됨)
-            //Room room = roomRepository.save(new Room(roomRequestDto,user));
-
             // 방장 방 입장 처리
             roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room,user));
 
