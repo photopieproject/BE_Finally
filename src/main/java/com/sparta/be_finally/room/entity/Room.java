@@ -37,10 +37,6 @@ public class Room {
     // Openvidu 의 roomId 이라고 생각하면 됨
     private String sessionId;
 
-    // room의 입장 코드라고 생각하면 됨
-    // 입장하는 user 마다 다른 token 값이 발급 되므로 추후 삭제!
-    //private String token;
-
     @NotNull
     private LocalDateTime expireDate;
 
