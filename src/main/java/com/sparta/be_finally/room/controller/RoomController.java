@@ -36,7 +36,7 @@ public class RoomController {
     // 방 입장
     @PostMapping("/room/roomCode")
     public PrivateResponseBody roomEnter(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
-        return new PrivateResponseBody(CommonStatusCode.ENTRANCE_ROOM,roomService.roomEnter(roomCodeRequestDto));
+        return roomService.roomEnter(roomCodeRequestDto);
     }
 
     // 방 종료 (Openvidu session만 삭제, DB는 24시간 후에 삭제 됨)

@@ -12,11 +12,11 @@ public enum CommonStatusCode implements StatusCode {
      CREATE_ROOM_NAME("방 이름을 입력해주세요",HttpStatus.BAD_REQUEST.value()),
      CREATE_ROOM("방 개설 완료", HttpStatus.OK.value()),
      ENTRANCE_ROOM("방 입장 완료", HttpStatus.OK.value()),
-     REGISTERED_USER("방에 등록된 사용자 입니다", HttpStatus.OK.value()),
+     REENTRANCE_ROOM("방 재입장 완료", HttpStatus.OK.value()),
      FAIL_ROOM("방 만들기 실패", HttpStatus.BAD_REQUEST.value()),
      FAIL_ENTER("방 입장 실패", HttpStatus.BAD_REQUEST.value()),
      FAIL_ENTER_OPENVIDU("Openvidu에 존재하지 않는 방 입니다.",HttpStatus.BAD_REQUEST.value()),
-     DELETE_ROOM_OPENVIDU("Openvidu Session delete",HttpStatus.BAD_REQUEST.value()),
+     DELETE_ROOM_OPENVIDU("Openvidu Session delete",HttpStatus.OK.value()),
 
      SHOOT_PHOTO_SUCCESS("사진 촬영 성공",HttpStatus.OK.value()),
      SHOOT_PHOTO_FAIL("사진을 촬영해주세요.",HttpStatus.BAD_REQUEST.value()),
