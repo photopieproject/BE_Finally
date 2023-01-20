@@ -63,7 +63,7 @@ public class Room {
         this.user = user;
         this.userCount ++;
         this.sessionId = sessionId;
-        this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
+        this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
 
     //추후 삭제
