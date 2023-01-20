@@ -33,7 +33,7 @@ public class RoomService {
     private final UserRepository userRepository;
     private final RoomParticipantRepository roomParticipantRepository;
     private final Validator validator;
-    /*private OpenVidu openVidu;
+    private OpenVidu openVidu;
 
     // OpenVidu 서버가 수신하는 URL
     @Value("${openvidu.url}")
@@ -48,7 +48,7 @@ public class RoomService {
     @PostConstruct
     public OpenVidu openVidu() {
         return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }*/
+    }
 
     // 방 생성시 세션(Openvidu room) 초기화
     @Transactional
@@ -60,7 +60,7 @@ public class RoomService {
             throw new RestApiException(CommonStatusCode.CREATE_ROOM_NAME);
 
         } else {
-            /*// 사용자가 연결할 때 다른 사용자에게 전달할 선택적 데이터, 유저의 닉네임을 전달할 것
+            // 사용자가 연결할 때 다른 사용자에게 전달할 선택적 데이터, 유저의 닉네임을 전달할 것
             String serverData = user.getNickname();
 
             // serverData 및 역할을 사용하여 connectionProperties 객체를 빌드합니다.
@@ -76,13 +76,13 @@ public class RoomService {
             String token = session.createConnection(connectionProperties).getToken();
 
             // 방 생성
-            Room room = roomRepository.save(new Room(roomRequestDto,user,session.getSessionId(),token));
+            Room room = roomRepository.save(new Room(roomRequestDto,user,session.getSessionId()));
 
             // 방장 token update (토큰이 있어야 방에 입장 가능)
-            userRepository.update(user.getId(),token);*/
+            userRepository.update(user.getId(),token);
 
             // 방 생성 (openvidu 서버 연결 후 삭제하면 됨)
-            Room room = roomRepository.save(new Room(roomRequestDto,user));
+            //Room room = roomRepository.save(new Room(roomRequestDto,user));
 
             // 방장 방 입장 처리
             roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room,user));
@@ -93,8 +93,8 @@ public class RoomService {
                     .nickname(user.getNickname())
                     .roomCode(room.getRoomCode())
                     .userCount(room.getUserCount())
-                    //.sessionId(session.getSessionId())
-                    //.token(token)
+                    .sessionId(session.getSessionId())
+                    .token(token)
                     .expireDate(room.getExpireDate())
                     .build();
         }
@@ -115,7 +115,7 @@ public class RoomService {
         } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) == null && room.getUserCount() < 4){
             // 방 첫 입장
 
-            /*// Openvidu room 입장 전, Openvidu sessionId 존재 여부 확인
+            // Openvidu room 입장 전, Openvidu sessionId 존재 여부 확인
             Session session = getSession(room.getSessionId());
 
             if (!roomRepository.existsBySessionId(session.getSessionId())) {
@@ -128,8 +128,10 @@ public class RoomService {
                     .data(user.getNickname())
                     .build();
 
+            String token = session.createConnection(connectionProperties).getToken();
+
             // 토큰 생성 후 입장한 유저에 token update
-            userRepository.update(user.getId(),session.createConnection(connectionProperties).getToken());*/
+            userRepository.update(user.getId(),token);
 
             // 방 입장 인원수 +1 업데이트
             room.enter();
@@ -143,8 +145,8 @@ public class RoomService {
                     .nickname(user.getNickname())
                     .roomCode(room.getRoomCode())
                     .userCount(room.getUserCount())
-                    //.sessionId(room.getSessionId())
-                    //.token(session.createConnection(connectionProperties).getToken())
+                    .sessionId(room.getSessionId())
+                    .token(token)
                     .expireDate(room.getExpireDate())
                     .build();
 
@@ -154,7 +156,6 @@ public class RoomService {
         }
     }
 
-    /*
     @Transactional
     public void roomExit(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         // 방 코드로 방 조회
@@ -192,7 +193,7 @@ public class RoomService {
         }
 
         return session;
-    }*/
+    }
 
     @Transactional
     public PrivateResponseBody choiceFrame (Long roomId, FrameRequestDto frameRequestDto){
