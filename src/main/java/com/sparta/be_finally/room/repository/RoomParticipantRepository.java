@@ -11,15 +11,15 @@ import java.util.List;
 @Repository
 public interface RoomParticipantRepository extends JpaRepository<RoomParticipant, Long> {
 
-
   //  RoomParticipant findRoomParticipantByUserId(String userId);
 
     RoomParticipant findRoomParticipantByUserIdAndRoom(String userId, Room room);
-
 
    // boolean findRoomParticipantByUserId(String userId);
 
     RoomParticipant findAllByUserId(String userId);
 
-   // List<RoomParticipant> findRoomParticipantByRoom(Room room);
+    List<RoomParticipant> findAllByRoomId(Long id);
+
+    // List<RoomParticipant> findRoomParticipantByRoom(Room room);
 }
