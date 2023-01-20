@@ -52,4 +52,12 @@ public class Validator {
             throw new RestApiException(CommonStatusCode.FAIL_ENTER2);
         }
     }
+
+    // room 테이블의 sessionId에 openvidu SessionId 이 저장 되어있는지 확인
+    @Transactional(readOnly = true)
+    public void existsRoomSessionId(String sessionId) {
+        if (!roomRepository.existsBySessionId(sessionId)) {
+            throw new RestApiException(CommonStatusCode.FAIL_ENTER_OPENVIDU);
+        }
+    }
 }

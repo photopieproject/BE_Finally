@@ -99,25 +99,46 @@ public class RoomService {
 
     // 방 입장하기
     @Transactional
-    public RoomResponseDto roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public PrivateResponseBody roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
 
         // 방 코드로 방 조회
         Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
 
+        // Openvidu room 입장 전, Openvidu sessionId 존재 여부 확인
+        Session session = getSession(room.getSessionId());
+
+        // room 테이블의 sessionId에 openvidu SessionId 이 저장 되어있는지 확인
+        validator.existsRoomSessionId(session.getSessionId());
+
         // 방 나간 후 재입장 처리
         if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) != null) {
-            throw new RestApiException(CommonStatusCode.REGISTERED_USER);
+
+            //serverData 및 역할을 사용하여 connectionProperties 객체를 빌드합니다.
+            ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
+                    .type(ConnectionType.WEBRTC)
+                    .data(user.getNickname())
+                    .build();
+
+            String token = session.createConnection(connectionProperties).getToken();
+
+            // 토큰 생성 후 입장한 유저에 token update
+            userRepository.update(user.getId(),token);
+
+            return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
+                                            RoomResponseDto.builder()
+                                                    .id(room.getId())
+                                                    .roomName(room.getRoomName())
+                                                    .nickname(user.getNickname())
+                                                    .roomCode(room.getRoomCode())
+                                                    .userCount(room.getUserCount())
+                                                    .sessionId(room.getSessionId())
+                                                    .token(token)
+                                                    .expireDate(room.getExpireDate())
+                                                    .build());
 
         } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) == null && room.getUserCount() < 4){
             // 방 첫 입장
-
-            // Openvidu room 입장 전, Openvidu sessionId 존재 여부 확인
-            Session session = getSession(room.getSessionId());
-
-            if (!roomRepository.existsBySessionId(session.getSessionId())) {
-                throw new RestApiException(CommonStatusCode.FAIL_ENTER_OPENVIDU);
-            }
 
             //serverData 및 역할을 사용하여 connectionProperties 객체를 빌드합니다.
             ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
@@ -136,16 +157,17 @@ public class RoomService {
             // 참여자 DB에 USER 저장
             roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room,user));
 
-            return RoomResponseDto.builder()
-                    .id(room.getId())
-                    .roomName(room.getRoomName())
-                    .nickname(user.getNickname())
-                    .roomCode(room.getRoomCode())
-                    .userCount(room.getUserCount())
-                    .sessionId(room.getSessionId())
-                    .token(token)
-                    .expireDate(room.getExpireDate())
-                    .build();
+            return new PrivateResponseBody(CommonStatusCode.ENTRANCE_ROOM,
+                    RoomResponseDto.builder()
+                            .id(room.getId())
+                            .roomName(room.getRoomName())
+                            .nickname(user.getNickname())
+                            .roomCode(room.getRoomCode())
+                            .userCount(room.getUserCount())
+                            .sessionId(room.getSessionId())
+                            .token(token)
+                            .expireDate(room.getExpireDate())
+                            .build());
 
         } else {
             // 인원수 초과시 에러 메세지 응답
@@ -160,7 +182,11 @@ public class RoomService {
 
         Session session = getSession(room.getSessionId());
 
-        //Openvidu session 삭제 (방 종료) 아마도..?
+        // room - sessionId 값을 null 로 변경
+
+        // room_participant - roomId로 등록된 데이터 삭제 처리
+
+        // Openvidu session 삭제 (방 종료)
         session.close();
     }
 
