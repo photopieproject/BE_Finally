@@ -240,7 +240,7 @@ public class RoomService {
             return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(10,amazonS3Client.getUrl(bucket,"frame/whitecloud.png")));
         }
         return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
-    }
+    }//
 }
 
 
