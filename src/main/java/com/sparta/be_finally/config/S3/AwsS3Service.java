@@ -24,6 +24,8 @@ public class AwsS3Service {
 
     private final AmazonS3 amazonS3;
 
+
+
     public String uploadFile(MultipartFile file) {
         String fileName = createFileName(file.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -55,6 +57,5 @@ public class AwsS3Service {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
         }
     }
-
 
 }

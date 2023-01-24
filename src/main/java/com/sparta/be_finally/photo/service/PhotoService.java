@@ -1,6 +1,8 @@
 package com.sparta.be_finally.photo.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.sparta.be_finally.config.S3.AwsS3Service;
+import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.errorcode.StatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
@@ -24,14 +26,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.Null;
+import java.net.URL;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class PhotoService {
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
     private final AwsS3Service awsS3Service;
     private final Validator validator;
     private final PhotoRepository photoRepository;
+
+    private final AmazonS3Client amazonS3Client;
     private final RoomRepository roomRepository;
     private OpenVidu openVidu;
 
@@ -50,18 +59,36 @@ public class PhotoService {
 
     //사진 촬영 준비
     @Transactional
-    public int photoShoot(Long roomId) {
+    public FrameResponseDto photoShoot(Long roomId) {
         User user = SecurityUtil.getCurrentUser();
-
         // 1. roomId 존재 여부 확인
         Room room = validator.existsRoom(roomId);
 
         // 2. 입장한 방 - 선택한 프레임 번호
         int frameNum = room.getFrame();
 
-
-
-        return frameNum;
+        if (frameNum == 1){
+            return new FrameResponseDto(1,amazonS3Client.getUrl(bucket,"frame/black.png"));
+        }else if (frameNum==2){
+            return new FrameResponseDto(2,amazonS3Client.getUrl(bucket,"frame/mint.png"));
+        }else if (frameNum ==3){
+            return new FrameResponseDto(3,amazonS3Client.getUrl(bucket,"frame/pink.png"));
+        } else if (frameNum == 4){
+            return new FrameResponseDto( 4,amazonS3Client.getUrl(bucket,"frame/purple.png"));
+        }else if (frameNum == 5){
+            return new FrameResponseDto(5,amazonS3Client.getUrl(bucket,"frame/white.png"));
+        }else if (frameNum == 6){
+            return new FrameResponseDto(6,amazonS3Client.getUrl(bucket,"frame/retro.png"));
+        } else if (frameNum == 7){
+            return new FrameResponseDto(7,amazonS3Client.getUrl(bucket,"frame/sunset.png"));
+        }else if (frameNum == 8){
+            return new FrameResponseDto(8, amazonS3Client.getUrl(bucket,"frame/blackcloud.jpg"));
+        }else if (frameNum == 9){
+            return new FrameResponseDto(9,amazonS3Client.getUrl(bucket,"frame/rainbow.jpg"));
+        }else if (frameNum ==10){
+            return new FrameResponseDto(10,amazonS3Client.getUrl(bucket,"frame/whitecloud.png"));
+        }
+        return null;
     }
 
     @Transactional

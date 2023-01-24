@@ -45,7 +45,7 @@ public class PhotoController {
     @ApiOperation(value = "사진 촬영")
     @GetMapping("/room/{roomId}")
     public FrameResponseDto photoShoot(@PathVariable Long roomId) {
-        return new FrameResponseDto(photoService.photoShoot(roomId));
+        return photoService.photoShoot(roomId);
     }
 
     @ApiOperation(value = "사진 촬영 후 이미지 저장")
