@@ -227,7 +227,7 @@ public class RoomService {
         } else if (frameRequestDto.getFrame() == 4){
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(4,amazonS3Client.getUrl(bucket,"frame/purple.png")));
         }else if (frameRequestDto.getFrame() == 5){
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(5,amazonS3Client.getUrl(bucket,"frame/white.png")));
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(5,amazonS3Client.getUrl(bucket,"frame/white.jpg")));
         }else if (frameRequestDto.getFrame() == 6){
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(6,amazonS3Client.getUrl(bucket,"frame/retro.png")));
         } else if (frameRequestDto.getFrame() == 7){

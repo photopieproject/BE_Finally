@@ -76,7 +76,7 @@ public class PhotoService {
         } else if (frameNum == 4){
             return new FrameResponseDto( 4,amazonS3Client.getUrl(bucket,"frame/purple.png"));
         }else if (frameNum == 5){
-            return new FrameResponseDto(5,amazonS3Client.getUrl(bucket,"frame/white.png"));
+            return new FrameResponseDto(5,amazonS3Client.getUrl(bucket,"frame/white.jpg"));
         }else if (frameNum == 6){
             return new FrameResponseDto(6,amazonS3Client.getUrl(bucket,"frame/retro.png"));
         } else if (frameNum == 7){

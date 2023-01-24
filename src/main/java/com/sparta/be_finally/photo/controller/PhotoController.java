@@ -42,7 +42,7 @@ public class PhotoController {
 
     }*/
 
-    @ApiOperation(value = "사진 촬영")
+    @ApiOperation(value = "선택한 프레임 조회")
     @GetMapping("/room/{roomId}")
     public FrameResponseDto photoShoot(@PathVariable Long roomId) {
         return photoService.photoShoot(roomId);

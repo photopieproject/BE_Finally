@@ -37,7 +37,6 @@ public class Room {
     private String roomCode;
     private int frame = 0;
 
-    private String frameUrl;
     private int userCount = 0;
 
     // Openvidu 의 roomId 이라고 생각하면 됨
