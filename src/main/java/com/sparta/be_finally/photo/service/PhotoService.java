@@ -58,9 +58,7 @@ public class PhotoService {
 
         // 2. 입장한 방 - 선택한 프레임 번호
         int frameNum = room.getFrame();
-
-
-
+        
         return frameNum;
     }
 
@@ -75,20 +73,20 @@ public class PhotoService {
         Photo photo = photoRepository.findByRoomId(roomId).orElse(null);
 
         // 3. photoRequestDto 에 있는 파일 S3에 업로드
-        if (photoRequestDto.getPhoto_one() != null && !photoRequestDto.getPhoto_one().getContentType().isEmpty()) {
-            String photo_one_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_one());
+        if (photoRequestDto.getPhoto_1() != null && !photoRequestDto.getPhoto_1().getContentType().isEmpty()) {
+            String photo_one_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_1());
             photoRepository.saveAndFlush(new Photo(room, photo_one_imgUrl));
 
-        } else if (photoRequestDto.getPhoto_two() != null && !photoRequestDto.getPhoto_two().getContentType().isEmpty()) {
-            String photo_two_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_two());
+        } else if (photoRequestDto.getPhoto_2() != null && !photoRequestDto.getPhoto_2().getContentType().isEmpty()) {
+            String photo_two_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_2());
             photo.photo_two_update(photo_two_imgUrl);
 
-        } else if (photoRequestDto.getPhoto_three() != null && !photoRequestDto.getPhoto_three().getContentType().isEmpty()) {
-            String photo_three_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_three());
+        } else if (photoRequestDto.getPhoto_3() != null && !photoRequestDto.getPhoto_3().getContentType().isEmpty()) {
+            String photo_three_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_3());
             photo.photo_three_update(photo_three_imgUrl);
 
-        } else if (photoRequestDto.getPhoto_four() != null && !photoRequestDto.getPhoto_four().getContentType().isEmpty()) {
-            String photo_four_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_four());
+        } else if (photoRequestDto.getPhoto_4() != null && !photoRequestDto.getPhoto_4().getContentType().isEmpty()) {
+            String photo_four_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_4());
             photo.photo_four_update(photo_four_imgUrl);
 
         } else {
