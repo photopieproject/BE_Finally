@@ -1,10 +1,12 @@
 package com.sparta.be_finally.room.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.util.SecurityUtil;
 import com.sparta.be_finally.config.validator.Validator;
+import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.room.dto.*;
 import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.room.entity.RoomParticipant;
@@ -25,9 +27,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RoomService {
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final RoomParticipantRepository roomParticipantRepository;
+    private final AmazonS3Client amazonS3Client;
     private final Validator validator;
     private OpenVidu openVidu;
 
@@ -212,8 +218,29 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElse(null);
         room.updateFrame(frameRequestDto);
 
-        return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME);
-    }
+        if (frameRequestDto.getFrame() == 1 ){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(1,amazonS3Client.getUrl(bucket,"frame/black.png")));
+        }else if (frameRequestDto.getFrame()==2){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(2,amazonS3Client.getUrl(bucket,"frame/mint.png")));
+        }else if (frameRequestDto.getFrame() ==3){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(3,amazonS3Client.getUrl(bucket,"frame/pink.png")));
+        } else if (frameRequestDto.getFrame() == 4){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(4,amazonS3Client.getUrl(bucket,"frame/purple.png")));
+        }else if (frameRequestDto.getFrame() == 5){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(5,amazonS3Client.getUrl(bucket,"frame/white.png")));
+        }else if (frameRequestDto.getFrame() == 6){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(6,amazonS3Client.getUrl(bucket,"frame/retro.png")));
+        } else if (frameRequestDto.getFrame() == 7){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(7,amazonS3Client.getUrl(bucket,"frame/sunset.png")));
+        }else if (frameRequestDto.getFrame() == 8){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(8, amazonS3Client.getUrl(bucket,"frame/blackcloud.jpg")));
+        }else if (frameRequestDto.getFrame() == 9){
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(9,amazonS3Client.getUrl(bucket,"frame/rainbow.jpg")));
+        }else if (frameRequestDto.getFrame() ==10){
+            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(10,amazonS3Client.getUrl(bucket,"frame/whitecloud.png")));
+        }
+        return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
+    }//
 }
 
 

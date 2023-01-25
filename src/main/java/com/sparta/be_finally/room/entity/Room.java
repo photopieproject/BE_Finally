@@ -1,6 +1,8 @@
 package com.sparta.be_finally.room.entity;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.user.entity.User;
@@ -10,6 +12,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -23,6 +26,7 @@ import java.util.UUID;
 @Entity
 public class Room {
     private static final int VALID_HOUR = 24;
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -32,7 +36,8 @@ public class Room {
 
     private String roomCode;
     private int frame = 0;
-    private int userCount =0;
+
+    private int userCount = 0;
 
     // Openvidu 의 roomId 이라고 생각하면 됨
     private String sessionId;
@@ -57,7 +62,7 @@ public class Room {
         //this.roomCode = (int)(Math.random()*100000);
         this.roomCode = UUID.randomUUID().toString().substring(0, 5);
         this.user = user;
-        this.userCount ++;
+        this.userCount++;
         this.sessionId = sessionId;
         this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
@@ -68,7 +73,7 @@ public class Room {
         //this.roomCode = (int)(Math.random()*100000);
         this.roomCode = UUID.randomUUID().toString().substring(0, 5);
         this.user = user;
-        this.userCount ++;
+        this.userCount++;
         this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
     }
 
