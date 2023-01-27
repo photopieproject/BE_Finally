@@ -35,6 +35,8 @@ public class Room {
     private String roomName;
 
     private String roomCode;
+
+
     private int frame = 0;
 
     private int userCount = 0;
@@ -74,8 +76,10 @@ public class Room {
         this.roomCode = UUID.randomUUID().toString().substring(0, 5);
         this.user = user;
         this.userCount++;
-        this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
+        this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
+
+
 
     public void enter() {
         this.userCount++;
