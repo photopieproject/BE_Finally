@@ -24,17 +24,20 @@ public class RoomParticipant {
     @Column(name="user_id", nullable = false)
     private String userId;
 
+    private String role;
 
     @Builder
-    public RoomParticipant(Long id, Room room, String userId){
+    public RoomParticipant(Long id, Room room, String userId, String role){
         this.id = id;
         this.room = room;
         this.userId = userId;
+        this.role = role;
     }
 
-    public static RoomParticipant createRoomParticipant(Room room, User user){
+    public static RoomParticipant createRoomParticipant(Room room, User user,String role){
         RoomParticipant roomParticipant = RoomParticipant.builder()
                 .room(room)
+                .role(role)
                 .userId(user.getUserId())
                 .build();
         return roomParticipant;

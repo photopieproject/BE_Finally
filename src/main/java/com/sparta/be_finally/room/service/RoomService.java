@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +57,8 @@ public class RoomService {
     @Transactional
     public RoomResponseDto createRoom(RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
+        String role = "leader";
+
 
         // 방 이름 미입력시 에러 메세지 응답
         if (roomRequestDto.getRoomName().isEmpty()) {
@@ -78,16 +81,18 @@ public class RoomService {
             String token = session.createConnection(connectionProperties).getToken();
 
             // 방 생성
+
             Room room = roomRepository.save(new Room(roomRequestDto,user,session.getSessionId()));
 
             // 방장 token update (토큰이 있어야 방에 입장 가능)
             userRepository.update(user.getId(),token);
 
             // 방장 방 입장 처리
-            roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room,user));
+            roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room,user,"leader"));
 
             return RoomResponseDto.builder()
                     .id(room.getId())
+                    .role("leader")
                     .roomName(roomRequestDto.getRoomName())
                     .nickname(user.getNickname())
                     .roomCode(room.getRoomCode())
@@ -103,6 +108,7 @@ public class RoomService {
     @Transactional
     public PrivateResponseBody roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
+        String role = "leader";
 
         // 방 코드로 방 조회
         Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
@@ -113,8 +119,9 @@ public class RoomService {
         // room 테이블의 sessionId에 openvidu SessionId 이 저장 되어있는지 확인
         validator.existsRoomSessionId(session.getSessionId());
 
-        // 방 나간 후 재입장 처리
-        if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) != null) {
+
+        // 방 나간 후 재입장 처리(방장이 재 입장인경우)
+        if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(),room,"leader") != null) {
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
             String token = validator.getToken(session, user);
@@ -122,6 +129,7 @@ public class RoomService {
             return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
                                             RoomResponseDto.builder()
                                                     .id(room.getId())
+                                                    .role("leader")
                                                     .roomName(room.getRoomName())
                                                     .nickname(user.getNickname())
                                                     .roomCode(room.getRoomCode())
@@ -131,21 +139,41 @@ public class RoomService {
                                                     .expireDate(room.getExpireDate())
                                                     .build());
 
-        } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) == null && room.getUserCount() < 4){
+        } //user가 재입장인 경우
+        else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(),room,"user") != null){
+            String token = validator.getToken(session,user);
+
+            return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
+                                            RoomResponseDto.builder()
+                                                    .id(room.getId())
+                                                    .role("user")
+                                                    .roomName(room.getRoomName())
+                                                    .nickname(user.getNickname())
+                                                    .roomCode(room.getRoomCode())
+                                                    .userCount(room.getUserCount())
+                                                    .sessionId(room.getSessionId())
+                                                    .token(token)
+                                                    .expireDate(room.getExpireDate())
+                                                    .build());
+
+        }
+            else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(),room) == null && room.getUserCount() < 4){
             // 방 첫 입장
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
             String token = validator.getToken(session, user);
 
+
             // 방 입장 인원수 +1 업데이트
             room.enter();
 
             // 참여자 DB에 USER 저장
-            roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room,user));
+            roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room,user,"user"));
 
             return new PrivateResponseBody(CommonStatusCode.ENTRANCE_ROOM,
                     RoomResponseDto.builder()
                             .id(room.getId())
+                            .role("user")
                             .roomName(room.getRoomName())
                             .nickname(user.getNickname())
                             .roomCode(room.getRoomCode())
