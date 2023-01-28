@@ -1,6 +1,7 @@
 package com.sparta.be_finally.photo.controller;
 
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
+import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.service.PhotoService;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -50,6 +52,15 @@ public class PhotoController {
     @ApiOperation(value = "사진 촬영 후 이미지 저장")
     @PostMapping("/room/{roomId}/shoot")
     public PrivateResponseBody photoShootSave(@PathVariable Long roomId, @ModelAttribute PhotoRequestDto photoRequestDto) {
-        return new PrivateResponseBody(photoService.photoShootSave(roomId, photoRequestDto));
+        return photoService.photoShootSave(roomId, photoRequestDto);
+    }
+
+    @ApiOperation(value = "사진 전송(조회)" )
+    @GetMapping("/room/{roomId}/shoot")
+    public PrivateResponseBody photoGet(@PathVariable Long roomId){
+        return photoService.photoGet(roomId);
     }
 }
+
+
+

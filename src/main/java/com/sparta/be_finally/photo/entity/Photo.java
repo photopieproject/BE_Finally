@@ -1,5 +1,6 @@
 package com.sparta.be_finally.photo.entity;
 
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.sparta.be_finally.room.entity.Room;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,11 @@ public class Photo {
     public Photo(Room room, String photo_one_imgUrl) {
         this.room = room;
         this.photo_one = photo_one_imgUrl;
+    }
+
+    public Photo(Room room, PutObjectResult photo_one_imgUrl) {
+        this.room = room;
+        this.photo_one = String.valueOf(photo_one_imgUrl);
     }
 
     public void photo_two_update(String photo_two_imgUrl) {
