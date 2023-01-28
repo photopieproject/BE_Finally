@@ -45,8 +45,8 @@ public class PhotoController {
 
     @ApiOperation(value = "선택한 프레임 조회")
     @GetMapping("/room/{roomId}")
-    public FrameResponseDto photoShoot(@PathVariable Long roomId) {
-        return photoService.photoShoot(roomId);
+    public PrivateResponseBody photoShoot(@PathVariable Long roomId) {
+        return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME2,photoService.photoShoot(roomId));
     }
 
     @ApiOperation(value = "사진 촬영 후 이미지 저장")
