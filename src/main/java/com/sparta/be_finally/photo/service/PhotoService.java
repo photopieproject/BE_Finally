@@ -91,6 +91,7 @@ public class PhotoService {
         return null;
     }
 
+    // 찍은 사진 S3 저장
     @Transactional
     public StatusCode photoShootSave(Long roomId, PhotoRequestDto photoRequestDto) {
         // 1. roomId 존재 여부 확인

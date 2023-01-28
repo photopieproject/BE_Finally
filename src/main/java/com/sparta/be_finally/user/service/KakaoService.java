@@ -66,7 +66,7 @@ public class KakaoService {
      }
 
      // 카톡 친구 목록 불러오기
-     public KakaoFriendListResponseDto requestFriendList(String accessToken) {
+     public KakaoFriendListResponseDto requestFriendList(String accessToken) throws JsonProcessingException {
           KakaoFriendListResponseDto kakaoFriendListResponseDto = new KakaoFriendListResponseDto();
 
           KakaoFriendResponseDto kakaoFriendResponseDto = new KakaoFriendResponseDto();
@@ -86,7 +86,20 @@ public class KakaoService {
                   String.class
           );
 
-          //kakaoFriendResponseDto.setKakaoFriend(response);
+          // HTTP 응답 (JSON) -> 액세스 토큰 파싱
+          String responseBody = response.getBody();
+          ObjectMapper objectMapper = new ObjectMapper();
+          JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+          Long id = Long.valueOf(jsonNode.get("id").asText());
+          String uuid = jsonNode.get("uuid").asText();
+          Boolean favorite = Boolean.valueOf(jsonNode.get("favorite").asText());
+          String profile_nickname = jsonNode.get("profile_nickname").asText();
+          String profile_thumbnail_image = jsonNode.get("profile_thumbnail_image").asText();
+
+          kakaoFriendResponseDto.setKakaoFriend(id, uuid, favorite, profile_nickname, profile_thumbnail_image);
+
+          kakaoFriendListResponseDto.addPostList(kakaoFriendResponseDto);
 
           return kakaoFriendListResponseDto;
      }
@@ -165,8 +178,8 @@ public class KakaoService {
           MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
           body.add("grant_type", "authorization_code");
           body.add("client_id", KAKAO_REST_API_KEY);
-          body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/api/user/kakao/callback");
-          //body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
+          //body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/api/user/kakao/callback");
+          body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
           //body.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
           body.add("code", code);
 
