@@ -52,6 +52,4 @@ public class RoomController {
         return roomService.choiceFrame(roomId, frameRequestDto);
     }
 
-
-
 }
