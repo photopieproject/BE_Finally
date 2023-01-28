@@ -130,7 +130,7 @@ public class PhotoService {
             imgUrlList.add(imgUrl);
         }
         //return imgUrlList;
-        return new PrivateResponseBody(CommonStatusCode.ENTRANCE_ROOM, imgUrlList,new FrameResponseDto(room.getFrame(),room.getFrameUrl()),room.getId());
+        return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET, imgUrlList,new FrameResponseDto(room.getFrame(),room.getFrameUrl()),room.getId());
     }
 }
 

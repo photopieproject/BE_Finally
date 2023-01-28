@@ -21,7 +21,7 @@ public enum CommonStatusCode implements StatusCode {
      SHOOT_PHOTO_SUCCESS("사진 촬영 성공",HttpStatus.OK.value()),
      SHOOT_PHOTO_FAIL("사진을 촬영해주세요.",HttpStatus.BAD_REQUEST.value()),
 
-     SHOOT_PHOTO_GET("사진을 조회 성공",HttpStatus.OK.value()),
+     SHOOT_PHOTO_GET("사진을 저장 하였습니다",HttpStatus.OK.value()),
 
      FAIL_MAN_ENTER("인원이 초과되어 입장이 불가합니다",HttpStatus.BAD_REQUEST.value()),
 
