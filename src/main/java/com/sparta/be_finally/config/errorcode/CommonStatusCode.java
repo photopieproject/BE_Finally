@@ -21,6 +21,8 @@ public enum CommonStatusCode implements StatusCode {
      SHOOT_PHOTO_SUCCESS("사진 촬영 성공",HttpStatus.OK.value()),
      SHOOT_PHOTO_FAIL("사진을 촬영해주세요.",HttpStatus.BAD_REQUEST.value()),
 
+     SHOOT_PHOTO_GET("사진을 저장 하였습니다",HttpStatus.OK.value()),
+
      FAIL_MAN_ENTER("인원이 초과되어 입장이 불가합니다",HttpStatus.BAD_REQUEST.value()),
 
      FAIL_NUMBER("잘못된 방코드 입니다.",HttpStatus.BAD_REQUEST.value()),
@@ -28,6 +30,7 @@ public enum CommonStatusCode implements StatusCode {
      SUCCESS_ROOM_EXIT("방 나가기 완료", HttpStatus.OK.value()),
      SUCCESS_ROOM_TOTAL_EXIT("방 나가기 완료", HttpStatus.OK.value()),
      CHOICE_FRAME("프레임 선택 완료", HttpStatus.OK.value()),
+     CHOICE_FRAME2("선택한 프레임이 맞는지 확인하세요", HttpStatus.OK.value()),
      FAIL_CHOICE_FRAME("방장만 프레임을 선택할 수 있습니다.", HttpStatus.BAD_REQUEST.value()),
      FAIL_CHOICE_FRAME2("올바른 프레임을 선택해주세요",HttpStatus.BAD_REQUEST.value()),
      INVALID_PARAMETER("Invalid parameter included",HttpStatus.BAD_REQUEST.value()),

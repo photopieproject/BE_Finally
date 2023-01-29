@@ -26,4 +26,7 @@ public class RoomResponseDto {
     private String token;
 
     private LocalDateTime expireDate;
+
+    private String role;
+
 }

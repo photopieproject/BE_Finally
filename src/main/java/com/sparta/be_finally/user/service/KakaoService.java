@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.be_finally.config.jwt.JwtUtil;
 import com.sparta.be_finally.config.security.UserDetailsImpl;
+import com.sparta.be_finally.user.dto.KakaoFriendListResponseDto;
+import com.sparta.be_finally.user.dto.KakaoFriendResponseDto;
 import com.sparta.be_finally.user.dto.KakaoUserInfoDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.entity.User;
@@ -33,6 +35,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -46,7 +50,8 @@ public class KakaoService {
      @Value ("${kakao.api.key}")
      private String KAKAO_REST_API_KEY;
 
-     /*public String kakaoLoginCheck(String code, HttpServletResponse response) throws IOException {
+     // 카톡 친구 목록 불러오기 전 카톡 로그인 처리
+     public String kakaoLoginCheck(String code, HttpServletResponse response) throws IOException {
           // 1. "인가 코드"로 "액세스 토큰" 요청
           String accessToken = getToken(code);
 
@@ -59,7 +64,51 @@ public class KakaoService {
 
           return createToken;
      }
-     public String requestFriendList(String accessToken, int friendNum) throws IOException {
+
+     // 카톡 친구 목록 불러오기
+     public KakaoFriendListResponseDto requestFriendList(String accessToken) throws JsonProcessingException {
+          KakaoFriendListResponseDto kakaoFriendListResponseDto = new KakaoFriendListResponseDto();
+
+          KakaoFriendResponseDto kakaoFriendResponseDto = new KakaoFriendResponseDto();
+
+          // HTTP Header 생성
+          HttpHeaders headers = new HttpHeaders();
+          headers.add("Authorization", "Bearer " + accessToken);
+          headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+          // HTTP 요청 보내기
+          HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(headers);
+          RestTemplate rt = new RestTemplate();
+          ResponseEntity<String> response = rt.exchange(
+                  "https://kapi.kakao.com/v1/api/talk/friends",
+                  HttpMethod.POST,
+                  kakaoUserInfoRequest,
+                  String.class
+          );
+
+          // HTTP 응답 (JSON) -> 액세스 토큰 파싱
+          String responseBody = response.getBody();
+          ObjectMapper objectMapper = new ObjectMapper();
+          JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+          Long id = Long.valueOf(jsonNode.get("id").asText());
+          String uuid = jsonNode.get("uuid").asText();
+          Boolean favorite = Boolean.valueOf(jsonNode.get("favorite").asText());
+          String profile_nickname = jsonNode.get("profile_nickname").asText();
+          String profile_thumbnail_image = jsonNode.get("profile_thumbnail_image").asText();
+
+          kakaoFriendResponseDto.setKakaoFriend(id, uuid, favorite, profile_nickname, profile_thumbnail_image);
+
+          kakaoFriendListResponseDto.addPostList(kakaoFriendResponseDto);
+
+          return kakaoFriendListResponseDto;
+     }
+
+
+     // 1. "인가 코드"로 "액세스 토큰" 요청
+     // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+     // 3. 필요시에 회원가입
+     /*public String requestFriendList(String accessToken, int friendNum) throws IOException {
           String returnMessageLog = "친구목록 불러오기 성공";
           String inPutAccessToken = accessToken;
           URL url = null;
@@ -120,7 +169,6 @@ public class KakaoService {
           return new LoginResponseDto(kakaoUser.getNickname(), kakaoUser.getUserId(), createToken);
      }
 
-     // 1. "인가 코드"로 "액세스 토큰" 요청
      private String getToken(String code) throws JsonProcessingException {
           // HTTP Header 생성
           HttpHeaders headers = new HttpHeaders();
@@ -131,7 +179,7 @@ public class KakaoService {
           body.add("grant_type", "authorization_code");
           body.add("client_id", KAKAO_REST_API_KEY);
           body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/api/user/kakao/callback");
-          //body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
+          //body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
           //body.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
           body.add("code", code);
 
@@ -153,7 +201,6 @@ public class KakaoService {
           return jsonNode.get("access_token").asText();
      }
 
-     // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
      private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
           // HTTP Header 생성
           HttpHeaders headers = new HttpHeaders();
@@ -183,7 +230,6 @@ public class KakaoService {
           return new KakaoUserInfoDto(id, nickname);
      }
 
-     // 3. 필요시에 회원가입
      @Transactional
      User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
           // DB 에 중복된 Kakao Id 가 있는지 확인
@@ -208,12 +254,9 @@ public class KakaoService {
           return kakaoUser;
      }
 
-     // 강제 로그인 및 토큰생성
      private void forceLogin(User kakaoUser) {
           UserDetails userDetails = new UserDetailsImpl(kakaoUser);
           Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
           SecurityContextHolder.getContext().setAuthentication(authentication);
      }
-
-
 }
