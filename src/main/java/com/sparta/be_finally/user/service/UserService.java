@@ -4,12 +4,14 @@ import com.sparta.be_finally.config.errorcode.StatusCode;
 import com.sparta.be_finally.config.errorcode.UserStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.jwt.JwtUtil;
+//import com.sparta.be_finally.config.model.AES256;
 import com.sparta.be_finally.user.dto.LoginRequestDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +23,25 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+//    private final AES256 aes256;
+    String newPhoneNumber = null;
 
-    //회원가입
+    // 회원가입
     public void signUp(SignupRequestDto requestDto) {
-        //userId 중복확인
+        // userId 중복확인
         if (userRepository.existsByUserId(requestDto.getUserId())) {
             throw new RestApiException(UserStatusCode.OVERLAPPED_USERID);
         }
         // 패스워드 암호화
         String password = passwordEncoder.encode(requestDto.getPassword());
 
+        // 핸드폰번호 암호화
+//        try {
+//            newPhoneNumber = aes256.encrypt(requestDto.getPhoneNumber());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(newPhoneNumber);
         // 회원가입
         userRepository.save(new User(requestDto, password));
     }

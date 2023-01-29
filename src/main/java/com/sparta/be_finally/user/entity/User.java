@@ -32,10 +32,14 @@ public class User{
     @Column
     private String token;
 
+    @Column(nullable = false)
+    private String phoneNumber;
+
     public User(SignupRequestDto requestDto, String password) {
         this.userId = requestDto.getUserId();
         this.password = password;
         this.nickname = requestDto.getNickname();
+        this.phoneNumber = requestDto.getPhoneNumber();
     }
 
     public User(String userId, String nickname, Long kakaoId, String password) {
