@@ -4,7 +4,7 @@ import com.sparta.be_finally.config.errorcode.StatusCode;
 import com.sparta.be_finally.config.errorcode.UserStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.jwt.JwtUtil;
-//import com.sparta.be_finally.config.model.AES256;
+import com.sparta.be_finally.config.model.AES256;
 import com.sparta.be_finally.user.dto.LoginRequestDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
@@ -23,7 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-//    private final AES256 aes256;
+    private final AES256 aes256;
     String newPhoneNumber = null;
 
     // 회원가입
@@ -36,14 +36,15 @@ public class UserService {
         String password = passwordEncoder.encode(requestDto.getPassword());
 
         // 핸드폰번호 암호화
-//        try {
-//            newPhoneNumber = aes256.encrypt(requestDto.getPhoneNumber());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(newPhoneNumber);
+        try {
+            newPhoneNumber = aes256.encrypt(requestDto.getPhoneNumber());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(newPhoneNumber);
+
         // 회원가입
-        userRepository.save(new User(requestDto, password));
+        userRepository.save(new User(requestDto, password, newPhoneNumber));
     }
 
     //userId 중복확인
