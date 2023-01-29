@@ -16,6 +16,8 @@ public enum UserStatusCode implements StatusCode {
      ONLY_FOR_ADMIN("관리자만 가능합니다.", HttpStatus.BAD_REQUEST.value()),
      WRONG_USERID_PATTERN("아이디는 최소 5자 이상, 10자 이하이며 알파벳 소문자(a~z), 숫자(0~9)로 구성되어야 합니다.", HttpStatus.BAD_REQUEST.value()),
      WRONG_PASSWORD_PATTERN("비밀번호는 최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 합니다.", HttpStatus.BAD_REQUEST.value()),
+
+     FAILE_USERID("본인 인증 실패",HttpStatus.BAD_REQUEST.value()),
      WRONG_LOGININFO("아이디 또는 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST.value()),
 
      WRONG_ADMIN_TOKEN("관리자 암호가 틀려 등록이 불가능합니다.", HttpStatus.BAD_REQUEST.value()),

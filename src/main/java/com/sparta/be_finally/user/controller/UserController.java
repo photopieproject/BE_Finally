@@ -20,6 +20,7 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Random;
@@ -85,6 +86,12 @@ public class UserController {
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
         return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
+    }
+
+    @ApiOperation(value = "아이디 찾기")
+    @PostMapping("/find-id")
+    public PrivateResponseBody findUserNum(@RequestParam String phoneNumber){
+        return userService.findUserNum(phoneNumber);
     }
 
 

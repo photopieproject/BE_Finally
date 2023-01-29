@@ -28,7 +28,7 @@ out/
 
 # 민감정보 숨기기
 application-security.properties
-application.yml
+appspec.yml
 
 ### NetBeans ###
 /nbproject/private/
