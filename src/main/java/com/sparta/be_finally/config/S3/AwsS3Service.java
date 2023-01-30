@@ -46,7 +46,7 @@ public class AwsS3Service {
             amazonS3Client.putObject(new PutObjectRequest(bucket, "photo/"+dirName + "/" + fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
-            return amazonS3Client.getUrl(bucket, fileName).toString();
+            return amazonS3Client.getUrl(bucket, "photo/"+dirName + "/" + fileName).toString();
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
         }

@@ -24,24 +24,7 @@ import java.util.List;
 @RequestMapping("/api/photo")
 @RequiredArgsConstructor
 public class PhotoController {
-    private final KakaoService kakaoService;
     private final PhotoService photoService;
-
-    @ApiOperation(value = "카카오톡 메시지 보내기")
-    @GetMapping("/kakaoMessage")
-    public void kakaoMessage(@RequestParam String code, HttpServletResponse response) throws IOException {
-
-        // 로그인 한 사용자의 카톡 로그인 유무 확인
-
-        // code: 카카오 서버로부터 받은 인가 코드
-        String accessToken = kakaoService.kakaoLoginCheck(code, response);
-
-        // 친구 목록 조회
-        KakaoFriendListResponseDto getFriend = kakaoService.requestFriendList(accessToken);
-
-
-
-    }
 
     @ApiOperation(value = "선택한 프레임 조회")
     @GetMapping("/room/{roomId}")
