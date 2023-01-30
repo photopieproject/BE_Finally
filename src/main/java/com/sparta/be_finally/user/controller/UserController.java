@@ -32,7 +32,7 @@ import java.util.Random;
 public class UserController {
     private final UserService userService;
     private final KakaoService kakaoService;
-    private DefaultMessageService messageService;
+    private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");;
     private final GoogleService googleService; 
 
     @ApiOperation(value = "회원가입 id 중복체크")
@@ -90,27 +90,28 @@ public class UserController {
     @ApiOperation(value = "비밀번호 찾기 인증")
     @PostMapping("/find-pw")
     public PrivateResponseBody findPassword(@RequestParam String phoneNumber, @RequestBody FindPasswordRequestDto findPasswordDto) {
-        userService.findpw(phoneNumber, findPasswordDto);
-        this.messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
+        if (userService.findPassword(phoneNumber, findPasswordDto.getUserId())){
+            this.messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
 
-        Message message = new Message();
-        message.setFrom("01023699764");
-        message.setTo(phoneNumber);
+            Message message = new Message();
+            message.setFrom("01023699764");
+            message.setTo(phoneNumber);
 
-        Random random = new Random();
-        String numStr = "";
-        for(int i = 0; i < 6; i++){
-            String ran = Integer.toString(random.nextInt(10));
-            numStr += ran;
+            Random random = new Random();
+            String numStr = "";
+            for(int i = 0; i < 6; i++){
+                String ran = Integer.toString(random.nextInt(10));
+                numStr += ran;
+            }
+
+            message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+            this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+            return new PrivateResponseBody(UserStatusCode.SUCCESS_IDENTIFICATION, numStr);
+        } else {
+            return new PrivateResponseBody(UserStatusCode.FAIL_IDENTIFICATION);
         }
-
-        message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
-
-        this.messageService.sendOne(new SingleMessageSendingRequest(message));
-
-
-
-        return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
     }
 
 //    체크 코드

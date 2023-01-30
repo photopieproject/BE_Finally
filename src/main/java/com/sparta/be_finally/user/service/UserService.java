@@ -1,7 +1,5 @@
 package com.sparta.be_finally.user.service;
 
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.google.common.collect.Lists;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.StatusCode;
 import com.sparta.be_finally.config.errorcode.UserStatusCode;
@@ -15,13 +13,10 @@ import com.sparta.be_finally.user.dto.SignupRequestDto;
 import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -34,7 +29,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AES256 aes256;
     String newPhoneNumber = null;
-
 
     // 회원가입
     public void signUp(SignupRequestDto requestDto) {
@@ -85,9 +79,19 @@ public class UserService {
         return new LoginResponseDto.commonLogin(user);
     }
 
-    public boolean findpw(String phoneNumber, FindPasswordRequestDto findPasswordRequestDto) {
+    public boolean findPassword(String phoneNumber, String userId) {
+        // 핸드폰번호 암호화
+        try {
+            newPhoneNumber = aes256.encrypt(phoneNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-
+        if (userRepository.existsByUserIdAndPhoneNumber(userId, newPhoneNumber)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public PrivateResponseBody findUserNum(String phoneNumber) {

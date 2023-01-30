@@ -21,9 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean findByPhoneNumber(String phoneNumber);
 
-
-
-
     @Modifying
     @Query (
             nativeQuery = true,
@@ -33,5 +30,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     )
     void update(@Param("id") Long id, @Param("token") String token);
 
-    void 
+    Optional<User> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
+    boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
 }
