@@ -17,10 +17,18 @@ import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +44,8 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AES256 aes256;
+
+    private DefaultMessageService messageService;
     String newPhoneNumber = null;
 
 
@@ -89,8 +99,15 @@ public class UserService {
     }
 
 
-    //아이디 찾기
+
+    //아이디 찾기(인증번호)
     public PrivateResponseBody findUserNum(String phoneNumber) {
+        this.messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
+
+
+        Message message = new Message();
+        message.setFrom("01023699764");
+        message.setTo(phoneNumber);
 
         String storeId = "";
 
@@ -107,12 +124,31 @@ public class UserService {
         for (User u : userList) {
             if (u.getPhoneNumber().equals(newPhoneNumber)) {
                 storeId = u.getUserId();
-                return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
+
+                Random random = new Random();
+                String numStr = "";
+                for(int i = 0; i < 6; i++){
+                    String ran = Integer.toString(random.nextInt(10));
+                    numStr += ran;
+                }
+                message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+                SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+                return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr, storeId);
+
             }
         }
-            return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
-        }
+        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+    }
+
 }
+
+
+
+
+
+
 
 
 
