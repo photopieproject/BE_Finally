@@ -88,11 +88,13 @@ public class UserService {
         return new LoginResponseDto.commonLogin(user);
     }
 
+
+    //아이디 찾기
     public PrivateResponseBody findUserNum(String phoneNumber) {
 
         String storeId = "";
 
-        // 핸드폰번호 암호화
+        // 핸드폰번호 다시 암호화하여 암호환 번호가 있는지 확인
         try {
             newPhoneNumber = aes256.encrypt(phoneNumber);
         } catch (Exception e) {
@@ -115,32 +117,5 @@ public class UserService {
 
 
 
-//        for (User u : userList) {
-//            if (u.getPhoneNumber().equals(newPhoneNumber)) {
-//                storeId = u.getUserId();
-//            }
-//        } return new PrivateResponseBody(UserStatusCode.INVALID_TOKEN, storeId);
-//    }
-
-
-
-//            if (!u.getPhoneNumber().equals(newPhoneNumber)) {
-//                return new PrivateResponseBody(UserStatusCode.FAILE_USERID,userLists);
-//            }
-//            return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, userLists);
-//
-
-
-//    List<User> userList = userRepository.findAll(); // 리스트를 받아옴
-//
-//        for (User u : userList) {
-//                if (u.getPhoneNumber().equals(newPhoneNumber)) {
-//                storeId = u.getUserId();
-//                }
-//                }
-//                return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
-//                }
-//                }
-//
 
 
