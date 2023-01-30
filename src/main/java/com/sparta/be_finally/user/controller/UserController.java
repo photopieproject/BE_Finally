@@ -3,6 +3,7 @@ package com.sparta.be_finally.user.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.UserStatusCode;
+import com.sparta.be_finally.user.dto.FindPasswordRequestDto;
 import com.sparta.be_finally.user.dto.LoginRequestDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import com.sparta.be_finally.user.service.GoogleService;
@@ -19,7 +20,6 @@ import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Random;
@@ -86,6 +86,40 @@ public class UserController {
 
         return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
     }
+
+    @ApiOperation(value = "비밀번호 찾기 인증")
+    @PostMapping("/find-pw")
+    public PrivateResponseBody findPassword(@RequestParam String phoneNumber, @RequestBody FindPasswordRequestDto findPasswordDto) {
+        userService.findpw(phoneNumber, findPasswordDto);
+        this.messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
+
+        Message message = new Message();
+        message.setFrom("01023699764");
+        message.setTo(phoneNumber);
+
+        Random random = new Random();
+        String numStr = "";
+        for(int i = 0; i < 6; i++){
+            String ran = Integer.toString(random.nextInt(10));
+            numStr += ran;
+        }
+
+        message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+        this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+
+
+        return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
+    }
+
+//    체크 코드
+//    public Boolean checkcode(String checkcode) {
+//        Member member = dao.findByCheckcode(checkcode);
+//        if(member == null)
+//            return false;
+//        return dao.update(Member.builder().username(member.getUsername()).checkcode("0").enabled(true).build())==1;
+//    }
 
 
 }

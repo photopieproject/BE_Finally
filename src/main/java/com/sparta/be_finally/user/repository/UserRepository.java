@@ -25,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "WHERE id = :id"
     )
     void update(@Param("id") Long id, @Param("token") String token);
+
+    void 
 }

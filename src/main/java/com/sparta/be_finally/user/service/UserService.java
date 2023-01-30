@@ -5,6 +5,7 @@ import com.sparta.be_finally.config.errorcode.UserStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.jwt.JwtUtil;
 import com.sparta.be_finally.config.model.AES256;
+import com.sparta.be_finally.user.dto.FindPasswordRequestDto;
 import com.sparta.be_finally.user.dto.LoginRequestDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
@@ -73,6 +74,11 @@ public class UserService {
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUserId()));
 
         return new LoginResponseDto.commonLogin(user);
+    }
+
+    public boolean findpw(String phoneNumber, FindPasswordRequestDto findPasswordRequestDto) {
+
+
     }
 
 

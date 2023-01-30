@@ -17,7 +17,7 @@ public class AES256 {
 //    @Value("${aes256.key}")
 //    private String key;
 
-    private final String key = "12345678910111213";
+    private final String key = "yV9XDKvlzXOPR/S7BoVy684oAJiSIBOleLVQZZFu2Gw=";
     private final String iv = key.substring(0, 16); // 16byte
 
     public String encrypt(String text) throws Exception {
