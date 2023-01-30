@@ -68,7 +68,7 @@ public class GoogleService {
         User googleUser = registerGoogleUserIfNeeded(googleUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken = jwtUtil.createToken(googleUser.getNickname());
+        String createToken = jwtUtil.createToken(googleUser.getUserId());
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 
         // 강제로그인

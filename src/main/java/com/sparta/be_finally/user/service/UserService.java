@@ -1,5 +1,8 @@
 package com.sparta.be_finally.user.service;
 
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.google.common.collect.Lists;
+import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.StatusCode;
 import com.sparta.be_finally.config.errorcode.UserStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
@@ -16,7 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.util.*;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +34,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AES256 aes256;
     String newPhoneNumber = null;
+
 
     // 회원가입
     public void signUp(SignupRequestDto requestDto) {
@@ -81,5 +90,59 @@ public class UserService {
 
     }
 
+    public PrivateResponseBody findUserNum(String phoneNumber) {
 
+        String storeId = "";
+
+        // 핸드폰번호 암호화
+        try {
+            newPhoneNumber = aes256.encrypt(phoneNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<User> userList = userRepository.findAll();
+
+
+        for (User u : userList) {
+            if (u.getPhoneNumber().equals(newPhoneNumber)) {
+                storeId = u.getUserId();
+                return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
+            }
+        }
+            return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+        }
 }
+
+
+
+
+//        for (User u : userList) {
+//            if (u.getPhoneNumber().equals(newPhoneNumber)) {
+//                storeId = u.getUserId();
+//            }
+//        } return new PrivateResponseBody(UserStatusCode.INVALID_TOKEN, storeId);
+//    }
+
+
+
+//            if (!u.getPhoneNumber().equals(newPhoneNumber)) {
+//                return new PrivateResponseBody(UserStatusCode.FAILE_USERID,userLists);
+//            }
+//            return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, userLists);
+//
+
+
+//    List<User> userList = userRepository.findAll(); // 리스트를 받아옴
+//
+//        for (User u : userList) {
+//                if (u.getPhoneNumber().equals(newPhoneNumber)) {
+//                storeId = u.getUserId();
+//                }
+//                }
+//                return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
+//                }
+//                }
+//
+
+

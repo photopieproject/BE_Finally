@@ -121,5 +121,11 @@ public class UserController {
 //        return dao.update(Member.builder().username(member.getUsername()).checkcode("0").enabled(true).build())==1;
 //    }
 
+    @ApiOperation(value = "아이디 찾기")
+    @PostMapping("/find-id")
+    public PrivateResponseBody findUserNum(@RequestParam String phoneNumber){
+        return userService.findUserNum(phoneNumber);
+    }
+
 
 }
