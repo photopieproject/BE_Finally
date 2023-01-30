@@ -64,7 +64,7 @@ public class JwtUtil {
           
           return BEARER_PREFIX +
                Jwts.builder()
-                    // username 넣기
+                    // userId 넣기
                     .setSubject(userId)
                     .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                     .setIssuedAt(date)
