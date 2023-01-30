@@ -85,7 +85,6 @@ public class PhotoService {
 
         //String folderName = String.valueOf(createFolder(bucket + "/contact", today));
 
-
         // 3. photoRequestDto 에 있는 파일 S3에 업로드
         if (photoRequestDto.getPhoto_1() != null && !photoRequestDto.getPhoto_1().getContentType().isEmpty()) {
             String photo_one_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_1(), room.getId());

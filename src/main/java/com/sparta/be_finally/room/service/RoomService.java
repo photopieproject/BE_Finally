@@ -58,8 +58,6 @@ public class RoomService {
     public RoomResponseDto createRoom(RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
 
-
-
         // 방 이름 미입력시 에러 메세지 응답
         if (roomRequestDto.getRoomName().isEmpty()) {
             throw new RestApiException(CommonStatusCode.CREATE_ROOM_NAME);
@@ -81,7 +79,6 @@ public class RoomService {
             String token = session.createConnection(connectionProperties).getToken();
 
             // 방 생성
-
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
 
             // 방장 token update (토큰이 있어야 방에 입장 가능)

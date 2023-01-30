@@ -6,20 +6,23 @@ import com.sparta.be_finally.config.errorcode.UserStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.jwt.JwtUtil;
 import com.sparta.be_finally.config.model.AES256;
-import com.sparta.be_finally.user.dto.FindPasswordRequestDto;
 import com.sparta.be_finally.user.dto.LoginRequestDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-
-
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,8 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AES256 aes256;
+
+    private DefaultMessageService messageService;
     String newPhoneNumber = null;
 
     // 회원가입
@@ -78,7 +83,7 @@ public class UserService {
 
         return new LoginResponseDto.commonLogin(user);
     }
-
+    
     public boolean findPassword(String phoneNumber, String userId) {
         // 핸드폰번호 암호화
         try {
@@ -94,11 +99,20 @@ public class UserService {
         }
     }
 
+
+
+    //아이디 찾기(인증번호)
     public PrivateResponseBody findUserNum(String phoneNumber) {
+        this.messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
+
+
+        Message message = new Message();
+        message.setFrom("01023699764");
+        message.setTo(phoneNumber);
 
         String storeId = "";
 
-        // 핸드폰번호 암호화
+        // 핸드폰번호 다시 암호화하여 암호환 번호가 있는지 확인
         try {
             newPhoneNumber = aes256.encrypt(phoneNumber);
         } catch (Exception e) {
@@ -111,42 +125,34 @@ public class UserService {
         for (User u : userList) {
             if (u.getPhoneNumber().equals(newPhoneNumber)) {
                 storeId = u.getUserId();
-                return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
+
+                Random random = new Random();
+                String numStr = "";
+                for(int i = 0; i < 6; i++){
+                    String ran = Integer.toString(random.nextInt(10));
+                    numStr += ran;
+                }
+                message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+                SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+                return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr, storeId);
+
             }
         }
-            return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
-        }
+        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+    }
+
 }
 
 
 
 
-//        for (User u : userList) {
-//            if (u.getPhoneNumber().equals(newPhoneNumber)) {
-//                storeId = u.getUserId();
-//            }
-//        } return new PrivateResponseBody(UserStatusCode.INVALID_TOKEN, storeId);
-//    }
 
 
 
-//            if (!u.getPhoneNumber().equals(newPhoneNumber)) {
-//                return new PrivateResponseBody(UserStatusCode.FAILE_USERID,userLists);
-//            }
-//            return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, userLists);
-//
 
 
-//    List<User> userList = userRepository.findAll(); // 리스트를 받아옴
-//
-//        for (User u : userList) {
-//                if (u.getPhoneNumber().equals(newPhoneNumber)) {
-//                storeId = u.getUserId();
-//                }
-//                }
-//                return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
-//                }
-//                }
-//
+
 
 
