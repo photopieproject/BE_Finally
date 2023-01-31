@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 public class RoomParticipant {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="room_participant_id")
