@@ -83,6 +83,44 @@ public class UserService {
         return new LoginResponseDto.commonLogin(user);
     }
 
+    //아이디 찾기(인증번호)
+    public PrivateResponseBody findUserNum(String phoneNumber) {
+        Message message = new Message();
+        message.setFrom("01023699764");
+        message.setTo(phoneNumber);
+
+        String storeId = "";
+
+        // 핸드폰번호 다시 암호화하여 암호환 번호가 있는지 확인
+        try {
+            newPhoneNumber = aes256.encrypt(phoneNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<User> userList = userRepository.findAll();
+
+        for (User u : userList) {
+            if (u.getPhoneNumber().equals(newPhoneNumber)) {
+                storeId = u.getUserId();
+
+                Random random = new Random();
+                String numStr = "";
+                for(int i = 0; i < 6; i++){
+                    String ran = Integer.toString(random.nextInt(10));
+                    numStr += ran;
+                }
+                message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+//                SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+                return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr, storeId);
+
+            }
+        }
+        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+    }
+
     // 비밀번호 찾기
     public PrivateResponseBody findPassword(String phoneNumber, String userId) {
         // 핸드폰번호 암호화
@@ -144,44 +182,7 @@ public class UserService {
 
     }
 
-    //아이디 찾기(인증번호)
-    public PrivateResponseBody findUserNum(String phoneNumber) {
-        Message message = new Message();
-        message.setFrom("01023699764");
-        message.setTo(phoneNumber);
 
-        String storeId = "";
-
-        // 핸드폰번호 다시 암호화하여 암호환 번호가 있는지 확인
-        try {
-            newPhoneNumber = aes256.encrypt(phoneNumber);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        List<User> userList = userRepository.findAll();
-
-
-        for (User u : userList) {
-            if (u.getPhoneNumber().equals(newPhoneNumber)) {
-                storeId = u.getUserId();
-
-                Random random = new Random();
-                String numStr = "";
-                for(int i = 0; i < 6; i++){
-                    String ran = Integer.toString(random.nextInt(10));
-                    numStr += ran;
-                }
-                message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
-
-                SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-
-                return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr, storeId);
-
-            }
-        }
-        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
-    }
 
 }
 
