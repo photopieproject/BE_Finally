@@ -17,7 +17,6 @@ public class PrivateResponseBody<T> {
      private String statusMsg;
      private int statusCode;
 
-
      //@ApiModelProperty(value="실제 데이터")
      @JsonInclude (JsonInclude.Include.NON_EMPTY)
      private T data1; // null 일경우 json에 안보내지도록
@@ -28,13 +27,10 @@ public class PrivateResponseBody<T> {
      @JsonInclude (JsonInclude.Include.NON_EMPTY)
      private T data3; // null 일경우 json에 안보내지도록
 
-
-     
      public PrivateResponseBody(StatusCode statusCode) {
           this.statusCode = statusCode.getStatusCode();
           this.statusMsg = statusCode.getStatusMsg();
      }
-     
 
      public PrivateResponseBody(StatusCode statusCode, T data1) {
           this.statusCode = statusCode.getStatusCode();
