@@ -101,7 +101,7 @@ public class UserController {
 
     // 비밀번호 재설정
     @ApiOperation(value = "비밀번호 재설정")
-    @PostMapping("/reset-pw")
+    @PutMapping("/reset-pw")
     public PrivateResponseBody resetPassword(@RequestBody @Valid ResetPasswordRequestDto resetPasswordRequestDto) {
         return userService.resetPassword(resetPasswordRequestDto.getUserId(), resetPasswordRequestDto.getPassword());
     }
