@@ -31,8 +31,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AES256 aes256;
-
-    private DefaultMessageService messageService;
+    private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");;
     String newPhoneNumber = null;
 
     // 회원가입
@@ -83,29 +82,70 @@ public class UserService {
 
         return new LoginResponseDto.commonLogin(user);
     }
-    
-    public boolean findPassword(String phoneNumber, String userId) {
+
+    // 비밀번호 찾기
+    public PrivateResponseBody findPassword(String phoneNumber, String userId) {
         // 핸드폰번호 암호화
         try {
             newPhoneNumber = aes256.encrypt(phoneNumber);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Optional<User> user = userRepository.findByUserIdAndPhoneNumber(userId, newPhoneNumber);
+        System.out.println("user:" + user);
 
         if (userRepository.existsByUserIdAndPhoneNumber(userId, newPhoneNumber)) {
-            return true;
+            Message message = new Message();
+            message.setFrom("01023699764");
+            message.setTo(phoneNumber);
+
+            Random random = new Random();
+            String numStr = "";
+            for(int i = 0; i < 6; i++){
+                String ran = Integer.toString(random.nextInt(10));
+                numStr += ran;
+            }
+
+            message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+//            this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+            return new PrivateResponseBody(UserStatusCode.SUCCESS_IDENTIFICATION, numStr, userId);
         } else {
-            return false;
+            return new PrivateResponseBody(UserStatusCode.FAIL_IDENTIFICATION);
         }
     }
 
+    // 비밀번호 재설정
+    public PrivateResponseBody resetPassword(String userId, String password) {
+        Optional<User> user = userRepository.findByUserId(userId);
+        System.out.println("비밀번호 변경 전 유저:" + user);
 
+        System.out.println("암호화 전 비밀번호: " + password);
+
+        // 패스워드 암호화
+        String newPassword = passwordEncoder.encode(password);
+
+        System.out.println("암호화 후 비밀번호: " + newPassword);
+
+        userRepository.pwUpdate(newPassword, userId);
+
+        Optional<User> newUser = userRepository.findByUserIdAndPassword(userId, newPassword);
+
+        System.out.println("비밀번호 변경 후 유저:" + newUser);
+
+        if (newUser.equals(user)) {
+            return new PrivateResponseBody(UserStatusCode.FAIL_RESET_PASSWORD);
+        } else {
+            return new PrivateResponseBody(UserStatusCode.SUCCESS_RESET_PASSWORD);
+        }
+
+
+
+    }
 
     //아이디 찾기(인증번호)
     public PrivateResponseBody findUserNum(String phoneNumber) {
-        this.messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
-
-
         Message message = new Message();
         message.setFrom("01023699764");
         message.setTo(phoneNumber);

@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -21,6 +23,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean findByPhoneNumber(String phoneNumber);
 
+    Optional<User> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
+    boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
+
+    Optional<User> findByUserIdAndPassword(String userId, String password);
+
     @Modifying
     @Query (
             nativeQuery = true,
@@ -30,6 +37,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     )
     void update(@Param("id") Long id, @Param("token") String token);
 
-    Optional<User> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
-    boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query (value = "UPDATE users u SET u.password = :password WHERE u.user_id = :userId", nativeQuery = true)
+    void pwUpdate(@Param("password") String password, @Param("userId") String userId);
+
 }
