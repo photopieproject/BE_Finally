@@ -29,7 +29,6 @@ import java.util.UUID;
 public class Room {
     private static final int VALID_HOUR = 24;
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -40,12 +39,9 @@ public class Room {
     @Column(nullable = false)
     private String roomCode;
 
-
     private int userCount = 0;
 
-
     private int frame;
-
 
     private String frameUrl;
 
@@ -62,7 +58,6 @@ public class Room {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "frame_id")
 //    private Frame frame;
-
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
