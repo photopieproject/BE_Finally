@@ -70,9 +70,7 @@ public class PhotoService {
         return new FrameResponseDto(room.getFrame(), room.getFrameUrl());
     }
 
-
     // 찍은 사진 S3 저장
-
     @Transactional
     public PrivateResponseBody photoShootSave(Long roomId, PhotoRequestDto photoRequestDto) {
         // 1. roomId 존재 여부 확인
@@ -107,11 +105,6 @@ public class PhotoService {
         }
         return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
     }
-
-
-
-
-
 
     @Transactional(readOnly = true)
     public PrivateResponseBody photoGet(Long roomId) {
