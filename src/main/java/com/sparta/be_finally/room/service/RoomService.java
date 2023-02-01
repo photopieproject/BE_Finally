@@ -80,9 +80,6 @@ public class RoomService {
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
             String token = session.createConnection(connectionProperties).getToken();
 
-
-
-
             // 방 생성
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
             photoRepository.save(new Photo(room));
