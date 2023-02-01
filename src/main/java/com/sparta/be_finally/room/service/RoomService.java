@@ -19,10 +19,12 @@ import com.sparta.be_finally.user.repository.UserRepository;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.LockModeType;
 import java.util.List;
 
 @Service
@@ -106,6 +108,7 @@ public class RoomService {
 
     // 방 입장하기
     @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public PrivateResponseBody roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
         String role = "leader";

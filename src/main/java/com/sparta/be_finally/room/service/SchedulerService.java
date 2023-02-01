@@ -44,10 +44,10 @@ public class SchedulerService {
 
                 if (photos != null) {
                     List<String> photo_url = new ArrayList<>();
-                    photo_url.add(photos.getPhoto_one().split(".com/")[1]);
-                    photo_url.add(photos.getPhoto_two().split(".com/")[1]);
-                    photo_url.add(photos.getPhoto_three().split(".com/")[1]);
-                    photo_url.add(photos.getPhoto_four().split(".com/")[1]);
+                    photo_url.add(photos.getPhotoOne().split(".com/")[1]);
+                    photo_url.add(photos.getPhotoTwo().split(".com/")[1]);
+                    photo_url.add(photos.getPhotoThree().split(".com/")[1]);
+                    photo_url.add(photos.getPhotoFour().split(".com/")[1]);
 
                     //S3 - 이미지 삭제 처리
                     for (String photo : photo_url) {
