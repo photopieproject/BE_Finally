@@ -41,13 +41,12 @@ public class Photo {
     }
 
     public Photo(String photoOneImgUrl) {
-        this.photo_one = photoOneImgUrl;
+        this.photoOne = photoOneImgUrl;
     }
 
     public void photo_one_update(String photo_one_imgUrl){
-        this.photo_one = photo_one_imgUrl;
+        this.photoOne = photo_one_imgUrl;
     }
-
 
     public void photo_two_update(String photo_two_imgUrl) {
         this.photoTwo = photo_two_imgUrl;
