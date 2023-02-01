@@ -3,6 +3,7 @@ package com.sparta.be_finally.room.entity;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
+import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.user.entity.User;
@@ -55,9 +56,9 @@ public class Room {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "frame_id")
-//    private Frame frame;
+
+
+
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
@@ -75,6 +76,7 @@ public class Room {
         this.user = user;
         this.userCount++;
         this.sessionId = sessionId;
+
         this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
 
@@ -89,10 +91,7 @@ public class Room {
     }
 
 
-//    public Room(int frame, URL frameUrl) {
-//        this.frame = frame;
-//        this.frameUrl = String.valueOf(frameUrl);
-//    }
+
 
     public Room(int frameNum, String frameUrl) {
         this.frame = frameNum;

@@ -7,6 +7,8 @@ import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.util.SecurityUtil;
 import com.sparta.be_finally.config.validator.Validator;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
+import com.sparta.be_finally.photo.entity.Photo;
+import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.dto.*;
 import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.room.entity.RoomParticipant;
@@ -45,6 +47,7 @@ public class RoomService {
     // OpenVidu 서버와 공유되는 비밀
     @Value("${openvidu.secret}")
     private String OPENVIDU_SECRET;
+    private final PhotoRepository photoRepository;
 
     // 어플리케이션 실행시 Bean 으로 등록
     // OpenVidu 객체를 활용해 spring은 OpenVidu 서버와 통신이 가능해짐
@@ -78,8 +81,12 @@ public class RoomService {
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
             String token = session.createConnection(connectionProperties).getToken();
 
+
+
+
             // 방 생성
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
+            photoRepository.save(new Photo(room));
 
             // 방장 token update (토큰이 있어야 방에 입장 가능)
             userRepository.update(user.getId(), token);
