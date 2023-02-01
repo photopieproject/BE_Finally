@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.bytebuddy.utility.nullability.MaybeNull;
+import org.springframework.data.jpa.repository.Lock;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -56,10 +57,6 @@ public class Room {
     @JoinColumn(name = "user_id")
     private User user;
 
-
-
-
-
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
 
@@ -78,7 +75,6 @@ public class Room {
         this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
 
-
     //추후 삭제
     public Room(RoomRequestDto roomRequestDto, User user) {
         this.roomName = roomRequestDto.getRoomName();
@@ -88,10 +84,6 @@ public class Room {
         this.userCount++;
         this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
-
-
-
-
 
     public Room(int frameNum, String frameUrl) {
         this.frame = frameNum;
