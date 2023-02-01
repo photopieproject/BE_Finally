@@ -32,7 +32,7 @@ public class User{
     @Column
     private String token;
 
-    @Column(nullable = false)
+    @Column
     private String phoneNumber;
 
     public User(SignupRequestDto requestDto, String password, String phoneNumber) {
@@ -42,11 +42,11 @@ public class User{
         this.phoneNumber = phoneNumber;
     }
 
-    public User(String userId, String nickname, Long kakaoId, String password) {
+    public User(String userId, String nickname, Long kakaoId, String encodedPassword) {
         this.userId = userId;
         this.kakaoId = kakaoId;
         this.nickname = nickname;
-        this.password = password;
+        this.password = encodedPassword;
     }
 
     public User(String userId, String nickname, String googleId, String encodedPassword) {

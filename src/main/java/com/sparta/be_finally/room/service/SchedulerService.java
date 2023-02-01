@@ -34,7 +34,8 @@ public class SchedulerService {
             //(fixedRate = 30000) // 30 초
 
     public void runAfterTenSecondsRepeatTenSeconds() {
-        List<Room> roomList = roomRepository.findAll();
+        List<Room> roomList = roomRepository.findRooms();
+       // List<Room> roomList = roomRepository.findAll();
         LocalDateTime time = LocalDateTime.now().withNano(0);
 
         for (Room room : roomList) {
@@ -55,7 +56,7 @@ public class SchedulerService {
                     photoRepository.delete(photos);
                 }
 
-                roomRepository.delete(room);
+                roomRepository.deleteById(room.getId());
             }
         }
     }

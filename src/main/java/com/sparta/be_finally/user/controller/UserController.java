@@ -3,7 +3,9 @@ package com.sparta.be_finally.user.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.UserStatusCode;
+import com.sparta.be_finally.user.dto.FindPasswordRequestDto;
 import com.sparta.be_finally.user.dto.LoginRequestDto;
+import com.sparta.be_finally.user.dto.ResetPasswordRequestDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import com.sparta.be_finally.user.service.GoogleService;
 import com.sparta.be_finally.user.service.KakaoService;
@@ -14,13 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Random;
@@ -33,7 +31,7 @@ import java.util.Random;
 public class UserController {
     private final UserService userService;
     private final KakaoService kakaoService;
-    private DefaultMessageService messageService;
+    private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
     private final GoogleService googleService; 
 
     @ApiOperation(value = "회원가입 id 중복체크")
@@ -68,8 +66,6 @@ public class UserController {
     @ApiOperation(value = "휴대폰 본인 확인")
     @PostMapping("/smsmessage")
     public PrivateResponseBody sendOne(@RequestParam String phoneNumber) {
-        this.messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
-
         Message message = new Message();
         message.setFrom("01023699764");
         message.setTo(phoneNumber);
@@ -83,7 +79,7 @@ public class UserController {
 
         message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
 
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
         return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
     }
@@ -94,5 +90,26 @@ public class UserController {
         return userService.findUserNum(phoneNumber);
     }
 
+    // 비밀번호 찾기
+    @ApiOperation(value = "비밀번호 찾기")
+    @PostMapping("/find-pw")
+    public PrivateResponseBody findPassword(@RequestParam String phoneNumber, @RequestBody FindPasswordRequestDto findPasswordDto) {
+        return userService.findPassword(phoneNumber, findPasswordDto.getUserId());
+    }
+
+    // 비밀번호 재설정
+    @ApiOperation(value = "비밀번호 재설정")
+    @PutMapping("/reset-pw")
+    public PrivateResponseBody resetPassword(@RequestBody @Valid ResetPasswordRequestDto resetPasswordRequestDto) {
+        return userService.resetPassword(resetPasswordRequestDto.getUserId(), resetPasswordRequestDto.getPassword());
+    }
+
+//    체크 코드
+//    public Boolean checkcode(String checkcode) {
+//        Member member = dao.findByCheckcode(checkcode);
+//        if(member == null)
+//            return false;
+//        return dao.update(Member.builder().username(member.getUsername()).checkcode("0").enabled(true).build())==1;
+//    }
 
 }

@@ -43,7 +43,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class KakaoService {
-     final String RequestFriendListURL = "https://kapi.kakao.com/v1/api/talk/friends"; // => 친구목록 엔드 포인트
      private final PasswordEncoder passwordEncoder;
      private final UserRepository userRepository;
      private final JwtUtil jwtUtil;
