@@ -88,24 +88,24 @@ public class PhotoService {
 
 
         if (photoRequestDto.getPhoto_1()!=null || photoRequestDto.getPhoto_2() !=null|| photoRequestDto.getPhoto_3() !=null|| photoRequestDto.getPhoto_4()!=null) {
-            if (photo.getPhoto_one() == null && photoRequestDto.getPhoto_1() != null && !photoRequestDto.getPhoto_1().getContentType().isEmpty()) {
+            if (photo.getPhotoOne() == null && photoRequestDto.getPhoto_1() != null && !photoRequestDto.getPhoto_1().getContentType().isEmpty()) {
                 String photo_one_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_1(), room.getId());
                 photo.photo_one_update(photo_one_imgUrl);
                 return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
 
 
-            } else if (photo.getPhoto_two() == null && photoRequestDto.getPhoto_2() != null && !photoRequestDto.getPhoto_2().getContentType().isEmpty()) {
+            } else if (photo.getPhotoTwo() == null && photoRequestDto.getPhoto_2() != null && !photoRequestDto.getPhoto_2().getContentType().isEmpty()) {
                 String photo_two_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_2(), room.getId());
                 photo.photo_two_update(photo_two_imgUrl);
                 return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
 
 
-            } else if (photo.getPhoto_three() == null && photoRequestDto.getPhoto_3() != null && !photoRequestDto.getPhoto_3().getContentType().isEmpty()) {
+            } else if (photo.getPhotoThree() == null && photoRequestDto.getPhoto_3() != null && !photoRequestDto.getPhoto_3().getContentType().isEmpty()) {
                 String photo_three_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_3(), room.getId());
                 photo.photo_three_update(photo_three_imgUrl);
                 return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
 
-            } else if (photo.getPhoto_four() == null && photoRequestDto.getPhoto_4() != null && !photoRequestDto.getPhoto_4().getContentType().isEmpty()) {
+            } else if (photo.getPhotoFour() == null && photoRequestDto.getPhoto_4() != null && !photoRequestDto.getPhoto_4().getContentType().isEmpty()) {
                 String photo_four_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_4(), room.getId());
                 photo.photo_four_update(photo_four_imgUrl);
                 return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
