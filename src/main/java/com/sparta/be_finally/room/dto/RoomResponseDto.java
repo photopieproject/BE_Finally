@@ -19,14 +19,11 @@ public class RoomResponseDto {
     private Long id;
     private String roomName;
     private String nickname;
-
     private String roomCode;
     private int userCount;
     private String sessionId;
     private String token;
-
     private LocalDateTime expireDate;
-
     private String role;
 
 }

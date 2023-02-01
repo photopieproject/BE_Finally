@@ -16,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.web.bind.annotation.*;
 
@@ -101,7 +99,7 @@ public class UserController {
 
     // 비밀번호 재설정
     @ApiOperation(value = "비밀번호 재설정")
-    @PostMapping("/reset-pw")
+    @PutMapping("/reset-pw")
     public PrivateResponseBody resetPassword(@RequestBody @Valid ResetPasswordRequestDto resetPasswordRequestDto) {
         return userService.resetPassword(resetPasswordRequestDto.getUserId(), resetPasswordRequestDto.getPassword());
     }
@@ -113,8 +111,5 @@ public class UserController {
 //            return false;
 //        return dao.update(Member.builder().username(member.getUsername()).checkcode("0").enabled(true).build())==1;
 //    }
-
-
-
 
 }
