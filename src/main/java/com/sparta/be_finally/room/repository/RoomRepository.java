@@ -1,13 +1,11 @@
 package com.sparta.be_finally.room.repository;
 
-import com.sparta.be_finally.room.dto.RoomRequestDto;
-import com.sparta.be_finally.room.dto.FrameRequestDto;
+import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.room.entity.Room;
-import com.sparta.be_finally.user.entity.User;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +15,13 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     boolean existsByRoomCode(String roomcode);
     boolean existsBySessionId(String sessionId);
 
+    @Query
+            (nativeQuery = true,
+                    value = "select *from room b "
+            )
+    List<Room> findRooms();
+
 }
+
+
+
