@@ -59,7 +59,6 @@ public class RoomService {
 
     // 방 생성시 세션(Openvidu room) 초기화
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public RoomResponseDto createRoom(RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
 
@@ -82,7 +81,7 @@ public class RoomService {
 
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
             String token = session.createConnection(connectionProperties).getToken();
-            
+
             // 방 생성
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
             photoRepository.save(new Photo(room));
@@ -109,6 +108,7 @@ public class RoomService {
 
     // 방 입장하기
     @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public PrivateResponseBody roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
         String role = "leader";
