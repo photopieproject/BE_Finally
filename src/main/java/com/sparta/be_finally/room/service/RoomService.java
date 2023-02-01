@@ -192,7 +192,6 @@ public class RoomService {
 
         Session session = getSession(room.getSessionId());
 
-
         String getConnectionId = null;
 
         // Openvidu 에서 사용자 연결 끊기
@@ -201,12 +200,11 @@ public class RoomService {
 
         for (Connection connection : activeConnections) {
             if (connection.getToken().equals(user.getToken())) {
-                getConnectionId = connection.getConnectionId();
+                //getConnectionId = connection.getConnectionId();
+                session.forceDisconnect(connection);
+
             }
         }
-
-        session.fetch();
-        session.forceDisconnect(getConnectionId);
 
         // room_participant - roomId, userId 로 등록된 데이터 삭제 처리
         RoomParticipant roomParticipant = roomParticipantRepository.findByUserIdAndRoom(user.getUserId(),room);
