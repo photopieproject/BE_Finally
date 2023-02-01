@@ -40,9 +40,9 @@ public class RoomController {
     }
 
     // 방 나가기
-    @DeleteMapping("/room-out/roomCode")
-    public PrivateResponseBody roomExit(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
-        roomService.roomExit(roomCodeRequestDto);
+    @DeleteMapping("/room/{roomId}/exit")
+    public PrivateResponseBody roomExit(@PathVariable Long roomId) throws OpenViduJavaClientException, OpenViduHttpException {
+        roomService.roomExit(roomId);
         return new PrivateResponseBody(CommonStatusCode.EXITROOM_SUCCESS);
     }
 
