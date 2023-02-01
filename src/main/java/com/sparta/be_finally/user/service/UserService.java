@@ -94,9 +94,11 @@ public class UserService {
         // 핸드폰번호 다시 암호화하여 암호환 번호가 있는지 확인
         try {
             newPhoneNumber = aes256.encrypt(phoneNumber);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         List<User> userList = userRepository.findAll();
 
