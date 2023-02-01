@@ -65,7 +65,7 @@ public class Validator {
         String token = session.createConnection(connectionProperties).getToken();
 
         // 토큰 생성 후 입장한 유저에 token update
-        userRepository.update(user.getId(),token);
+        userRepository.update(user.getId(), token);
 
         return token;
     }
