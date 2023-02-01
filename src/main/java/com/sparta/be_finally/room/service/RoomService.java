@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.net.URL;
 import java.util.List;
 
 @Service
@@ -184,11 +183,11 @@ public class RoomService {
     }
 
     @Transactional
-    public void roomExit(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public void roomExit(Long roomId) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
 
-        // 방 코드로 방 조회
-        Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
+        // roomId 로 방 조회
+        Room room = validator.existsRoom(roomId);
 
         Session session = getSession(room.getSessionId());
 
