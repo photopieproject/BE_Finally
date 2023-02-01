@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -70,7 +71,11 @@ public class PhotoService {
     // 찍은 사진 S3 저장
     @Transactional
     public PrivateResponseBody photoShootSave(Long roomId, PhotoRequestDto photoRequestDto) {
-        if(!photoRepository.existsByRoomId(roomId)) {
+//        Photo photoZip = photoRepository.findByRoomIdAndPhoto(roomId);
+//        System.out.println(photoZip);
+
+        if(photoRepository.findByRoomIdAndPhoto(roomId) != null) {
+
             // 1. roomId 존재 여부 확인
             Room room = validator.existsRoom(roomId);
 
@@ -110,7 +115,6 @@ public class PhotoService {
 
     @Transactional(readOnly = true)
     public PrivateResponseBody photoGet(Long roomId) {
-
 
         Room room = validator.existsRoom(roomId);
 
