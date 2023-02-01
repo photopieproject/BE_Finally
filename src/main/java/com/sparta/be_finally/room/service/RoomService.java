@@ -7,6 +7,8 @@ import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.util.SecurityUtil;
 import com.sparta.be_finally.config.validator.Validator;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
+import com.sparta.be_finally.photo.entity.Photo;
+import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.dto.*;
 import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.room.entity.RoomParticipant;
@@ -21,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.net.URL;
 import java.util.List;
 
 @Service
@@ -45,6 +46,7 @@ public class RoomService {
     // OpenVidu 서버와 공유되는 비밀
     @Value("${openvidu.secret}")
     private String OPENVIDU_SECRET;
+    private final PhotoRepository photoRepository;
 
     // 어플리케이션 실행시 Bean 으로 등록
     // OpenVidu 객체를 활용해 spring은 OpenVidu 서버와 통신이 가능해짐
@@ -78,8 +80,12 @@ public class RoomService {
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
             String token = session.createConnection(connectionProperties).getToken();
 
+
+
+
             // 방 생성
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
+            photoRepository.save(new Photo(room));
 
             // 방장 token update (토큰이 있어야 방에 입장 가능)
             userRepository.update(user.getId(), token);
@@ -116,9 +122,8 @@ public class RoomService {
         // room 테이블의 sessionId에 openvidu SessionId 이 저장 되어있는지 확인
         validator.existsRoomSessionId(session.getSessionId());
 
-
         // 방 나간 후 재입장 처리(방장이 재 입장인경우)
-        if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, "leader") != null) {
+        if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, role) != null) {
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
             String token = validator.getToken(session, user);
@@ -126,7 +131,7 @@ public class RoomService {
             return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
                     RoomResponseDto.builder()
                             .id(room.getId())
-                            .role("leader")
+                            .role(role)
                             .roomName(room.getRoomName())
                             .nickname(user.getNickname())
                             .roomCode(room.getRoomCode())
@@ -159,7 +164,6 @@ public class RoomService {
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
             String token = validator.getToken(session, user);
 
-
             // 방 입장 인원수 +1 업데이트
             room.enter();
 
@@ -186,7 +190,41 @@ public class RoomService {
     }
 
     @Transactional
-    public void roomExit(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public void roomExit(Long roomId) throws OpenViduJavaClientException, OpenViduHttpException {
+        User user = SecurityUtil.getCurrentUser();
+
+        // roomId 로 방 조회
+        Room room = validator.existsRoom(roomId);
+
+        Session session = getSession(room.getSessionId());
+
+        String getConnectionId = null;
+
+        // Openvidu 에서 사용자 연결 끊기
+        // Session.getActiveConnections()에서 반환된 목록에서 원하는 Connection 개체를 찾습니다
+        List<Connection> activeConnections = session.getActiveConnections();
+
+        for (Connection connection : activeConnections) {
+            if (connection.getToken().equals(user.getToken())) {
+                //getConnectionId = connection.getConnectionId();
+                session.forceDisconnect(connection);
+
+            }
+        }
+
+        // room_participant - roomId, userId 로 등록된 데이터 삭제 처리
+        RoomParticipant roomParticipant = roomParticipantRepository.findByUserIdAndRoom(user.getUserId(),room);
+        roomParticipantRepository.delete(roomParticipant);
+
+        // 방 입장 인원수 -1 업데이트
+        room.exit();
+
+        // user.getToken = null 로 update
+        userRepository.update(user.getId(), null);
+    }
+
+    @Transactional
+    public void roomClose(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         // 방 코드로 방 조회
         Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
 
@@ -239,7 +277,6 @@ public class RoomService {
             return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME);
         }
         Room room = roomRepository.findById(roomId).orElse(null);
-
 
         int frameNum = frameRequestDto.getFrame();
 
