@@ -122,6 +122,13 @@ public class RoomService {
         // room 테이블의 sessionId에 openvidu SessionId 이 저장 되어있는지 확인
         validator.existsRoomSessionId(session.getSessionId());
 
+        // 사진 촬영 중이거나 촬영을 마친 방은 입장 불가
+        Photo photo = photoRepository.findByRoom(room);
+
+        if (photo.getPhotoOne() != null) {
+            throw new RestApiException(CommonStatusCode.NOT_ALLOWED_TO_ENTER);
+        }
+
         // 방 나간 후 재입장 처리(방장이 재 입장인경우)
         if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, role) != null) {
 
