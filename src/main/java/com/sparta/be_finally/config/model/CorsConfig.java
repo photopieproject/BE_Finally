@@ -14,6 +14,7 @@ public class CorsConfig implements WebMvcConfigurer {
                .allowedOrigins("http://localhost:3000") // 프론트 로컬주소
                .allowedOrigins("https://dev.djcf93g3uh9mz.amplifyapp.com") // 프론트 배포 주소
                .allowedOrigins("https://www.photo-pie.store") // 프론트 도메인 주소
+               .allowedOrigins("https://photo-pie.store") // 프론트 도메인 주소
                .allowedHeaders("*")
                .allowedMethods("*")
           .exposedHeaders(JwtUtil.AUTHORIZATION_HEADER); //JSON 으로 Token 내용 전달
