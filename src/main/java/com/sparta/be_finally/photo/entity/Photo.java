@@ -21,6 +21,8 @@ public class Photo {
     private String photoThree;
     private String photoFour;
 
+    private String completePhoto;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
@@ -35,7 +37,6 @@ public class Photo {
         this.room = room;
         this.photoOne = String.valueOf(photo_one_imgUrl);
     }
-
 
     public Photo(Room room) {
         this.room = room;

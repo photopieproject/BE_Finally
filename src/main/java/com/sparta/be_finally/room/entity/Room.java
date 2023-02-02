@@ -47,6 +47,7 @@ public class Room {
 
     private String frameUrl;
 
+
     // Openvidu 의 roomId 이라고 생각하면 됨
     private String sessionId;
 

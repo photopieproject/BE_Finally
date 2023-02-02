@@ -34,7 +34,10 @@ public enum CommonStatusCode implements StatusCode {
      FAIL_CHOICE_FRAME2("올바른 프레임을 선택해주세요",HttpStatus.BAD_REQUEST.value()),
      INVALID_PARAMETER("Invalid parameter included",HttpStatus.BAD_REQUEST.value()),
      INTERNAL_SERVER_ERROR("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value()),
-     DELETE_USER("회원 탈퇴 성공", HttpStatus.OK.value());
+     DELETE_USER("회원 탈퇴 성공", HttpStatus.OK.value()),
+
+     COMPLETE_PHOTO_SUCCESS("완성이미지 저장완료", HttpStatus.OK.value()),
+     COMPLETE_PHOTO_FAIL("완성이미지 저장실패", HttpStatus.BAD_REQUEST.value());
 
      private final String StatusMsg;
      private final int statusCode;
