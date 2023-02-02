@@ -79,7 +79,8 @@ public class KakaoService {
           MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
           body.add("grant_type", "authorization_code");
           body.add("client_id", KAKAO_REST_API_KEY);
-          body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/api/user/kakao/callback");
+          //body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/api/user/kakao/callback");
+          body.add("redirect_uri", "https://photo-pie.store/api/user/kakao/callback");
           //body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
           //body.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
           body.add("code", code);
