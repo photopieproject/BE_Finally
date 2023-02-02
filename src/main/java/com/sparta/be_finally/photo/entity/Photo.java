@@ -16,7 +16,6 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    
     private String photoOne;
     private String photoTwo;
     private String photoThree;

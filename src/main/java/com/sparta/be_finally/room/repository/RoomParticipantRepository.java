@@ -16,4 +16,5 @@ public interface RoomParticipantRepository extends JpaRepository<RoomParticipant
     List<RoomParticipant> findAllByRoomId(Long id);
 
     RoomParticipant findByUserIdAndRoom(String userId, Room room);
+
 }
