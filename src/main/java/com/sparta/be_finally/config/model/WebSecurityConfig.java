@@ -71,9 +71,9 @@ public class WebSecurityConfig {
 
           CorsConfiguration config = new CorsConfiguration();
 
-          config.addAllowedOrigin("http://localhost:3000");
-//          https://dev.djcf93g3uh9mz.amplifyapp.com
-          config.addAllowedOrigin("https://dev.djcf93g3uh9mz.amplifyapp.com");
+          config.addAllowedOrigin("http://localhost:3000"); // 프론트 로컬주소
+          config.addAllowedOrigin("https://dev.djcf93g3uh9mz.amplifyapp.com"); // 프론트 배포주소
+          config.addAllowedOrigin("https://www.photo-pie.store"); // 프론트 도메인주소
 
           config.addExposedHeader(JwtUtil.AUTHORIZATION_HEADER);
 
