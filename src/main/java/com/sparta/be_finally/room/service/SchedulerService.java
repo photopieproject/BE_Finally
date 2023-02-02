@@ -12,12 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -28,18 +27,25 @@ public class SchedulerService {
     private final RoomRepository roomRepository;
     private final PhotoRepository photoRepository;
     private final AwsS3Service awsS3Service;
-    @Scheduled(fixedRate = 1800000)
-            //(fixedRate = 1800000)//
-            //(cron = "0 0 0/1 * * *")// 1시간마다
-            //(fixedRate = 30000) // 30 초
 
+    //(fixedRate = 1800000)//
+    //(cron = "0 0 0/1 * * *")// 1시간마다
+    //(fixedRate = 30000) // 30 초
+
+    @Scheduled(fixedRate = 1800000)
+    @Transactional
     public void runAfterTenSecondsRepeatTenSeconds() {
-        List<Room> roomList = roomRepository.findRooms();
-       // List<Room> roomList = roomRepository.findAll();
+
+
+        // List<Room> roomList = roomRepository.findAll();
         LocalDateTime time = LocalDateTime.now().withNano(0);
+        List <Room> roomList = roomRepository.findRooms();
+
+
 
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {
+
                 Photo photos = photoRepository.findByRoomId(room.getId()).orElse(null);
 
                 if (photos != null) {
@@ -56,7 +62,7 @@ public class SchedulerService {
                     photoRepository.delete(photos);
                 }
 
-                roomRepository.deleteById(room.getId());
+                roomRepository.delete(room);
             }
         }
     }

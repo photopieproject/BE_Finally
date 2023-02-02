@@ -26,6 +26,7 @@ public enum UserStatusCode implements StatusCode {
      AGREE_USER_TYPED("인증 완료", HttpStatus.OK.value()),
      FAIL_USER_TYPED("인증 실패", HttpStatus.BAD_REQUEST.value()),
      NOT_FOUND_USER("일치하는 유저가 없습니다.", HttpStatus.BAD_REQUEST.value()),
+     REGISTERED_PHONENUM("등록된 휴대폰 번호가 있습니다",HttpStatus.BAD_REQUEST.value()),
      FAIL_IDENTIFICATION("본인 인증 실패!", HttpStatus.BAD_REQUEST.value()),
      SUCCESS_IDENTIFICATION("인증문자 전송 완료! 코드확인 후 비밀번호를 재설정 해주세요", HttpStatus.OK.value()),
      SUCCESS_RESET_PASSWORD ("비밀번호 변경 완료", HttpStatus.OK.value()),
