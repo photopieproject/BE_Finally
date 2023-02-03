@@ -23,10 +23,12 @@ public class Photo {
 
     private String completePhoto;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String qrCode;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
-
 
     public Photo(Room room, String photo_one_imgUrl) {
         this.room = room;

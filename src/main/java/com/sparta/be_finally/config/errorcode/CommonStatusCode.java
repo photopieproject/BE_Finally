@@ -37,7 +37,11 @@ public enum CommonStatusCode implements StatusCode {
      DELETE_USER("회원 탈퇴 성공", HttpStatus.OK.value()),
 
      COMPLETE_PHOTO_SUCCESS("완성이미지 저장완료", HttpStatus.OK.value()),
-     COMPLETE_PHOTO_FAIL("완성이미지 저장실패", HttpStatus.BAD_REQUEST.value());
+     COMPLETE_PHOTO_FAIL("완성이미지 저장실패", HttpStatus.BAD_REQUEST.value()),
+     CREATE_QRCODE("QR코드 생성 완료", HttpStatus.OK.value()),
+     FAIL_QRCODE("QR코드 생성 실패", HttpStatus.BAD_REQUEST.value());
+
+
 
      private final String StatusMsg;
      private final int statusCode;

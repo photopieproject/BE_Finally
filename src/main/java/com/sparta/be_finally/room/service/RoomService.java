@@ -1,6 +1,10 @@
 package com.sparta.be_finally.room.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
@@ -18,6 +22,7 @@ import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
@@ -25,9 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.LockModeType;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RoomService {
 
@@ -340,6 +348,8 @@ public class RoomService {
         }
         return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
     }
+
+
 }
 
 
