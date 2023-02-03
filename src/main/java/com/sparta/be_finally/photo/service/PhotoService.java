@@ -168,6 +168,7 @@ public class PhotoService {
         }
     }
 
+    // QRCode 반환
     @Transactional
     public PrivateResponseBody returnQr(Long roomId) {
         String qrcode = photoRepository.findByRoomIdAndQrCode(roomId);
@@ -183,7 +184,7 @@ public class PhotoService {
     private String createQr(Long roomId) {
         byte[] image = new byte[0];
         String url = photoRepository.createQrPhotoUrl(roomId);
-//        String url = completePhotoRequestDto.getCompletePhoto().toString();
+
         try {
             image = PhotoService.getQRCodeImage(url, 250, 250);
         } catch (WriterException | IOException e) {
@@ -193,7 +194,6 @@ public class PhotoService {
         System.out.println("url:" + url);
         System.out.println("image:" + image);
 
-        // 이거 가져올 때 쓰기
         String qrcode = Base64.getEncoder().encodeToString(image);
 
         return qrcode;
@@ -230,11 +230,6 @@ public class PhotoService {
         }
         return null;
     }
-
-
-
-
-
 
 
 }
