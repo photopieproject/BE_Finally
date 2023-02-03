@@ -10,6 +10,7 @@ import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.util.SecurityUtil;
 import com.sparta.be_finally.config.validator.Validator;
+import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.entity.Photo;
@@ -35,7 +36,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PhotoService {
     private final RoomRepository roomRepository;
-
     @Value("${cloud.aws.s3.bucket}" )
     private String bucket;
     private final AwsS3Service awsS3Service;
@@ -57,7 +57,7 @@ public class PhotoService {
         return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    //사진 촬영 준비
+    // 사진 촬영 준비
     @Transactional
     public FrameResponseDto photoShoot(Long roomId) {
         User user = SecurityUtil.getCurrentUser();
@@ -81,12 +81,7 @@ public class PhotoService {
         //    photo_one 촬영 한 상태 : isExist = null
         Photo photo = photoRepository.findByRoomId(roomId).orElse(null);
 
-
-
-
         // 3. photoRequestDto 에 있는 파일 S3에 업로드
-
-
         if (photoRequestDto.getPhoto_1()!=null || photoRequestDto.getPhoto_2() !=null|| photoRequestDto.getPhoto_3() !=null|| photoRequestDto.getPhoto_4()!=null) {
             if (photo.getPhotoOne() == null && photoRequestDto.getPhoto_1() != null && !photoRequestDto.getPhoto_1().getContentType().isEmpty()) {
                 String photo_one_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_1(), room.getId());
@@ -115,6 +110,22 @@ public class PhotoService {
             }
         }
         return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_FAIL);
+    }
+
+    @Transactional
+    public PrivateResponseBody completePhotoSave(Long roomId, CompletePhotoRequestDto completePhotoRequestDto) {
+        // 1. roomId 존재 여부 확인
+        Room room = validator.existsRoom(roomId);
+
+        // 2. Room 테이블 - 완성 이미지 저장
+        String completePhoto = awsS3Service.uploadFile(completePhotoRequestDto.getCompletePhoto(), room.getId());
+        photoRepository.updateCompletePhoto(completePhoto, roomId);
+
+        if(photoRepository.findByRoomIdAndCompletePhotoNull(roomId) != null) {
+            return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_SUCCESS);
+        } else {
+            return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_FAIL);
+        }
     }
 
 

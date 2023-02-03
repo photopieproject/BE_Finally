@@ -28,6 +28,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUserIdAndPassword(String userId, String password);
 
+    Optional<User> findAllByPhoneNumber(String phoneNumber);
+
     @Modifying
     @Query (
             nativeQuery = true,
@@ -41,5 +43,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying(clearAutomatically = true)
     @Query (value = "UPDATE users u SET u.password = :password WHERE u.user_id = :userId", nativeQuery = true)
     void pwUpdate(@Param("password") String password, @Param("userId") String userId);
+
+
 
 }
