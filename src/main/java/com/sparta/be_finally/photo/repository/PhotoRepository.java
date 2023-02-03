@@ -25,9 +25,17 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     @Query (value = "UPDATE photo p SET p.complete_photo = :completePhoto WHERE p.room_id = :roomId", nativeQuery = true)
     void updateCompletePhoto(@Param("completePhoto") String completePhoto, @Param("roomId") Long roomId);
 
-
     Optional<Photo> findByRoomIdAndCompletePhotoNull(Long roomId);
 
+    @Query(value = "SELECT p.complete_photo FROM photo p WHERE p.room_id = :roomId", nativeQuery = true)
+    String createQrPhotoUrl(@Param("roomId") Long roomId);
+
+    @Modifying
+    @Query(value = "UPDATE photo p SET p.qr_code = :qrCode where p.room_id = :roomId", nativeQuery = true)
+    void saveQrCode(@Param("qrCode") String qrCode, @Param("roomId") Long roomId);
+
+    @Query(value = "SELECT p.qr_code FROM photo p WHERE p.room_id = :roomId", nativeQuery = true)
+    String findByRoomIdAndQrCode(@Param("roomId") Long roomId);
 }
 
 

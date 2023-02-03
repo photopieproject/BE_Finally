@@ -21,9 +21,9 @@ public class Validator {
 
     // roomcode 로 room 존재 여부 확인 후 Room return
     @Transactional(readOnly = true)
-    public Room existsRoom(String roomcode) {
-        if (roomRepository.existsByRoomCode(roomcode)) {
-            Optional<Room> room = roomRepository.findByRoomCode(roomcode);
+    public Room existsRoom(String roomCode) {
+        if (roomRepository.existsByRoomCode(roomCode)) {
+            Optional<Room> room = roomRepository.findByRoomCode(roomCode);
             return room.get();
 
         } else {
