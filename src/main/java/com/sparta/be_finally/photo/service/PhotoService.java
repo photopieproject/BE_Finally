@@ -14,6 +14,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.sparta.be_finally.config.S3.AwsS3Service;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
+import com.sparta.be_finally.config.model.AES256;
 import com.sparta.be_finally.config.util.SecurityUtil;
 import com.sparta.be_finally.config.validator.Validator;
 import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
@@ -50,6 +51,8 @@ public class PhotoService {
     private final PhotoRepository photoRepository;
     private final AmazonS3Client amazonS3Client;
     private OpenVidu openVidu;
+
+    private final AES256 aes256;
 
     // QR 색상
     private static int backgroundColor = 0xFF000002;
@@ -123,8 +126,9 @@ public class PhotoService {
         return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_FAIL);
     }
 
+    // 사진 4장 & 프레임 뿌려주기
     @Transactional(readOnly = true)
-    public PrivateResponseBody photoGet(Long roomId) {
+    public PrivateResponseBody photoGet(Long roomId) throws IOException {
 
         Room room = validator.existsRoom(roomId);
 
@@ -132,24 +136,34 @@ public class PhotoService {
         List<S3ObjectSummary> s3ObjectSummaries = objectListing.getObjectSummaries();
 
         List<String> imgUrlList = Lists.newArrayList();
+        List<String> imgTransList = Lists.newArrayList();
 
         for (S3ObjectSummary s3Object : s3ObjectSummaries) {
             String imgKey = s3Object.getKey();
             String imgUrl = amazonS3Client.getResourceUrl(bucket, imgKey);
 
-            // base64
-            try {
-                String base64ImageUrl = createBase64(imgUrl);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//
+//            // base64
+//            try {
+//                String base64ImageUrl = createBase64(imgUrl);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+            String baseList= aes256.getBase64(imgUrl);
 
             imgUrlList.add(imgUrl);
+            imgTransList.add(baseList);
         }
+
+        String url =room.getFrameUrl();
+        String urlConversion= aes256.getBase64(url);
+
         //return imgUrlList;
-        return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET, imgUrlList, new FrameResponseDto(room.getFrame(), room.getFrameUrl()), room.getId());
+        return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET, imgTransList,new FrameResponseDto(room.getFrame(),urlConversion),room.getId());
     }
+
 
     // 완성 사진 저장
     @Transactional

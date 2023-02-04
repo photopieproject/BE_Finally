@@ -4,6 +4,7 @@ import com.sparta.be_finally.config.jwt.JwtAuthFilter;
 import com.sparta.be_finally.config.jwt.JwtUtil;
 import com.sparta.be_finally.config.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,10 +12,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -40,7 +44,13 @@ public class WebSecurityConfig {
           http.csrf().disable();
           
           // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
-          http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+          http.sessionManagement()
+                  .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                  .maximumSessions(1)
+                  .maxSessionsPreventsLogin(false)
+                  .expiredUrl("/login")
+                  .sessionRegistry(sessionRegistry());
+
           http.authorizeRequests()
                // 토큰검증 필요없는 페이지 설정
 //               .antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
@@ -65,6 +75,17 @@ public class WebSecurityConfig {
 //          http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
           
           return http.build();
+     }
+
+     // logout 후 login할 때 정상동작을 위함
+     @Bean
+     public SessionRegistry sessionRegistry() {
+          return new SessionRegistryImpl();
+     }
+
+     @Bean
+     public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+          return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
      }
 
      @Bean

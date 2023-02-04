@@ -1,5 +1,6 @@
 package com.sparta.be_finally.config.model;
 
+import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,9 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Base64;
 
 @Component
@@ -39,5 +43,12 @@ public class AES256 {
         byte[] decodedBytes = Base64.getDecoder().decode(cipherText);
         byte[] decrypted = cipher.doFinal(decodedBytes);
         return new String(decrypted, "UTF-8");
+    }
+
+    public String getBase64(String imageURL) throws IOException {
+        URL url = new URL(imageURL);
+        InputStream is = url.openStream();
+        byte[] bytes = IOUtils.toByteArray(is);
+        return org.apache.commons.codec.binary.Base64.encodeBase64String(bytes);
     }
 }

@@ -43,7 +43,7 @@ public class PhotoController {
 
     @ApiOperation(value = "사진 전송(조회)" )
     @GetMapping("/room/{roomId}/shoot")
-    public PrivateResponseBody photoGet(@PathVariable Long roomId){
+    public PrivateResponseBody photoGet(@PathVariable Long roomId) throws IOException {
         return photoService.photoGet(roomId);
     }
 
