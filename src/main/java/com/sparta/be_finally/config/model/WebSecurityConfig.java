@@ -47,7 +47,7 @@ public class WebSecurityConfig {
           http.sessionManagement()
                   .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                   .maximumSessions(1)
-                  .maxSessionsPreventsLogin(false)
+                  .maxSessionsPreventsLogin(true)
                   .expiredUrl("/login")
                   .sessionRegistry(sessionRegistry());
 
