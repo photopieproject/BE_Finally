@@ -27,7 +27,7 @@ public class Photo {
     private String qrCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", unique = true)
     private Room room;
 
     public Photo(Room room, String photo_one_imgUrl) {

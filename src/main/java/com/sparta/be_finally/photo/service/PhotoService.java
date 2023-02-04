@@ -91,9 +91,7 @@ public class PhotoService {
         Room room = validator.existsRoom(roomId);
 
         // 2. Photo 테이블 - room_id 에서 촬영한 사진 조회
-        //    사진을 한 컷 이상 찍은 상태 : isExist 에 정보 저장 됨
-        //    photo_one 촬영 한 상태 : isExist = null
-        Photo photo = photoRepository.findByRoomId(roomId).orElse(null);
+        Photo photo = photoRepository.findByRoom(room);
 
         // 3. photoRequestDto 에 있는 파일 S3에 업로드
         if (photoRequestDto.getPhoto_1()!=null || photoRequestDto.getPhoto_2() !=null|| photoRequestDto.getPhoto_3() !=null|| photoRequestDto.getPhoto_4()!=null) {
@@ -102,12 +100,10 @@ public class PhotoService {
                 photo.photo_one_update(photo_one_imgUrl);
                 return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
 
-
             } else if (photo.getPhotoTwo() == null && photoRequestDto.getPhoto_2() != null && !photoRequestDto.getPhoto_2().getContentType().isEmpty()) {
                 String photo_two_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_2(), room.getId());
                 photo.photo_two_update(photo_two_imgUrl);
                 return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
-
 
             } else if (photo.getPhotoThree() == null && photoRequestDto.getPhoto_3() != null && !photoRequestDto.getPhoto_3().getContentType().isEmpty()) {
                 String photo_three_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_3(), room.getId());
