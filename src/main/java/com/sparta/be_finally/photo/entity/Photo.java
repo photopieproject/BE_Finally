@@ -35,13 +35,14 @@ public class Photo {
         this.photoOne = photo_one_imgUrl;
     }
 
-    public Photo(Room room, PutObjectResult photo_one_imgUrl) {
-        this.room = room;
-        this.photoOne = String.valueOf(photo_one_imgUrl);
-    }
 
     public Photo(Room room) {
         this.room = room;
+    }
+
+    public Photo(Room room, PutObjectResult photo_one_imgUrl) {
+        this.room = room;
+        this.photoOne = String.valueOf(photo_one_imgUrl);
     }
 
     public Photo(String photoOneImgUrl) {

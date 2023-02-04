@@ -34,11 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.io.*;
+import java.net.URL;
 import java.util.Base64;
 import java.util.List;
 
@@ -46,7 +43,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class PhotoService {
-    private final RoomRepository roomRepository;
     @Value("${cloud.aws.s3.bucket}" )
     private String bucket;
     private final AwsS3Service awsS3Service;
@@ -140,6 +136,15 @@ public class PhotoService {
         for (S3ObjectSummary s3Object : s3ObjectSummaries) {
             String imgKey = s3Object.getKey();
             String imgUrl = amazonS3Client.getResourceUrl(bucket, imgKey);
+
+            // base64
+            try {
+                String base64ImageUrl = createBase64(imgUrl);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             imgUrlList.add(imgUrl);
         }
         //return imgUrlList;
@@ -172,8 +177,8 @@ public class PhotoService {
     @Transactional
     public PrivateResponseBody returnQr(Long roomId) {
         String qrcode = photoRepository.findByRoomIdAndQrCode(roomId);
-        if (qrcode != null) {
 
+        if (qrcode != null) {
             return new PrivateResponseBody(CommonStatusCode.CREATE_QRCODE, qrcode);
         } else {
             return new PrivateResponseBody(CommonStatusCode.FAIL_QRCODE);
@@ -213,24 +218,20 @@ public class PhotoService {
         return pngData;
     }
 
-    public String decodeQR(byte[] qrCodeBytes) {
-        try {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(qrCodeBytes);
-            BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
-            BufferedImageLuminanceSource bufferedImageLuminanceSource = new BufferedImageLuminanceSource(bufferedImage);
-            HybridBinarizer hybridBinarizer = new HybridBinarizer(bufferedImageLuminanceSource);
-            BinaryBitmap binaryBitmap = new BinaryBitmap(hybridBinarizer);
-            MultiFormatReader multiFormatReader = new MultiFormatReader();
-            Result result = multiFormatReader.decode(binaryBitmap);
-            return result.getText();
-        } catch (NotFoundException e) {
-            return "QR Code Not Found In This Image!";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    // base64
+    private String createBase64(String imgUrl) throws IOException {
+        // base64
+        URL urlInput = new URL(imgUrl);
+        BufferedImage urlImage = ImageIO.read(urlInput);
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(urlImage, "jpg", bos);
+        Base64.Encoder encoder = Base64.getEncoder();
+        String encodeString = encoder.encodeToString(bos.toByteArray());
+
+//        String qrcode = Base64.getEncoder().encodeToString(imgUrl);
+
+        return encodeString;
     }
-
-
 }
 

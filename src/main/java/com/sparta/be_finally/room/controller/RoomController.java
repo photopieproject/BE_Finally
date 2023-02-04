@@ -29,18 +29,21 @@ public class RoomController {
     //          각 참가자는 토큰을 사용하여 하나의 연결을 사용하여 연결합니다
 
     // 방 생성
+    @ApiOperation(value = "방 생성")
     @PostMapping("/room")
     public PrivateResponseBody createRoom(@RequestBody RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         return new PrivateResponseBody(CommonStatusCode.CREATE_ROOM,roomService.createRoom(roomRequestDto));
     }
 
     // 방 입장
+    @ApiOperation(value = "방 입장")
     @PostMapping("/room/roomCode")
     public PrivateResponseBody roomEnter(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         return roomService.roomEnter(roomCodeRequestDto);
     }
 
     // 방 나가기
+    @ApiOperation(value = "방 나가기")
     @DeleteMapping("/room/{roomId}/exit")
     public PrivateResponseBody roomExit(@PathVariable Long roomId) throws OpenViduJavaClientException, OpenViduHttpException {
         roomService.roomExit(roomId);
@@ -49,6 +52,7 @@ public class RoomController {
 
 
     // 방 종료 (Openvidu session만 삭제, DB는 24시간 후에 삭제 됨)
+    @ApiOperation(value = "방 종료")
     @DeleteMapping("/room/roomCode")
     public PrivateResponseBody roomClose(@RequestBody RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         roomService.roomClose(roomCodeRequestDto);
@@ -56,10 +60,10 @@ public class RoomController {
     }
 
     // 프레임 선택
+    @ApiOperation(value = "사진 프레임 선택")
     @PutMapping("/room/{roomId}")
     public PrivateResponseBody choiceFrame(@PathVariable Long roomId, @RequestBody FrameRequestDto frameRequestDto) {
         return roomService.choiceFrame(roomId, frameRequestDto);
     }
-
 
 }

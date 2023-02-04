@@ -43,7 +43,6 @@ public class RoomService {
     private String bucket;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
-
     private final RoomParticipantRepository roomParticipantRepository;
     private final AmazonS3Client amazonS3Client;
     private final Validator validator;
@@ -65,7 +64,7 @@ public class RoomService {
         return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    // 방 생성시 세션(Openvidu room) 초기화
+    // 방 생성시 세션(Openvidu room) 초기화성
     @Transactional
     public RoomResponseDto createRoom(RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
