@@ -1,6 +1,7 @@
 package com.sparta.be_finally.user.service;
 
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
+import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.errorcode.StatusCode;
 import com.sparta.be_finally.config.errorcode.UserStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
@@ -13,6 +14,7 @@ import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
@@ -25,13 +27,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AES256 aes256;
-    private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");;
+    private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr" );
+    ;
     String newPhoneNumber = null;
 
     // 회원가입
@@ -49,7 +53,16 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(newPhoneNumber);
+        //System.out.println(newPhoneNumber);
+
+
+        //유저 데이터베이스에서 휴대폰번호 확인.
+        //만약에 저장된 휴대폰번호가 있으면 ->등록된 휴대폰번호라고 알려주기
+        //없으면 회원가입 가능
+
+        if (userRepository.existsByPhoneNumber(newPhoneNumber)){
+            throw new RestApiException(UserStatusCode.REGISTERED_PHONENUM);
+        }
 
         // 회원가입
         userRepository.save(new User(requestDto, password, newPhoneNumber));
@@ -86,7 +99,7 @@ public class UserService {
     //아이디 찾기(인증번호)
     public PrivateResponseBody findUserNum(String phoneNumber) {
         Message message = new Message();
-        message.setFrom("01023699764");
+        message.setFrom("01023699764" );
         message.setTo(phoneNumber);
 
         String storeId = "";
@@ -103,25 +116,30 @@ public class UserService {
         List<User> userList = userRepository.findAll();
 
         for (User u : userList) {
-            if (u.getPhoneNumber().equals(newPhoneNumber)) {
-                storeId = u.getUserId();
 
-                Random random = new Random();
-                String numStr = "";
-                for(int i = 0; i < 6; i++){
-                    String ran = Integer.toString(random.nextInt(10));
-                    numStr += ran;
-                }
-                message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+                if (u.getPhoneNumber()!=null&&u.getPhoneNumber().equals(newPhoneNumber)) {
+                    storeId = u.getUserId();
+
+                    Random random = new Random();
+                    String numStr = "";
+                    for (int i = 0; i < 6; i++) {
+                        String ran = Integer.toString(random.nextInt(10));
+                        numStr += ran;
+                    }
+                    message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요" );
 
 //                SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
-                return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr, storeId);
+                    return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr, storeId);
 
+                }
             }
+            return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
         }
-        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
-    }
+
+
+
+
 
     // 비밀번호 찾기
     public PrivateResponseBody findPassword(String phoneNumber, String userId) {

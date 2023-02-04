@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.bytebuddy.utility.nullability.MaybeNull;
+import org.springframework.data.jpa.repository.Lock;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -46,6 +47,7 @@ public class Room {
 
     private String frameUrl;
 
+
     // Openvidu 의 roomId 이라고 생각하면 됨
     private String sessionId;
 
@@ -56,12 +58,17 @@ public class Room {
     @JoinColumn(name = "user_id")
     private User user;
 
-
-
-
-
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
+
+    public Room(Long id) {
+        this.id = id;
+    }
+
+    public Room(int frameNum, String frameUrl) {
+        this.frame = frameNum;
+        this.frameUrl = String.valueOf(frameUrl);
+    }
 
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
         this.roomCode = roomCodeRequestDto.getRoomCode();
@@ -74,36 +81,7 @@ public class Room {
         this.user = user;
         this.userCount++;
         this.sessionId = sessionId;
-
         this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
-    }
-
-
-    //추후 삭제
-    public Room(RoomRequestDto roomRequestDto, User user) {
-        this.roomName = roomRequestDto.getRoomName();
-        //this.roomCode = (int)(Math.random()*100000);
-        this.roomCode = UUID.randomUUID().toString().substring(0, 5);
-        this.user = user;
-        this.userCount++;
-        this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
-    }
-
-
-
-
-
-    public Room(int frameNum, String frameUrl) {
-        this.frame = frameNum;
-        this.frameUrl = String.valueOf(frameUrl);
-    }
-
-    public Room(Long id) {
-        this.id = id;
-    }
-
-    public void enter() {
-        this.userCount++;
     }
 
     public void updateFrame(FrameRequestDto frameRequestDto, String frameUrl) {
@@ -111,6 +89,12 @@ public class Room {
         this.frameUrl = frameUrl;
     }
 
+    // 방 입장
+    public void enter() {
+        this.userCount++;
+    }
+
+    // 방 나가기
     public void exit() {
         this.userCount--;
     }

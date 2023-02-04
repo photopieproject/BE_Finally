@@ -4,6 +4,7 @@ import com.sparta.be_finally.config.jwt.JwtAuthFilter;
 import com.sparta.be_finally.config.jwt.JwtUtil;
 import com.sparta.be_finally.config.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,10 +12,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -40,7 +44,13 @@ public class WebSecurityConfig {
           http.csrf().disable();
           
           // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
-          http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+          http.sessionManagement()
+                  .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                  .maximumSessions(1)
+                  .maxSessionsPreventsLogin(true)
+                  .expiredUrl("/login")
+                  .sessionRegistry(sessionRegistry());
+
           http.authorizeRequests()
                // 토큰검증 필요없는 페이지 설정
 //               .antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
@@ -48,8 +58,9 @@ public class WebSecurityConfig {
                .antMatchers("/api/doc").permitAll()
                .antMatchers("/socket").permitAll()
                .antMatchers("/").permitAll()
+               .antMatchers("/api/photo/room/{roomId}/shoot").permitAll()
 
-
+                  
                .antMatchers("/swagger-ui/**").permitAll() //스웨거 권한설정 X
                .antMatchers("/swagger-resources/**").permitAll() //스웨거 권한설정 X
                .antMatchers("/swagger-ui.html").permitAll() //스웨거 권한설정 X
@@ -66,14 +77,26 @@ public class WebSecurityConfig {
           return http.build();
      }
 
+     // logout 후 login할 때 정상동작을 위함
+     @Bean
+     public SessionRegistry sessionRegistry() {
+          return new SessionRegistryImpl();
+     }
+
+     @Bean
+     public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+          return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
+     }
+
      @Bean
      public CorsConfigurationSource corsConfigurationSource(){
 
           CorsConfiguration config = new CorsConfiguration();
 
-          config.addAllowedOrigin("http://localhost:3000");
-//          https://dev.djcf93g3uh9mz.amplifyapp.com
-          config.addAllowedOrigin("https://dev.djcf93g3uh9mz.amplifyapp.com");
+          config.addAllowedOrigin("http://localhost:3000"); // 프론트 로컬주소
+          config.addAllowedOrigin("https://dev.djcf93g3uh9mz.amplifyapp.com"); // 프론트 배포주소
+          config.addAllowedOrigin("https://www.photo-pie.store"); // 프론트 도메인주소
+          config.addAllowedOrigin("https://photo-pie.store"); // 프론트 도메인주소
 
           config.addExposedHeader(JwtUtil.AUTHORIZATION_HEADER);
 

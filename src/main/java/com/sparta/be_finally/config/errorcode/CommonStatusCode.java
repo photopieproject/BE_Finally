@@ -17,6 +17,7 @@ public enum CommonStatusCode implements StatusCode {
      FAIL_ROOM("방 만들기 실패", HttpStatus.BAD_REQUEST.value()),
      FAIL_ENTER("방 입장 실패", HttpStatus.BAD_REQUEST.value()),
      FAIL_ENTER_OPENVIDU("존재하지 않는 방 입니다.",HttpStatus.BAD_REQUEST.value()),
+     NOT_ALLOWED_TO_ENTER("촬영 중이거나 촬영이 끝난 방은 입장할 수 없습니다.",HttpStatus.BAD_REQUEST.value()),
      DELETE_ROOM_OPENVIDU("Openvidu Session delete",HttpStatus.OK.value()),
      FAIL_SAVE_PHOTO("이 방에 저장되어있는 사진이 있습니다.", HttpStatus.BAD_REQUEST.value()),
      SHOOT_PHOTO_SUCCESS("사진 촬영 성공",HttpStatus.OK.value()),
@@ -33,7 +34,14 @@ public enum CommonStatusCode implements StatusCode {
      FAIL_CHOICE_FRAME2("올바른 프레임을 선택해주세요",HttpStatus.BAD_REQUEST.value()),
      INVALID_PARAMETER("Invalid parameter included",HttpStatus.BAD_REQUEST.value()),
      INTERNAL_SERVER_ERROR("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value()),
-     DELETE_USER("회원 탈퇴 성공", HttpStatus.OK.value());
+     DELETE_USER("회원 탈퇴 성공", HttpStatus.OK.value()),
+
+     COMPLETE_PHOTO_SUCCESS("완성이미지 저장완료", HttpStatus.OK.value()),
+     COMPLETE_PHOTO_FAIL("완성이미지 저장실패", HttpStatus.BAD_REQUEST.value()),
+     CREATE_QRCODE("QR코드 생성 완료", HttpStatus.OK.value()),
+     FAIL_QRCODE("QR코드 생성 실패", HttpStatus.BAD_REQUEST.value());
+
+
 
      private final String StatusMsg;
      private final int statusCode;

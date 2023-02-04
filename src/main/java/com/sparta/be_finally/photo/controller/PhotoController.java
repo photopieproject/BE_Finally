@@ -2,6 +2,7 @@ package com.sparta.be_finally.photo.controller;
 
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
+import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.service.PhotoService;
@@ -11,8 +12,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import retrofit2.http.Path;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,9 +43,22 @@ public class PhotoController {
 
     @ApiOperation(value = "사진 전송(조회)" )
     @GetMapping("/room/{roomId}/shoot")
-    public PrivateResponseBody photoGet(@PathVariable Long roomId){
+    public PrivateResponseBody photoGet(@PathVariable Long roomId) throws IOException {
         return photoService.photoGet(roomId);
     }
+
+    @ApiOperation(value = "완성 이미지 저장")
+    @PostMapping("/room/{roomId}/completePhoto")
+    public PrivateResponseBody completePhotoSave(@PathVariable Long roomId, @ModelAttribute CompletePhotoRequestDto completePhotoRequestDto) {
+        return photoService.completePhotoSave(roomId, completePhotoRequestDto);
+    }
+
+    @ApiOperation(value = "QR코드 발급")
+    @GetMapping("/room/{roomId}/qrCode")
+    public PrivateResponseBody returnQr(@PathVariable Long roomId) {
+        return photoService.returnQr(roomId);
+    }
+
 }
 
 

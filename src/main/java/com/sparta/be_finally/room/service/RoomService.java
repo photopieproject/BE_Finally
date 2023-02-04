@@ -1,6 +1,10 @@
 package com.sparta.be_finally.room.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
@@ -18,15 +22,20 @@ import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.net.URL;
+import javax.persistence.LockModeType;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RoomService {
 
@@ -34,7 +43,6 @@ public class RoomService {
     private String bucket;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
-
     private final RoomParticipantRepository roomParticipantRepository;
     private final AmazonS3Client amazonS3Client;
     private final Validator validator;
@@ -56,7 +64,7 @@ public class RoomService {
         return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    // 방 생성시 세션(Openvidu room) 초기화
+    // 방 생성시 세션(Openvidu room) 초기화성
     @Transactional
     public RoomResponseDto createRoom(RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
@@ -80,9 +88,6 @@ public class RoomService {
 
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
             String token = session.createConnection(connectionProperties).getToken();
-
-
-
 
             // 방 생성
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
@@ -110,6 +115,7 @@ public class RoomService {
 
     // 방 입장하기
     @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public PrivateResponseBody roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
         String role = "leader";
@@ -122,6 +128,13 @@ public class RoomService {
 
         // room 테이블의 sessionId에 openvidu SessionId 이 저장 되어있는지 확인
         validator.existsRoomSessionId(session.getSessionId());
+
+        // 사진 촬영 중이거나 촬영을 마친 방은 입장 불가
+        Photo photo = photoRepository.findByRoom(room);
+
+        if (photo.getPhotoOne() != null) {
+            throw new RestApiException(CommonStatusCode.NOT_ALLOWED_TO_ENTER);
+        }
 
         // 방 나간 후 재입장 처리(방장이 재 입장인경우)
         if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, role) != null) {
@@ -191,11 +204,11 @@ public class RoomService {
     }
 
     @Transactional
-    public void roomExit(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public void roomExit(Long roomId) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
 
-        // 방 코드로 방 조회
-        Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
+        // roomId 로 방 조회
+        Room room = validator.existsRoom(roomId);
 
         Session session = getSession(room.getSessionId());
 
@@ -334,6 +347,8 @@ public class RoomService {
         }
         return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
     }
+
+
 }
 
 

@@ -1,6 +1,7 @@
 package com.sparta.be_finally.config.security;
 
 import com.sparta.be_finally.user.entity.User;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode(of = {"user"})
 public class UserDetailsImpl implements UserDetails {
 
      //인증이 완료된 사용자 추가

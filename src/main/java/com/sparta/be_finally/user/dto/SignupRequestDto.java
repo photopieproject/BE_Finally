@@ -2,12 +2,14 @@ package com.sparta.be_finally.user.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class SignupRequestDto {
 
@@ -24,7 +26,8 @@ public class SignupRequestDto {
     @NotBlank
     private String nickname;
 
-    @NotBlank
+    @NotBlank(message = "휴대폰번호는 필수 입력 값입니다.")
+    @Pattern(regexp = "^01(?:0|1|[6-9])(?:\\d{4})\\d{4}$", message = "올바른 휴대폰번호 형식으로 입력해주세요.")
     private String phoneNumber;
 
 }
