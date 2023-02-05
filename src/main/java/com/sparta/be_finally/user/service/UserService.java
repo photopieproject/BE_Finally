@@ -23,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -62,14 +64,13 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //System.out.println(newPhoneNumber);
-
 
         //유저 데이터베이스에서 휴대폰번호 확인.
         //만약에 저장된 휴대폰번호가 있으면 ->등록된 휴대폰번호라고 알려주기
         //없으면 회원가입 가능
 
-        if (userRepository.existsByPhoneNumber(newPhoneNumber)) {
+        if (userRepository.existsByPhoneNumber(newPhoneNumber)){
+
             throw new RestApiException(UserStatusCode.REGISTERED_PHONENUM);
         }
 
@@ -81,7 +82,6 @@ public class UserService {
     public StatusCode idCheck(String userId) {
         if (userRepository.existsByUserId(userId)) {
             return UserStatusCode.OVERLAPPED_USERID;
-
         } else {
             return UserStatusCode.AVAILABLE_USERID;
         }
@@ -173,22 +173,24 @@ public class UserService {
         // 핸드폰번호 다시 암호화하여 암호환 번호가 있는지 확인
         try {
             newPhoneNumber = aes256.encrypt(phoneNumber);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         List<User> userList = userRepository.findAll();
         for (User u : userList) {
-            if (u.getPhoneNumber() != null && u.getPhoneNumber().equals(newPhoneNumber)) {
-                storeId = u.getUserId();
+                if (u.getPhoneNumber()!=null&&u.getPhoneNumber().equals(newPhoneNumber)) {
+                    storeId = u.getUserId();
 
-                Random random = new Random();
-                String numStr = "";
-                for (int i = 0; i < 6; i++) {
-                    String ran = Integer.toString(random.nextInt(10));
-                    numStr += ran;
-                }
-                message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+                    Random random = new Random();
+                    String numStr = "";
+                    for (int i = 0; i < 6; i++) {
+                        String ran = Integer.toString(random.nextInt(10));
+                        numStr += ran;
+                    }
+                    message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요" );
+
+               // SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
                 if (!confirmRepository.existsByUserId(storeId)) {
                     confirmRepository.save(new Confirm(numStr, newPhoneNumber, storeId));
@@ -228,9 +230,6 @@ public class UserService {
     }
 
 
-
-
-
     // 비밀번호 찾기
     public PrivateResponseBody findPassword(String phoneNumber, String userId) {
         String passWord = "";
@@ -264,8 +263,10 @@ public class UserService {
             }
             confirmRepository.checkPassWordUpdate(numStr, passWord);
             return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, userId);
+           // this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        } else {
+            return new PrivateResponseBody(UserStatusCode.FAIL_IDENTIFICATION);
         }
-        return new PrivateResponseBody(UserStatusCode.FAIL_IDENTIFICATION);
     }
 
 
@@ -303,27 +304,19 @@ public class UserService {
     // 비밀번호 재설정
     public PrivateResponseBody resetPassword(String userId, String password) {
         Optional<User> user = userRepository.findByUserId(userId);
-        System.out.println("비밀번호 변경 전 유저:" + user);
-
-        System.out.println("암호화 전 비밀번호: " + password);
 
         // 패스워드 암호화
         String newPassword = passwordEncoder.encode(password);
 
-        System.out.println("암호화 후 비밀번호: " + newPassword);
-
         userRepository.pwUpdate(newPassword, userId);
 
         Optional<User> newUser = userRepository.findByUserIdAndPassword(userId, newPassword);
-
-        System.out.println("비밀번호 변경 후 유저:" + newUser);
 
         if (newUser.equals(user)) {
             return new PrivateResponseBody(UserStatusCode.FAIL_RESET_PASSWORD);
         } else {
             return new PrivateResponseBody(UserStatusCode.SUCCESS_RESET_PASSWORD);
         }
-
     }
 }
 

@@ -13,8 +13,6 @@ public interface RoomParticipantRepository extends JpaRepository<RoomParticipant
 
     RoomParticipant findRoomParticipantByUserIdAndRoomAndRole(String userId, Room room, String role);
 
-    List<RoomParticipant> findAllByRoomId(Long id);
-
     RoomParticipant findByUserIdAndRoom(String userId, Room room);
 
 }
