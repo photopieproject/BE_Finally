@@ -339,12 +339,12 @@ public class RoomService {
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
 
         } else if (frameRequestDto.getFrame() == 8) {
-            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/chan.jpg"));
+            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/chan.png"));
             room.updateFrame(frameRequestDto,frameUrl);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
 
         } else if (frameNum == 9) {
-            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/city.jpg"));
+            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/city.png"));
             room.updateFrame(frameRequestDto,frameUrl);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
 
