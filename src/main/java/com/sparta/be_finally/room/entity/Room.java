@@ -32,7 +32,7 @@ public class Room {
     private static final int VALID_HOUR = 24;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
