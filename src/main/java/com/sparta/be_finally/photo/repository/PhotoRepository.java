@@ -41,6 +41,9 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     boolean existsByRoomIdAndCompletePhotoIsNull(Long roomId);
 
+    @Query(value = "SELECT p.complete_photo FROM photo p WHERE p.room_id = :roomId", nativeQuery = true)
+    String findByRoomIdAndCompletePhoto(@Param("roomId") Long roomId);
+
 
 }
 

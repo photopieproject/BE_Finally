@@ -37,6 +37,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -207,6 +208,18 @@ public class PhotoService {
         } else {
             return new PrivateResponseBody(CommonStatusCode.FAIL_QRCODE);
         }
+    }
+
+    @Transactional
+    public PrivateResponseBody kakaoUrl(Long roomId) {
+        String url = photoRepository.findByRoomIdAndCompletePhoto(roomId);
+        if (url != null) {
+            return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO, url);
+        } else {
+            return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_NULL);
+
+        }
+
     }
 
     // QRCode 생성
