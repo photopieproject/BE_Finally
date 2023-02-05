@@ -40,6 +40,8 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     String findByRoomIdAndQrCode(@Param("roomId") Long roomId);
 
     boolean existsByRoomIdAndCompletePhotoIsNull(Long roomId);
+
+
 }
 
 
