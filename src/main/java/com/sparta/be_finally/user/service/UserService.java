@@ -50,8 +50,6 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //System.out.println(newPhoneNumber);
-
 
         //유저 데이터베이스에서 휴대폰번호 확인.
         //만약에 저장된 휴대폰번호가 있으면 ->등록된 휴대폰번호라고 알려주기
@@ -69,7 +67,6 @@ public class UserService {
     public StatusCode idCheck(String userId) {
         if (userRepository.existsByUserId(userId)) {
             return UserStatusCode.OVERLAPPED_USERID;
-
         } else {
             return UserStatusCode.AVAILABLE_USERID;
         }
@@ -104,11 +101,9 @@ public class UserService {
         // 핸드폰번호 다시 암호화하여 암호환 번호가 있는지 확인
         try {
             newPhoneNumber = aes256.encrypt(phoneNumber);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         List<User> userList = userRepository.findAll();
 
@@ -133,9 +128,6 @@ public class UserService {
             }
             return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
         }
-
-
-
 
 
     // 비밀번호 찾기
@@ -174,33 +166,20 @@ public class UserService {
     // 비밀번호 재설정
     public PrivateResponseBody resetPassword(String userId, String password) {
         Optional<User> user = userRepository.findByUserId(userId);
-        System.out.println("비밀번호 변경 전 유저:" + user);
-
-        System.out.println("암호화 전 비밀번호: " + password);
 
         // 패스워드 암호화
         String newPassword = passwordEncoder.encode(password);
 
-        System.out.println("암호화 후 비밀번호: " + newPassword);
-
         userRepository.pwUpdate(newPassword, userId);
 
         Optional<User> newUser = userRepository.findByUserIdAndPassword(userId, newPassword);
-
-        System.out.println("비밀번호 변경 후 유저:" + newUser);
 
         if (newUser.equals(user)) {
             return new PrivateResponseBody(UserStatusCode.FAIL_RESET_PASSWORD);
         } else {
             return new PrivateResponseBody(UserStatusCode.SUCCESS_RESET_PASSWORD);
         }
-
-
-
     }
-
-
-
 }
 
 
