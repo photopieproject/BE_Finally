@@ -187,13 +187,13 @@ public class PhotoService {
             photoRepository.saveQrCode(qrCode, roomId);
 
         } else {
-            return new PrivateResponseBody(CommonStatusCode.EXISTS_COMPLETE_PHOTO);
+            return new PrivateResponseBody(CommonStatusCode.EXISTS_COMPLETE_PHOTO, photoRepository.createQrPhotoUrl(roomId));
         }
 
         if(photoRepository.findByRoomIdAndCompletePhotoNull(roomId) != null) {
             return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_SUCCESS, photoRepository.createQrPhotoUrl(roomId));
         } else {
-            return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_FAIL, photoRepository.createQrPhotoUrl(roomId));
+            return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_FAIL);
         }
     }
 
