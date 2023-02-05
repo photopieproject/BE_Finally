@@ -13,7 +13,6 @@ import com.sparta.be_finally.config.S3.AwsS3Service;
 import com.sparta.be_finally.common.dto.PrivateResponseBody;
 import com.sparta.be_finally.common.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.AES256;
-import com.sparta.be_finally.common.model.CustomMultipartFile;
 import com.sparta.be_finally.common.util.SecurityUtil;
 import com.sparta.be_finally.common.validator.Validator;
 import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
@@ -193,7 +192,6 @@ public class PhotoService {
     // QR코드 생성
     private String createQr(Long roomId) {
         byte[] image = new byte[0];
-        //String QrCodeUrl = "";
 
         // url = complete_photo Url
         String url = photoRepository.createQrPhotoUrl(roomId);
@@ -201,9 +199,6 @@ public class PhotoService {
         try {
             // base 64 로 저장
             image = PhotoService.getQRCodeImage(url, 250, 250);
-
-            // file 로 저장
-            //QrCodeUrl = saveS3QRCodeImage(url,250,250, roomId);
 
         } catch (WriterException | IOException e) {
             e.printStackTrace();
@@ -216,40 +211,6 @@ public class PhotoService {
 
         return qrcode;
     }
-
-    /*private String saveS3QRCodeImage(String url, int width, int height, Long roomId) throws WriterException {
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(url, BarcodeFormat.QR_CODE, width, height);
-
-        MatrixToImageConfig matrixToImageConfig = new MatrixToImageConfig(backgroundColor, paintColor);
-
-        BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix, matrixToImageConfig);
-
-        MultipartFile multipartFile = convertBufferedImageToMultipartFile(bufferedImage, roomId);
-
-        // 생성된 Qrcode 이미지 s3에 업로드
-        String QrCodeUrl = awsS3Service.uploadFile(multipartFile, roomId);
-
-        return QrCodeUrl;
-    }
-
-    // BufferedImage > MultipartFile 로 변환
-    private MultipartFile convertBufferedImageToMultipartFile(BufferedImage image, Long roomId) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        try {
-            ImageIO.write(image, "jpeg", out);
-            InputStream is = new ByteArrayInputStream(out.toByteArray());
-
-        } catch (IOException e) {
-            log.error("IO Error", e);
-            return null;
-        }
-
-        // inputstream 땜에 s3 안들어감 이따 확인 요망...
-        byte[] bytes = out.toByteArray();
-        return new CustomMultipartFile(bytes, roomId+"QRCodeImage", roomId+"QRCodeImage.jpeg", "jpeg", bytes.length);
-    }*/
 
     // QR이미지 생성
     private static byte[] getQRCodeImage(String url, int width, int height) throws WriterException, IOException {
