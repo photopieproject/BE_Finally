@@ -36,12 +36,9 @@ public class SchedulerService {
     @Transactional
     public void runAfterTenSecondsRepeatTenSeconds() {
 
-
         // List<Room> roomList = roomRepository.findAll();
         LocalDateTime time = LocalDateTime.now().withNano(0);
         List <Room> roomList = roomRepository.findRooms();
-
-
 
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {

@@ -18,7 +18,6 @@ public class FrameResponseDto {
         this.frameNum = frameNum;
     }
 
-
     public FrameResponseDto(int frameNum, String frameUrl) {
         this.frameNum = frameNum;
         this.frameUrl = String.valueOf(frameUrl);

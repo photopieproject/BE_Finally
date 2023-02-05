@@ -15,7 +15,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     // 룸아이디에 맞는 photo optional 객체 반환
     Optional<Photo> findByRoomId(Long roomId);
 
-    // 룸 객체를 찾아 photo륿 반환
+    // 룸 객체를 찾아 photo를 반환
     Photo findByRoom(Room room);
 
     // 방 번호 확인후 완성된 사진 추가
@@ -38,8 +38,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     // QR코드 반환
     @Query(value = "SELECT p.qr_code FROM photo p WHERE p.room_id = :roomId", nativeQuery = true)
     String findByRoomIdAndQrCode(@Param("roomId") Long roomId);
-
-    boolean existsByRoomIdAndQrCodeNull(Long roomId);
 
     boolean existsByRoomIdAndCompletePhotoIsNull(Long roomId);
 }
