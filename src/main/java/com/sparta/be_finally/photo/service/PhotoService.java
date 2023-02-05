@@ -137,26 +137,17 @@ public class PhotoService {
             String imgKey = s3Object.getKey();
             String imgUrl = amazonS3Client.getResourceUrl(bucket, imgKey);
 
-//
-//            // base64
-//            try {
-//                String base64ImageUrl = createBase64(imgUrl);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
             String baseList= aes256.getBase64(imgUrl);
 
             imgUrlList.add(imgUrl);
             imgTransList.add(baseList);
         }
 
-        String url =room.getFrameUrl();
+        String url = room.getFrameUrl();
         String urlConversion= aes256.getBase64(url);
 
-        //return imgUrlList;
-        return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET, imgTransList,new FrameResponseDto(room.getFrame(),urlConversion),room.getId());
+        // return imgUrlList;
+        return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET, imgTransList, new FrameResponseDto(room.getFrame(),urlConversion), room.getId());
     }
 
 
@@ -167,13 +158,18 @@ public class PhotoService {
         Room room = validator.existsRoom(roomId);
 
         // 2. Room 테이블 - 완성 이미지 저장
-        String completePhoto = awsS3Service.uploadFile(completePhotoRequestDto.getCompletePhoto(), room.getId());
-        photoRepository.updateCompletePhoto(completePhoto, roomId);
+        if(photoRepository.existsByRoomIdAndCompletePhotoIsNull(roomId)) {
+            String completePhoto = awsS3Service.uploadFile(completePhotoRequestDto.getCompletePhoto(), room.getId());
+            photoRepository.updateCompletePhoto(completePhoto, roomId);
 
-        // 3. QR코드 생성
-        String qrCode = createQr(roomId); // base64 인코딩
-        System.out.println("qrCode : " + qrCode);
-        photoRepository.saveQrCode(qrCode, roomId);
+            // 3. QR코드 생성
+            String qrCode = createQr(roomId); // base64 인코딩
+            System.out.println("qrCode : " + qrCode);
+            photoRepository.saveQrCode(qrCode, roomId);
+
+        } else {
+            return new PrivateResponseBody(CommonStatusCode.EXISTS_COMPLETE_PHOTO);
+        }
 
         if(photoRepository.findByRoomIdAndCompletePhotoNull(roomId) != null) {
             return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_SUCCESS);
