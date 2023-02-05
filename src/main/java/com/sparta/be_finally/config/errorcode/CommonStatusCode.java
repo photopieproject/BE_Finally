@@ -40,10 +40,8 @@ public enum CommonStatusCode implements StatusCode {
      COMPLETE_PHOTO_FAIL("완성이미지 저장실패", HttpStatus.BAD_REQUEST.value()),
      CREATE_QRCODE("QR코드 생성 완료", HttpStatus.OK.value()),
      FAIL_QRCODE("QR코드 생성 실패", HttpStatus.BAD_REQUEST.value()),
-     EXISTS_COMPLETE_PHOTO("이미 사진이 저장돼 있습니다.", HttpStatus.BAD_REQUEST.value());
-
-
-
+     EXISTS_COMPLETE_PHOTO("이미 사진이 저장돼 있습니다.", HttpStatus.BAD_REQUEST.value()),
+     EXISTS_QRCODE("이미 저장돼있는 QR코드가 있습니다.", HttpStatus.BAD_REQUEST.value());
 
 
      private final String StatusMsg;

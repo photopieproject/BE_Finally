@@ -162,17 +162,15 @@ public class PhotoService {
         if(photoRepository.existsByRoomIdAndCompletePhotoIsNull(roomId)) {
             String completePhoto = awsS3Service.uploadFile(completePhotoRequestDto.getCompletePhoto(), room.getId());
             photoRepository.updateCompletePhoto(completePhoto, roomId);
-        } else {
-            return new PrivateResponseBody(CommonStatusCode.EXISTS_COMPLETE_PHOTO);
-        }
 
-        // 3. QR코드 생성
-        if(photoRepository.existsByRoomIdAndQrCodeNull(roomId) == true ) {
+            // 3. QR코드 생성
             String qrCode = createQr(roomId); // base64 인코딩
             System.out.println("qrCode : " + qrCode);
             photoRepository.saveQrCode(qrCode, roomId);
-        }
 
+        } else {
+            return new PrivateResponseBody(CommonStatusCode.EXISTS_COMPLETE_PHOTO);
+        }
 
         if(photoRepository.findByRoomIdAndCompletePhotoNull(roomId) != null) {
             return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_SUCCESS);
