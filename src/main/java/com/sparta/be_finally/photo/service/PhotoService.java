@@ -96,22 +96,22 @@ public class PhotoService {
             if (photo.getPhotoOne() == null && photoRequestDto.getPhoto_1() != null && !photoRequestDto.getPhoto_1().getContentType().isEmpty()) {
                 String photo_one_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_1(), room.getId());
                 photo.photo_one_update(photo_one_imgUrl);
-                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
+                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
 
             } else if (photo.getPhotoTwo() == null && photoRequestDto.getPhoto_2() != null && !photoRequestDto.getPhoto_2().getContentType().isEmpty()) {
                 String photo_two_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_2(), room.getId());
                 photo.photo_two_update(photo_two_imgUrl);
-                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
+                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
 
             } else if (photo.getPhotoThree() == null && photoRequestDto.getPhoto_3() != null && !photoRequestDto.getPhoto_3().getContentType().isEmpty()) {
                 String photo_three_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_3(), room.getId());
                 photo.photo_three_update(photo_three_imgUrl);
-                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
+                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
 
             } else if (photo.getPhotoFour() == null && photoRequestDto.getPhoto_4() != null && !photoRequestDto.getPhoto_4().getContentType().isEmpty()) {
                 String photo_four_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_4(), room.getId());
                 photo.photo_four_update(photo_four_imgUrl);
-                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
+                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
 
             } else {
                 return new PrivateResponseBody(CommonStatusCode.FAIL_SAVE_PHOTO);
@@ -126,7 +126,7 @@ public class PhotoService {
 
         Room room = validator.existsRoom(roomId);
 
-        ObjectListing objectListing = amazonS3Client.listObjects(bucket, "photo/"+room.getId() + "/");
+        ObjectListing objectListing = amazonS3Client.listObjects(bucket, "photo/"+ room.getId() + "/");
         List<S3ObjectSummary> s3ObjectSummaries = objectListing.getObjectSummaries();
 
         List<String> imgUrlList = Lists.newArrayList();
@@ -158,7 +158,7 @@ public class PhotoService {
 
         // 2. Room 테이블 - 완성 이미지 저장
         if(photoRepository.existsByRoomIdAndCompletePhotoIsNull(roomId)) {
-            String completePhoto = awsS3Service.uploadFile(completePhotoRequestDto.getCompletePhoto(), room.getId());
+            String completePhoto = awsS3Service.uploadCompleteFile(completePhotoRequestDto.getCompletePhoto(), room.getId());
             photoRepository.updateCompletePhoto(completePhoto, roomId);
 
             // 3. QR코드 생성
