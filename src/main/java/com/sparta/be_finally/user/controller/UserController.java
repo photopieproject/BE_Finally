@@ -60,7 +60,7 @@ public class UserController {
     @ApiOperation(value = "구글 로그인")
     @GetMapping("/google/callback")
     public PrivateResponseBody googleLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        return new PrivateResponseBody(UserStatusCode.USER_LOGIN_SUCCESS,googleService.googleLogin(code, response));
+        return new PrivateResponseBody(UserStatusCode.USER_LOGIN_SUCCESS, googleService.googleLogin(code, response));
     }
 
     @ApiOperation(value = "휴대폰 본인 확인")
@@ -104,12 +104,5 @@ public class UserController {
         return userService.resetPassword(resetPasswordRequestDto.getUserId(), resetPasswordRequestDto.getPassword());
     }
 
-//    체크 코드
-//    public Boolean checkcode(String checkcode) {
-//        Member member = dao.findByCheckcode(checkcode);
-//        if(member == null)
-//            return false;
-//        return dao.update(Member.builder().username(member.getUsername()).checkcode("0").enabled(true).build())==1;
-//    }
 
 }
