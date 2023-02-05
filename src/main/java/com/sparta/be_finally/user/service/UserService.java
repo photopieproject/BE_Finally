@@ -7,11 +7,15 @@ import com.sparta.be_finally.config.errorcode.UserStatusCode;
 import com.sparta.be_finally.config.exception.RestApiException;
 import com.sparta.be_finally.config.jwt.JwtUtil;
 import com.sparta.be_finally.config.model.AES256;
+import com.sparta.be_finally.user.dto.ConfirmRequestDto;
 import com.sparta.be_finally.user.dto.LoginRequestDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
+import com.sparta.be_finally.user.entity.Confirm;
 import com.sparta.be_finally.user.entity.User;
+import com.sparta.be_finally.user.repository.ConfirmRepository;
 import com.sparta.be_finally.user.repository.UserRepository;
+import io.netty.handler.codec.socksx.v5.Socks5PasswordAuthRequestDecoder;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +26,7 @@ import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
@@ -31,10 +36,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
+    private final ConfirmRepository confirmRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+
+
     private final AES256 aes256;
-    private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr" );
+    private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
     ;
     String newPhoneNumber = null;
 
@@ -60,7 +69,7 @@ public class UserService {
         //만약에 저장된 휴대폰번호가 있으면 ->등록된 휴대폰번호라고 알려주기
         //없으면 회원가입 가능
 
-        if (userRepository.existsByPhoneNumber(newPhoneNumber)){
+        if (userRepository.existsByPhoneNumber(newPhoneNumber)) {
             throw new RestApiException(UserStatusCode.REGISTERED_PHONENUM);
         }
 
@@ -96,10 +105,67 @@ public class UserService {
         return new LoginResponseDto.commonLogin(user);
     }
 
+
+    //회원가입 시 휴대폰번호로 인증 문자 받기
+    public PrivateResponseBody sendOne(String phoneNumber) {
+        Message message = new Message();
+        message.setFrom("01023699764");
+        message.setTo(phoneNumber);
+
+        Random random = new Random();
+        String numStr = "";
+        for (int i = 0; i < 6; i++) {
+            String ran = Integer.toString(random.nextInt(10));
+            numStr += ran;
+        }
+
+        message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        try {
+            newPhoneNumber = aes256.encrypt(phoneNumber);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (!confirmRepository.existsByPhoneNum(newPhoneNumber)) {
+            confirmRepository.save(new Confirm(numStr, newPhoneNumber));
+        }
+        confirmRepository.checkNumUpdate(numStr, newPhoneNumber);
+        return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS);
+    }
+
+
+    //회원가입시 인증문자 확인하기
+    @Transactional
+    public PrivateResponseBody checkNum(ConfirmRequestDto confirmRequestDto) {
+        String storePhoneNum = "";
+        String checkNumber = "";
+
+
+        List<Confirm> confirmList = confirmRepository.findAll();
+
+        for (Confirm c : confirmList) {
+            storePhoneNum = c.getPhoneNum();
+            checkNumber = c.getCheckNum();
+        }
+
+
+        if (confirmRepository.existsByCheckNumAndPhoneNum(confirmRequestDto.getCheckNumber(), storePhoneNum)) {
+            confirmRepository.deleteByCheckNum(checkNumber);
+            return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED);
+
+        }
+        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+    }
+
+
     //아이디 찾기(인증번호)
     public PrivateResponseBody findUserNum(String phoneNumber) {
         Message message = new Message();
-        message.setFrom("01023699764" );
+        message.setFrom("01023699764");
         message.setTo(phoneNumber);
 
         String storeId = "";
@@ -112,67 +178,123 @@ public class UserService {
             e.printStackTrace();
         }
 
-
         List<User> userList = userRepository.findAll();
-
         for (User u : userList) {
+            if (u.getPhoneNumber() != null && u.getPhoneNumber().equals(newPhoneNumber)) {
+                storeId = u.getUserId();
 
-                if (u.getPhoneNumber()!=null&&u.getPhoneNumber().equals(newPhoneNumber)) {
-                    storeId = u.getUserId();
-
-                    Random random = new Random();
-                    String numStr = "";
-                    for (int i = 0; i < 6; i++) {
-                        String ran = Integer.toString(random.nextInt(10));
-                        numStr += ran;
-                    }
-                    message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요" );
-
-//                SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-
-                    return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr, storeId);
-
+                Random random = new Random();
+                String numStr = "";
+                for (int i = 0; i < 6; i++) {
+                    String ran = Integer.toString(random.nextInt(10));
+                    numStr += ran;
                 }
+                message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+                if (!confirmRepository.existsByUserId(storeId)) {
+                    confirmRepository.save(new Confirm(numStr, newPhoneNumber, storeId));
+                }
+                confirmRepository.checkUserUpdate(numStr, storeId);
+                return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS);
             }
-            return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+        }
+        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+    }
+
+
+    // 아이디찾기 눌렀을 때 인증문자 확인
+    @Transactional
+    public PrivateResponseBody idCheckNum(ConfirmRequestDto confirmRequestDto) {
+        String storeId = "";
+        String storePhoneNum = "";
+        String storeCheckNum = "";
+
+        List<Confirm> confirmList = confirmRepository.findAll();
+        for (Confirm c : confirmList) {
+            storeId = c.getUserId();
+            storePhoneNum = c.getPhoneNum();
+            storeCheckNum = c.getCheckNum();
         }
 
+        if (confirmRepository.existsByCheckNumAndPhoneNum(confirmRequestDto.getCheckNumber(),storePhoneNum)) {
+            confirmRepository.deleteByCheckNum(storeCheckNum);
+            return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
+        } else if (confirmRequestDto.getCheckNumber().isEmpty()) {
+            return new PrivateResponseBody(UserStatusCode.FAILE_INSERT_NUMBER);
+        }
+        return new PrivateResponseBody(UserStatusCode.FAIL_IDENTIFICATION);
+    }
 
 
 
 
     // 비밀번호 찾기
     public PrivateResponseBody findPassword(String phoneNumber, String userId) {
-        // 핸드폰번호 암호화
+        Message message = new Message();
+        message.setFrom("01023699764");
+        message.setTo(phoneNumber);
+
+        String storeId = "";
+
+        // 핸드폰번호 다시 암호화하여 암호환 번호가 있는지 확인
         try {
             newPhoneNumber = aes256.encrypt(phoneNumber);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Optional<User> user = userRepository.findByUserIdAndPhoneNumber(userId, newPhoneNumber);
-        System.out.println("user:" + user);
 
-        if (userRepository.existsByUserIdAndPhoneNumber(userId, newPhoneNumber)) {
-            Message message = new Message();
-            message.setFrom("01023699764");
-            message.setTo(phoneNumber);
+        List<User> userList = userRepository.findAll();
+        for (User u : userList) {
+            if (userRepository.existsByUserIdAndPhoneNumber(userId,newPhoneNumber)) {
+                storeId = u.getPassword();
 
-            Random random = new Random();
-            String numStr = "";
-            for(int i = 0; i < 6; i++){
-                String ran = Integer.toString(random.nextInt(10));
-                numStr += ran;
+                Random random = new Random();
+                String numStr = "";
+                for (int i = 0; i < 6; i++) {
+                    String ran = Integer.toString(random.nextInt(10));
+                    numStr += ran;
+                }
+                message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+
+                if (!confirmRepository.existsByPasswordAndPhoneNum(storeId,newPhoneNumber)) {
+                    confirmRepository.save(new Confirm(numStr, newPhoneNumber,userId, storeId));
+                }
+                confirmRepository.checkPassWordUpdate(numStr, storeId);
+                return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS,userId);
             }
-
-            message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
-
-//            this.messageService.sendOne(new SingleMessageSendingRequest(message));
-
-            return new PrivateResponseBody(UserStatusCode.SUCCESS_IDENTIFICATION, numStr, userId);
-        } else {
-            return new PrivateResponseBody(UserStatusCode.FAIL_IDENTIFICATION);
         }
+        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
     }
+
+
+
+
+
+
+
+    // 비밀번호 찾기 인증번호보내기
+    @Transactional
+    public PrivateResponseBody passwordCheckNum(ConfirmRequestDto confirmRequestDto){
+        String storeId = "";
+        String storeCheckNum="";
+
+        List<Confirm> confirmList = confirmRepository.findAll();
+        for (Confirm c: confirmList){
+            storeId = c.getUserId();
+            storeCheckNum= c.getCheckNum();
+        }
+
+        if (confirmRequestDto.getCheckNumber().equals(storeCheckNum)) {
+            confirmRepository.deleteByCheckNum(storeCheckNum);
+            return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED,storeId);
+        }
+        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+    }
+
+
+
+
 
     // 비밀번호 재설정
     public PrivateResponseBody resetPassword(String userId, String password) {

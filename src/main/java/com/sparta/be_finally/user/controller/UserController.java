@@ -3,10 +3,7 @@ package com.sparta.be_finally.user.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.be_finally.config.dto.PrivateResponseBody;
 import com.sparta.be_finally.config.errorcode.UserStatusCode;
-import com.sparta.be_finally.user.dto.FindPasswordRequestDto;
-import com.sparta.be_finally.user.dto.LoginRequestDto;
-import com.sparta.be_finally.user.dto.ResetPasswordRequestDto;
-import com.sparta.be_finally.user.dto.SignupRequestDto;
+import com.sparta.be_finally.user.dto.*;
 import com.sparta.be_finally.user.service.GoogleService;
 import com.sparta.be_finally.user.service.KakaoService;
 import com.sparta.be_finally.user.service.UserService;
@@ -66,29 +63,28 @@ public class UserController {
     @ApiOperation(value = "휴대폰 본인 확인")
     @PostMapping("/smsmessage")
     public PrivateResponseBody sendOne(@RequestParam String phoneNumber) {
-        Message message = new Message();
-        message.setFrom("01023699764");
-        message.setTo(phoneNumber);
-
-        Random random = new Random();
-        String numStr = "";
-        for(int i = 0; i < 6; i++){
-            String ran = Integer.toString(random.nextInt(10));
-            numStr += ran;
-        }
-
-        message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
-
-//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-
-        return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
+        return userService.sendOne(phoneNumber);
     }
+
+    @ApiOperation(value = "본인확인 시 보낼 인증번호")
+    @PostMapping("/smsmessage/check")
+    public PrivateResponseBody checkNum(@RequestBody ConfirmRequestDto confirmRequestDto){
+        return userService.checkNum(confirmRequestDto);
+    }
+
 
     @ApiOperation(value = "아이디 찾기")
     @PostMapping("/find-id")
     public PrivateResponseBody findUserNum(@RequestParam String phoneNumber){
         return userService.findUserNum(phoneNumber);
     }
+
+    @ApiOperation(value = "아이디 찾기 인증번호 ")
+    @PostMapping("/find-id/check")
+    public PrivateResponseBody idCheckNum(@RequestBody ConfirmRequestDto confirmRequestDto ){
+        return userService.idCheckNum(confirmRequestDto);
+    }
+
 
     // 비밀번호 찾기
     @ApiOperation(value = "비밀번호 찾기")
@@ -97,6 +93,11 @@ public class UserController {
         return userService.findPassword(phoneNumber, findPasswordDto.getUserId());
     }
 
+    @ApiOperation(value ="비밀번호 찾기 인증번호" )
+    @PostMapping("/find-pw/check")
+    public PrivateResponseBody passwordCheckNum(@RequestBody ConfirmRequestDto confirmRequestDto){
+        return userService.passwordCheckNum(confirmRequestDto);
+    }
     // 비밀번호 재설정
     @ApiOperation(value = "비밀번호 재설정")
     @PutMapping("/reset-pw")
