@@ -1,10 +1,10 @@
-package com.sparta.be_finally.config.handler;
+package com.sparta.be_finally.common.handler;
 
-import com.sparta.be_finally.config.dto.ErrorResponseDto;
-import com.sparta.be_finally.config.errorcode.CommonStatusCode;
-import com.sparta.be_finally.config.errorcode.StatusCode;
-import com.sparta.be_finally.config.errorcode.UserStatusCode;
-import com.sparta.be_finally.config.exception.RestApiException;
+import com.sparta.be_finally.common.dto.ErrorResponseDto;
+import com.sparta.be_finally.common.errorcode.CommonStatusCode;
+import com.sparta.be_finally.common.errorcode.StatusCode;
+import com.sparta.be_finally.common.errorcode.UserStatusCode;
+import com.sparta.be_finally.common.exception.RestApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;

@@ -1,7 +1,7 @@
-package com.sparta.be_finally.config.jwt;
+package com.sparta.be_finally.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.be_finally.config.dto.ErrorResponseDto;
+import com.sparta.be_finally.common.dto.ErrorResponseDto;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

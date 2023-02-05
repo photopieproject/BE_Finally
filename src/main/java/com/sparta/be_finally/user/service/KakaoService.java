@@ -3,10 +3,8 @@ package com.sparta.be_finally.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.be_finally.config.jwt.JwtUtil;
+import com.sparta.be_finally.config.security.jwt.JwtUtil;
 import com.sparta.be_finally.config.security.UserDetailsImpl;
-import com.sparta.be_finally.user.dto.KakaoFriendListResponseDto;
-import com.sparta.be_finally.user.dto.KakaoFriendResponseDto;
 import com.sparta.be_finally.user.dto.KakaoUserInfoDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.entity.User;
@@ -30,13 +28,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j

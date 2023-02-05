@@ -1,6 +1,6 @@
-package com.sparta.be_finally.config.exception;
+package com.sparta.be_finally.common.exception;
 
-import com.sparta.be_finally.config.errorcode.StatusCode;
+import com.sparta.be_finally.common.errorcode.StatusCode;
 
 public class RestApiException extends RuntimeException{
      
