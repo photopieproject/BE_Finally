@@ -193,7 +193,7 @@ public class PhotoService {
         if(photoRepository.findByRoomIdAndCompletePhotoNull(roomId) != null) {
             return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_SUCCESS, photoRepository.createQrPhotoUrl(roomId));
         } else {
-            return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_FAIL);
+            return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_FAIL, photoRepository.createQrPhotoUrl(roomId));
         }
     }
 
