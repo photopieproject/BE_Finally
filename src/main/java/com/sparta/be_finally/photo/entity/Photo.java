@@ -20,9 +20,7 @@ public class Photo {
     private String photoTwo;
     private String photoThree;
     private String photoFour;
-
     private String completePhoto;
-
     @Column(columnDefinition = "LONGTEXT")
     private String qrCode;
 
@@ -30,23 +28,8 @@ public class Photo {
     @JoinColumn(name = "room_id", unique = true)
     private Room room;
 
-    public Photo(Room room, String photo_one_imgUrl) {
-        this.room = room;
-        this.photoOne = photo_one_imgUrl;
-    }
-
-
     public Photo(Room room) {
         this.room = room;
-    }
-
-    public Photo(Room room, PutObjectResult photo_one_imgUrl) {
-        this.room = room;
-        this.photoOne = String.valueOf(photo_one_imgUrl);
-    }
-
-    public Photo(String photoOneImgUrl) {
-        this.photoOne = photoOneImgUrl;
     }
 
     public void photo_one_update(String photo_one_imgUrl){

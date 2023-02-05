@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +62,7 @@ public class UserController {
     @ApiOperation(value = "구글 로그인")
     @GetMapping("/google/callback")
     public PrivateResponseBody googleLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        return new PrivateResponseBody(UserStatusCode.USER_LOGIN_SUCCESS,googleService.googleLogin(code, response));
+        return new PrivateResponseBody(UserStatusCode.USER_LOGIN_SUCCESS, googleService.googleLogin(code, response));
     }
 
     @ApiOperation(value = "휴대폰 본인 확인")
@@ -79,7 +81,7 @@ public class UserController {
 
         message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
 
-//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
         return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
     }
@@ -104,12 +106,5 @@ public class UserController {
         return userService.resetPassword(resetPasswordRequestDto.getUserId(), resetPasswordRequestDto.getPassword());
     }
 
-//    체크 코드
-//    public Boolean checkcode(String checkcode) {
-//        Member member = dao.findByCheckcode(checkcode);
-//        if(member == null)
-//            return false;
-//        return dao.update(Member.builder().username(member.getUsername()).checkcode("0").enabled(true).build())==1;
-//    }
 
 }

@@ -15,21 +15,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUserId(String userId);
 
-    boolean existsByPhoneNumber(String phoneNumber);
-
     Optional<User> findByKakaoId(Long kakaoId);
 
     Optional<User> findByGoogleId(String googleId);
 
-    boolean findByPhoneNumber(String phoneNumber);
-
     Optional<User> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
+
     boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
 
     Optional<User> findByUserIdAndPassword(String userId, String password);
 
-    Optional<User> findAllByPhoneNumber(String phoneNumber);
-
+    boolean existsByPhoneNumber(String phoneNumber);
+    
     @Modifying
     @Query (
             nativeQuery = true,
@@ -43,7 +40,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying(clearAutomatically = true)
     @Query (value = "UPDATE users u SET u.password = :password WHERE u.user_id = :userId", nativeQuery = true)
     void pwUpdate(@Param("password") String password, @Param("userId") String userId);
-
-
 
 }

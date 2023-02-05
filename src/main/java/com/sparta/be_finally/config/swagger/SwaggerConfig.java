@@ -1,4 +1,4 @@
-package com.sparta.be_finally.config;
+package com.sparta.be_finally.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

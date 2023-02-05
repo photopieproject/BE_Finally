@@ -58,7 +58,7 @@ public class RoomService {
         return openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    // 방 생성시 세션(Openvidu room) 초기화성
+    // 방 생성시 세션(Openvidu room) 초기화
     @Transactional
     public RoomResponseDto createRoom(RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
@@ -77,17 +77,23 @@ public class RoomService {
                     .data(serverData)
                     .build();
 
-            // 새로운 openvidu 세션 생성
+            // 새로운 openvidu 세션 생성: 오픈비두 방을 만든다.
             Session session = openVidu.createSession();
+
+            // Log: 세션아이디 확인
+            log.info("세션아이디 확인 / sessionId = " + session.getSessionId());
 
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
             String token = session.createConnection(connectionProperties).getToken();
+
+            // Log: 토큰 확인
+            log.info("토큰 확인 / token = " + token);
 
             // 방 생성
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
             photoRepository.save(new Photo(room));
 
-            // 방장 token update (토큰이 있어야 방에 입장 가능)
+            // 방장 token update (토큰이 있어야 방에 입장 가능) 오픈비두에서 만들어준 토큰값을 넣어준다.
             userRepository.update(user.getId(), token);
 
             // 방장 방 입장 처리
@@ -109,7 +115,7 @@ public class RoomService {
 
     // 방 입장하기
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_WRITE) // 비관적 락
     public PrivateResponseBody roomEnter(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
         String role = "leader";
@@ -136,6 +142,9 @@ public class RoomService {
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
             String token = validator.getToken(session, user);
 
+            // Log: 재입장 토큰 확인
+            log.info("재입장 토큰 확인 / token = " + token);
+
             return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
                     RoomResponseDto.builder()
                             .id(room.getId())
@@ -149,7 +158,7 @@ public class RoomService {
                             .expireDate(room.getExpireDate())
                             .build());
 
-        } //user가 재입장인 경우
+        } // user가 재입장인 경우
         else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, "user") != null) {
             String token = validator.getToken(session, user);
 
@@ -201,12 +210,10 @@ public class RoomService {
     public void roomExit(Long roomId) throws OpenViduJavaClientException, OpenViduHttpException {
         User user = SecurityUtil.getCurrentUser();
 
-        // roomId 로 방 조회
+        // roomId로 방 조회
         Room room = validator.existsRoom(roomId);
 
         Session session = getSession(room.getSessionId());
-
-        String getConnectionId = null;
 
         // Openvidu 에서 사용자 연결 끊기
         // Session.getActiveConnections()에서 반환된 목록에서 원하는 Connection 개체를 찾습니다
@@ -214,9 +221,7 @@ public class RoomService {
 
         for (Connection connection : activeConnections) {
             if (connection.getToken().equals(user.getToken())) {
-                //getConnectionId = connection.getConnectionId();
-                session.forceDisconnect(connection);
-
+                session.forceDisconnect(connection); // 세션에 입장한 사용자 연결 끊기
             }
         }
 
@@ -227,28 +232,32 @@ public class RoomService {
         // 방 입장 인원수 -1 업데이트
         room.exit();
 
+        // Log: 현재 남아있는 방 참가자수 확인
+        log.info("현재 남아있는 방 참가자수 확인 / room.getUserCount() = " + room.getUserCount());
+
         // user.getToken = null 로 update
         userRepository.update(user.getId(), null);
     }
 
-    @Transactional
-    public void roomClose(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
-        // 방 코드로 방 조회
-        Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
+//    @Transactional
+//    public void roomClose(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+//        // 방 코드로 방 조회
+//        Room room = validator.existsRoom(roomCodeRequestDto.getRoomCode());
+//
+//        Session session = getSession(room.getSessionId());
+//
+//        // room_participant - roomId로 등록된 데이터 삭제 처리
+//        List<RoomParticipant> participants = roomParticipantRepository.findAllByRoomId(room.getId());
+//
+//        for (RoomParticipant participant : participants) {
+//            roomParticipantRepository.delete(participant);
+//        }
+//
+//        // Openvidu session 삭제 (방 종료)
+//        session.close();
+//    }
 
-        Session session = getSession(room.getSessionId());
-
-        // room_participant - roomId로 등록된 데이터 삭제 처리
-        List<RoomParticipant> participants = roomParticipantRepository.findAllByRoomId(room.getId());
-
-        for (RoomParticipant participant : participants) {
-            roomParticipantRepository.delete(participant);
-        }
-
-        // Openvidu session 삭제 (방 종료)
-        session.close();
-    }
-
+    // 방 입장
     private Session getSession(String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
         //오픈비두에 활성화된 세션을 모두 가져와 리스트에 담는다.
         //활성화된 session의 sessionId들을 room에서 get한 sessionId(입장할 채팅방의 sessionId)와 비교
@@ -270,6 +279,9 @@ public class RoomService {
             }
         }
 
+        // Log: 존재하는 세션 확인
+        log.info("존재하는 세션 확인 / session = " + session.getSessionId());
+
         if (session == null) {
             throw new RestApiException(CommonStatusCode.FAIL_ENTER_OPENVIDU);
         }
@@ -287,6 +299,9 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElse(null);
 
         int frameNum = frameRequestDto.getFrame();
+
+        // Log: 사용자가 선택한 프레임 번호
+        log.info("사용자가 선택한 프레임 번호 / frameNum = " + frameNum);
 
         if (frameNum == 1) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/black.png"));
@@ -344,78 +359,3 @@ public class RoomService {
 
 
 }
-
-
-
-//        if (frameRequestDto.getFrame() == 1 ){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/black.png");
-//            frameRepository.saveAndFlush(new Frame(1,frameUrl));
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(1,frameUrl));
-//
-//
-//        }else if (frameRequestDto.getFrame()==2){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/mint.png");
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(2, frameUrl));
-//
-//
-//        }else if (frameRequestDto.getFrame() ==3){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/pink.png");
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(3,frameUrl));
-//
-//
-//        } else if (frameRequestDto.getFrame() == 4){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/purple.png");
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(4,frameUrl));
-//
-//
-//        }else if (frameRequestDto.getFrame() == 5){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/white.png");
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(5,frameUrl));
-//
-//
-//        }else if (frameRequestDto.getFrame() == 6){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/retro.png");
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(6,frameUrl));
-//
-//
-//        } else if (frameRequestDto.getFrame() == 7){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/sunset.png");
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(7,frameUrl));
-//
-//
-//        }else if (frameRequestDto.getFrame() == 8){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/blackcloud.jpg");
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(8, frameUrl));
-//
-//
-//        }else if (frameRequestDto.getFrame() == 9){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/rainbow.jpg");
-//            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new Frame(9,frameUrl));
-//
-//
-//        }else if (frameRequestDto.getFrame() ==10){
-//            URL frameUrl = amazonS3Client.getUrl(bucket,"frame/whitecloud.png");
-//            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new Frame(10,frameUrl));
-//
-//        }
-//        return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
-//    }
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

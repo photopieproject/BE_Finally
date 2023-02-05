@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
-    // 룸 객체를 찾아 photo륿 반환
+
+    // 룸 객체를 찾아 photo를 반환
     Photo findByRoom(Room room);
 
     // 방 번호 확인후 완성된 사진 추가
@@ -35,9 +36,12 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     @Query(value = "SELECT p.qr_code FROM photo p WHERE p.room_id = :roomId", nativeQuery = true)
     String findByRoomIdAndQrCode(@Param("roomId") Long roomId);
 
-    boolean existsByRoomIdAndQrCodeNull(Long roomId);
-
     boolean existsByRoomIdAndCompletePhotoIsNull(Long roomId);
+
+    @Query(value = "SELECT p.complete_photo FROM photo p WHERE p.room_id = :roomId", nativeQuery = true)
+    String findByRoomIdAndCompletePhoto(@Param("roomId") Long roomId);
+
+
 }
 
 

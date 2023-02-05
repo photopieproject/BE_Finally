@@ -51,6 +51,10 @@ public class PhotoController {
         return photoService.returnQr(roomId);
     }
 
+    @ApiOperation(value = "kakao 전송하기 url")
+    @GetMapping("/room/{roomId}/kakaoUrl")
+    public PrivateResponseBody kakaoUrl(@PathVariable Long roomId) {return photoService.kakaoUrl(roomId);}
+
 }
 
 
