@@ -1,6 +1,7 @@
 package com.sparta.be_finally.user.repository;
 
 import com.sparta.be_finally.user.entity.Confirm;
+import com.sparta.be_finally.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,42 +14,21 @@ public interface ConfirmRepository extends JpaRepository<Confirm,Long> {
 
     boolean existsByUserId(String userId);
 
-    boolean existsByPasswordAndPhoneNum(String passWord, String PhoneNumber);
-
-
-    boolean existsByCheckNumAndPhoneNum(String checkNumber, String phoneNumber);
-
-    boolean existsByCheckNumAndUserIdNull(String checkNumber);
-
-    boolean existsByCheckNumAndPhoneNumAndUserIdAndPassword(String checkNumber, String phoneNumber, String userId,String passWord);
-
-    boolean existsByCheckNumAndPhoneNumAndUserId(String checkNumber, String phoneNumber, String userId);
-
-
-
-    void deleteByCheckNumAndAndPhoneNum(String checkNumber, String phoneNumber);
-
-
+    boolean existsByUserIdAndPasswordAndPhoneNum(String userId, String passWord, String PhoneNumber);
 
 
     void deleteByCheckNum(String checkNumber);
 
 
-//    @Transactional
-//    @Modifying(clearAutomatically = true)
-//    @Query (value = "DELETE Confirm c "
-
-
-
 //회원가입시 인증번호
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query (value = "UPDATE Confirm c SET c.checkNum = :checkNum WHERE c.phoneNum = :phoneNum AND c.userId IS NULL" )
+    @Query (value = "UPDATE Confirm c SET c.checkNum = :checkNum WHERE c.phoneNum = :phoneNum" )
     void checkNumUpdate(@Param("checkNum") String checkNum, @Param("phoneNum") String phoneNum);
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query (value = "UPDATE Confirm c SET c.checkNum = :checkNum WHERE c.userId = :userId")
+    @Query (value = "UPDATE Confirm c SET c.checkNum = :checkNum WHERE c.userId =:userId")
     void checkUserUpdate(@Param("checkNum") String checkNum, @Param("userId") String userId);
 
 
@@ -56,7 +36,6 @@ public interface ConfirmRepository extends JpaRepository<Confirm,Long> {
     @Modifying(clearAutomatically = true)
     @Query (value = "UPDATE Confirm c SET c.checkNum =:checkNum WHERE c.password =:passWord")
     void checkPassWordUpdate(@Param("checkNum") String checkNum, @Param("passWord") String passWord);
-
 
 
 }

@@ -4,10 +4,7 @@ package com.sparta.be_finally.user.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -26,6 +23,7 @@ public class Confirm {
 
     private String password;
 
+
     public Confirm(String numStr, String newPhoneNumber) {
         this.checkNum = numStr;
         this.phoneNum = newPhoneNumber;
@@ -38,10 +36,13 @@ public class Confirm {
 
     }
 
+
     public Confirm(String numStr, String newPhoneNumber, String userId, String passWord) {
+
         this.checkNum = numStr;
         this.phoneNum = newPhoneNumber;
         this.userId = userId;
         this.password = passWord;
     }
+
 }

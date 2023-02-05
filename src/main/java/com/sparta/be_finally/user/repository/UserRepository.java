@@ -21,7 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByGoogleId(String googleId);
 
-    boolean findByPhoneNumber(String phoneNumber);
 
     Optional<User> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
 

@@ -92,7 +92,6 @@ public class UserController {
         return userService.idCheckNum(confirmRequestDto);
     }
 
-
     // 비밀번호 찾기
     @ApiOperation(value = "비밀번호 찾기")
     @PostMapping("/find-pw")
@@ -111,13 +110,5 @@ public class UserController {
     public PrivateResponseBody resetPassword(@RequestBody @Valid ResetPasswordRequestDto resetPasswordRequestDto) {
         return userService.resetPassword(resetPasswordRequestDto.getUserId(), resetPasswordRequestDto.getPassword());
     }
-
-//    체크 코드
-//    public Boolean checkcode(String checkcode) {
-//        Member member = dao.findByCheckcode(checkcode);
-//        if(member == null)
-//            return false;
-//        return dao.update(Member.builder().username(member.getUsername()).checkcode("0").enabled(true).build())==1;
-//    }
 
 }
