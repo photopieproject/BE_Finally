@@ -20,7 +20,6 @@ public class AES256 {
 
 //    @Value("${aes256.key}")
 //    private String key;
-
     private final String key = "yV9XDKvlzXOPR/S7BoVy684oAJiSIBOleLVQZZFu2Gw=";
     private final String iv = key.substring(0, 16); // 16byte
 
@@ -45,10 +44,5 @@ public class AES256 {
         return new String(decrypted, "UTF-8");
     }
 
-    public String getBase64(String imageURL) throws IOException {
-        URL url = new URL(imageURL);
-        InputStream is = url.openStream();
-        byte[] bytes = IOUtils.toByteArray(is);
-        return org.apache.commons.codec.binary.Base64.encodeBase64String(bytes);
-    }
+
 }
