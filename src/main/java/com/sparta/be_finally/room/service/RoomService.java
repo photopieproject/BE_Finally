@@ -279,6 +279,9 @@ public class RoomService {
             }
         }
 
+        // Log: 존재하는 세션 확인
+        log.info("존재하는 세션 확인 / session = " + session.getSessionId());
+
         if (session == null) {
             throw new RestApiException(CommonStatusCode.FAIL_ENTER_OPENVIDU);
         }
@@ -296,6 +299,9 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElse(null);
 
         int frameNum = frameRequestDto.getFrame();
+
+        // Log: 사용자가 선택한 프레임 번호
+        log.info("사용자가 선택한 프레임 번호 / frameNum = " + frameNum);
 
         if (frameNum == 1) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/black.png"));
