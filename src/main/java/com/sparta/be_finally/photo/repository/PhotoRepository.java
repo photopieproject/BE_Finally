@@ -39,8 +39,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     @Query(value = "SELECT p.qr_code FROM photo p WHERE p.room_id = :roomId", nativeQuery = true)
     String findByRoomIdAndQrCode(@Param("roomId") Long roomId);
 
-    boolean existsByRoomIdAndQrCodeNull(Long roomId);
-
     boolean existsByRoomIdAndCompletePhotoIsNull(Long roomId);
 }
 
