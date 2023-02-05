@@ -118,7 +118,6 @@ public class UserService {
             String ran = Integer.toString(random.nextInt(10));
             numStr += ran;
         }
-
         message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
 
 //        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
@@ -129,7 +128,6 @@ public class UserService {
             e.printStackTrace();
         }
 
-
         if (!confirmRepository.existsByPhoneNum(newPhoneNumber)) {
             confirmRepository.save(new Confirm(numStr, newPhoneNumber));
         }
@@ -138,31 +136,41 @@ public class UserService {
     }
 
 
+
+
+
     //회원가입시 인증문자 확인하기
     @Transactional
     public PrivateResponseBody checkNum(ConfirmRequestDto confirmRequestDto) {
         String storePhoneNum = "";
         String checkNumber = "";
+        String userId ="";
 
 
         List<Confirm> confirmList = confirmRepository.findAll();
-
         for (Confirm c : confirmList) {
             storePhoneNum = c.getPhoneNum();
             checkNumber = c.getCheckNum();
+            userId = c.getUserId();
         }
 
-
-        if (confirmRepository.existsByCheckNumAndPhoneNum(confirmRequestDto.getCheckNumber(), storePhoneNum)) {
-            confirmRepository.deleteByCheckNum(checkNumber);
+        if (confirmRepository.existsByCheckNumAndPhoneNum(checkNumber,storePhoneNum)){
+            confirmRepository.deleteByCheckNumAndAndPhoneNum(confirmRequestDto.getCheckNumber(), storePhoneNum);
             return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED);
-
+        } else if (confirmRequestDto.getCheckNumber().isEmpty()){
+            return new PrivateResponseBody(UserStatusCode.FAILE_INSERT_NUMBER);
         }
         return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
     }
 
 
-    //아이디 찾기(인증번호)
+
+
+
+
+
+
+//아이디 찾기(인증번호)
     public PrivateResponseBody findUserNum(String phoneNumber) {
         Message message = new Message();
         message.setFrom("01023699764");
@@ -216,7 +224,7 @@ public class UserService {
             storeCheckNum = c.getCheckNum();
         }
 
-        if (confirmRepository.existsByCheckNumAndPhoneNum(confirmRequestDto.getCheckNumber(),storePhoneNum)) {
+        if (confirmRepository.existsByCheckNumAndPhoneNumAndUserId(confirmRequestDto.getCheckNumber(),storePhoneNum,storeId)) {
             confirmRepository.deleteByCheckNum(storeCheckNum);
             return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
         } else if (confirmRequestDto.getCheckNumber().isEmpty()) {
@@ -278,18 +286,26 @@ public class UserService {
     public PrivateResponseBody passwordCheckNum(ConfirmRequestDto confirmRequestDto){
         String storeId = "";
         String storeCheckNum="";
+        String passWord = "";
+        String phoneNumber ="";
+
 
         List<Confirm> confirmList = confirmRepository.findAll();
         for (Confirm c: confirmList){
             storeId = c.getUserId();
             storeCheckNum= c.getCheckNum();
+            passWord = c.getPassword();
+            phoneNumber = c. getPhoneNum();
         }
 
-        if (confirmRequestDto.getCheckNumber().equals(storeCheckNum)) {
+        if (confirmRepository.existsByCheckNumAndPhoneNumAndUserIdAndPassword(storeCheckNum,phoneNumber,storeId,passWord)) {
             confirmRepository.deleteByCheckNum(storeCheckNum);
             return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED,storeId);
         }
-        return new PrivateResponseBody(UserStatusCode.FAILE_USERID);
+        else if (confirmRequestDto.getCheckNumber().isEmpty()) {
+            return new PrivateResponseBody(UserStatusCode.FAILE_INSERT_NUMBER);
+        }
+        return new PrivateResponseBody(UserStatusCode.FAIL_IDENTIFICATION);
     }
 
 
@@ -320,12 +336,7 @@ public class UserService {
             return new PrivateResponseBody(UserStatusCode.SUCCESS_RESET_PASSWORD);
         }
 
-
-
     }
-
-
-
 }
 
 

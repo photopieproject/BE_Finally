@@ -15,16 +15,29 @@ public interface ConfirmRepository extends JpaRepository<Confirm,Long> {
 
     boolean existsByPasswordAndPhoneNum(String passWord, String PhoneNumber);
 
-    boolean existsByUserIdAndPhoneNumAndPassword(String userId, String phoneNumber, String passWord);
 
     boolean existsByCheckNumAndPhoneNum(String checkNumber, String phoneNumber);
 
+    boolean existsByCheckNumAndUserIdNull(String checkNumber);
 
+    boolean existsByCheckNumAndPhoneNumAndUserIdAndPassword(String checkNumber, String phoneNumber, String userId,String passWord);
+
+    boolean existsByCheckNumAndPhoneNumAndUserId(String checkNumber, String phoneNumber, String userId);
+
+
+
+    void deleteByCheckNumAndAndPhoneNum(String checkNumber, String phoneNumber);
 
 
 
 
     void deleteByCheckNum(String checkNumber);
+
+
+//    @Transactional
+//    @Modifying(clearAutomatically = true)
+//    @Query (value = "DELETE Confirm c "
+
 
 
 //회원가입시 인증번호
