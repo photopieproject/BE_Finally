@@ -35,33 +35,26 @@ public class SchedulerService {
     @Scheduled(fixedRate = 1800000)
     @Transactional
     public void runAfterTenSecondsRepeatTenSeconds() {
-
-
         // List<Room> roomList = roomRepository.findAll();
         LocalDateTime time = LocalDateTime.now().withNano(0);
         List <Room> roomList = roomRepository.findRooms();
 
-
-
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {
 
-                Photo photos = photoRepository.findByRoomId(room.getId()).orElse(null);
+                Photo photos = photoRepository.findByRoom(room);
 
                 if (photos != null) {
-                    List<String> photo_url = new ArrayList<>();
-                    photo_url.add(photos.getPhotoOne().split(".com/")[1]);
-                    photo_url.add(photos.getPhotoTwo().split(".com/")[1]);
-                    photo_url.add(photos.getPhotoThree().split(".com/")[1]);
-                    photo_url.add(photos.getPhotoFour().split(".com/")[1]);
 
                     //S3 - 이미지 삭제 처리
-                    for (String photo : photo_url) {
-                        awsS3Service.deleteFile(photo);
-                    }
+                    awsS3Service.deleteFolder("CompletePhoto/" + photos.getRoom().getId() + "/");
+                    awsS3Service.deleteFolder("photo/" + photos.getRoom().getId() + "/");
+
+                    //db - photo 삭제 처리
                     photoRepository.delete(photos);
                 }
 
+                //db - room 삭제 처리
                 roomRepository.delete(room);
             }
         }

@@ -149,7 +149,6 @@ public class PhotoService {
         return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET, imgTransList, new FrameResponseDto(room.getFrame(),urlConversion), room.getId());
     }
 
-
     // 완성 사진 저장
     @Transactional
     public PrivateResponseBody completePhotoSave(Long roomId, CompletePhotoRequestDto completePhotoRequestDto) {
