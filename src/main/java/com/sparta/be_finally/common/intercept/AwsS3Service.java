@@ -63,8 +63,8 @@ public class AwsS3Service {
         }
     }
 
-    public void deleteFile(String fileName) {
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    public void deleteFolder(String folderName) {
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, folderName));
     }
 
     public String createFileName(String fileName) { // 먼저 파일 업로드 시, 파일명을 난수화하기 위해 random으로 돌립니다.
