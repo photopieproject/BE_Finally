@@ -1,7 +1,7 @@
-package com.sparta.be_finally.config.util;
+package com.sparta.be_finally.common.util;
 
-import com.sparta.be_finally.config.errorcode.UserStatusCode;
-import com.sparta.be_finally.config.exception.RestApiException;
+import com.sparta.be_finally.common.errorcode.UserStatusCode;
+import com.sparta.be_finally.common.exception.RestApiException;
 import com.sparta.be_finally.config.security.UserDetailsImpl;
 import com.sparta.be_finally.user.entity.User;
 import lombok.NoArgsConstructor;

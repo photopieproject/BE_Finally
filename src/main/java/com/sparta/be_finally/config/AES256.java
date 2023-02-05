@@ -1,4 +1,4 @@
-package com.sparta.be_finally.config.model;
+package com.sparta.be_finally.config;
 
 import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Value;

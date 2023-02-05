@@ -1,4 +1,4 @@
-package com.sparta.be_finally.config.model;
+package com.sparta.be_finally.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

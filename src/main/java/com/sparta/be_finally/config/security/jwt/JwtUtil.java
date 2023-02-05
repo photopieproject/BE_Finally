@@ -1,4 +1,4 @@
-package com.sparta.be_finally.config.jwt;
+package com.sparta.be_finally.config.security.jwt;
 
 import com.sparta.be_finally.config.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;

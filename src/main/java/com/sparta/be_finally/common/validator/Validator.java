@@ -1,7 +1,7 @@
-package com.sparta.be_finally.config.validator;
+package com.sparta.be_finally.common.validator;
 
-import com.sparta.be_finally.config.errorcode.CommonStatusCode;
-import com.sparta.be_finally.config.exception.RestApiException;
+import com.sparta.be_finally.common.errorcode.CommonStatusCode;
+import com.sparta.be_finally.common.exception.RestApiException;
 import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.room.repository.RoomRepository;
 import com.sparta.be_finally.user.entity.User;

@@ -5,25 +5,22 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.Lists;
 import com.google.zxing.*;
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.sparta.be_finally.config.S3.AwsS3Service;
-import com.sparta.be_finally.config.dto.PrivateResponseBody;
-import com.sparta.be_finally.config.errorcode.CommonStatusCode;
-import com.sparta.be_finally.config.model.AES256;
-import com.sparta.be_finally.config.util.SecurityUtil;
-import com.sparta.be_finally.config.validator.Validator;
+import com.sparta.be_finally.common.dto.PrivateResponseBody;
+import com.sparta.be_finally.common.errorcode.CommonStatusCode;
+import com.sparta.be_finally.config.AES256;
+import com.sparta.be_finally.common.util.SecurityUtil;
+import com.sparta.be_finally.common.validator.Validator;
 import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.entity.Room;
-import com.sparta.be_finally.room.repository.RoomRepository;
 import com.sparta.be_finally.user.entity.User;
 import io.openvidu.java.client.OpenVidu;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
@@ -194,10 +192,14 @@ public class PhotoService {
     // QR코드 생성
     private String createQr(Long roomId) {
         byte[] image = new byte[0];
+
+        // url = complete_photo Url
         String url = photoRepository.createQrPhotoUrl(roomId);
 
         try {
+            // base 64 로 저장
             image = PhotoService.getQRCodeImage(url, 250, 250);
+
         } catch (WriterException | IOException e) {
             e.printStackTrace();
         }
