@@ -1,7 +1,6 @@
 package com.sparta.be_finally.room.service;
 
-import com.sparta.be_finally.config.S3.AwsS3Configuration;
-import com.sparta.be_finally.config.S3.AwsS3Service;
+import com.sparta.be_finally.common.intercept.AwsS3Service;
 import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.entity.Room;

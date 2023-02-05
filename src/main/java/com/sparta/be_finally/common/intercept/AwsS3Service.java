@@ -1,4 +1,4 @@
-package com.sparta.be_finally.config.S3;
+package com.sparta.be_finally.common.intercept;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
