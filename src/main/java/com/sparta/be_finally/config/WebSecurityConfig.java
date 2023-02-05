@@ -1,13 +1,12 @@
-package com.sparta.be_finally.config.model;
+package com.sparta.be_finally.config;
 
-import com.sparta.be_finally.config.jwt.JwtAuthFilter;
-import com.sparta.be_finally.config.jwt.JwtUtil;
+import com.sparta.be_finally.config.security.jwt.JwtAuthFilter;
+import com.sparta.be_finally.config.security.jwt.JwtUtil;
 import com.sparta.be_finally.config.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

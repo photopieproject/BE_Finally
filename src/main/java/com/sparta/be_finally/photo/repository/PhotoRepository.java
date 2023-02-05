@@ -38,6 +38,10 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     // QR코드 반환
     @Query(value = "SELECT p.qr_code FROM photo p WHERE p.room_id = :roomId", nativeQuery = true)
     String findByRoomIdAndQrCode(@Param("roomId") Long roomId);
+
+    boolean existsByRoomIdAndQrCodeNull(Long roomId);
+
+    boolean existsByRoomIdAndCompletePhotoIsNull(Long roomId);
 }
 
 

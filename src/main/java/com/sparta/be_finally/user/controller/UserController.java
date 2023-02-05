@@ -1,9 +1,16 @@
 package com.sparta.be_finally.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sparta.be_finally.config.dto.PrivateResponseBody;
-import com.sparta.be_finally.config.errorcode.UserStatusCode;
+
 import com.sparta.be_finally.user.dto.*;
+
+import com.sparta.be_finally.common.dto.PrivateResponseBody;
+import com.sparta.be_finally.common.errorcode.UserStatusCode;
+import com.sparta.be_finally.user.dto.FindPasswordRequestDto;
+import com.sparta.be_finally.user.dto.LoginRequestDto;
+import com.sparta.be_finally.user.dto.ResetPasswordRequestDto;
+import com.sparta.be_finally.user.dto.SignupRequestDto;
+
 import com.sparta.be_finally.user.service.GoogleService;
 import com.sparta.be_finally.user.service.KakaoService;
 import com.sparta.be_finally.user.service.UserService;

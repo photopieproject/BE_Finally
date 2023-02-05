@@ -5,25 +5,22 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.Lists;
 import com.google.zxing.*;
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.sparta.be_finally.config.S3.AwsS3Service;
-import com.sparta.be_finally.config.dto.PrivateResponseBody;
-import com.sparta.be_finally.config.errorcode.CommonStatusCode;
-import com.sparta.be_finally.config.model.AES256;
-import com.sparta.be_finally.config.util.SecurityUtil;
-import com.sparta.be_finally.config.validator.Validator;
+import com.sparta.be_finally.common.dto.PrivateResponseBody;
+import com.sparta.be_finally.common.errorcode.CommonStatusCode;
+import com.sparta.be_finally.config.AES256;
+import com.sparta.be_finally.common.util.SecurityUtil;
+import com.sparta.be_finally.common.validator.Validator;
 import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.entity.Room;
-import com.sparta.be_finally.room.repository.RoomRepository;
 import com.sparta.be_finally.user.entity.User;
 import io.openvidu.java.client.OpenVidu;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
@@ -98,22 +96,22 @@ public class PhotoService {
             if (photo.getPhotoOne() == null && photoRequestDto.getPhoto_1() != null && !photoRequestDto.getPhoto_1().getContentType().isEmpty()) {
                 String photo_one_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_1(), room.getId());
                 photo.photo_one_update(photo_one_imgUrl);
-                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
+                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
 
             } else if (photo.getPhotoTwo() == null && photoRequestDto.getPhoto_2() != null && !photoRequestDto.getPhoto_2().getContentType().isEmpty()) {
                 String photo_two_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_2(), room.getId());
                 photo.photo_two_update(photo_two_imgUrl);
-                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
+                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
 
             } else if (photo.getPhotoThree() == null && photoRequestDto.getPhoto_3() != null && !photoRequestDto.getPhoto_3().getContentType().isEmpty()) {
                 String photo_three_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_3(), room.getId());
                 photo.photo_three_update(photo_three_imgUrl);
-                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
+                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
 
             } else if (photo.getPhotoFour() == null && photoRequestDto.getPhoto_4() != null && !photoRequestDto.getPhoto_4().getContentType().isEmpty()) {
                 String photo_four_imgUrl = awsS3Service.uploadFile(photoRequestDto.getPhoto_4(), room.getId());
                 photo.photo_four_update(photo_four_imgUrl);
-                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET);
+                return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_SUCCESS);
 
             } else {
                 return new PrivateResponseBody(CommonStatusCode.FAIL_SAVE_PHOTO);
@@ -128,7 +126,7 @@ public class PhotoService {
 
         Room room = validator.existsRoom(roomId);
 
-        ObjectListing objectListing = amazonS3Client.listObjects(bucket, "photo/"+room.getId() + "/");
+        ObjectListing objectListing = amazonS3Client.listObjects(bucket, "photo/"+ room.getId() + "/");
         List<S3ObjectSummary> s3ObjectSummaries = objectListing.getObjectSummaries();
 
         List<String> imgUrlList = Lists.newArrayList();
@@ -138,26 +136,17 @@ public class PhotoService {
             String imgKey = s3Object.getKey();
             String imgUrl = amazonS3Client.getResourceUrl(bucket, imgKey);
 
-//
-//            // base64
-//            try {
-//                String base64ImageUrl = createBase64(imgUrl);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
             String baseList= aes256.getBase64(imgUrl);
 
             imgUrlList.add(imgUrl);
             imgTransList.add(baseList);
         }
 
-        String url =room.getFrameUrl();
+        String url = room.getFrameUrl();
         String urlConversion= aes256.getBase64(url);
 
-        //return imgUrlList;
-        return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET, imgTransList,new FrameResponseDto(room.getFrame(),urlConversion),room.getId());
+        // return imgUrlList;
+        return new PrivateResponseBody(CommonStatusCode.SHOOT_PHOTO_GET, imgTransList, new FrameResponseDto(room.getFrame(),urlConversion), room.getId());
     }
 
 
@@ -168,13 +157,18 @@ public class PhotoService {
         Room room = validator.existsRoom(roomId);
 
         // 2. Room 테이블 - 완성 이미지 저장
-        String completePhoto = awsS3Service.uploadFile(completePhotoRequestDto.getCompletePhoto(), room.getId());
-        photoRepository.updateCompletePhoto(completePhoto, roomId);
+        if(photoRepository.existsByRoomIdAndCompletePhotoIsNull(roomId)) {
+            String completePhoto = awsS3Service.uploadCompleteFile(completePhotoRequestDto.getCompletePhoto(), room.getId());
+            photoRepository.updateCompletePhoto(completePhoto, roomId);
 
-        // 3. QR코드 생성
-        String qrCode = createQr(roomId); // base64 인코딩
-        System.out.println("qrCode : " + qrCode);
-        photoRepository.saveQrCode(qrCode, roomId);
+            // 3. QR코드 생성
+            String qrCode = createQr(roomId); // base64 인코딩
+            System.out.println("qrCode : " + qrCode);
+            photoRepository.saveQrCode(qrCode, roomId);
+
+        } else {
+            return new PrivateResponseBody(CommonStatusCode.EXISTS_COMPLETE_PHOTO);
+        }
 
         if(photoRepository.findByRoomIdAndCompletePhotoNull(roomId) != null) {
             return new PrivateResponseBody(CommonStatusCode.COMPLETE_PHOTO_SUCCESS);
@@ -198,10 +192,14 @@ public class PhotoService {
     // QR코드 생성
     private String createQr(Long roomId) {
         byte[] image = new byte[0];
+
+        // url = complete_photo Url
         String url = photoRepository.createQrPhotoUrl(roomId);
 
         try {
+            // base 64 로 저장
             image = PhotoService.getQRCodeImage(url, 250, 250);
+
         } catch (WriterException | IOException e) {
             e.printStackTrace();
         }

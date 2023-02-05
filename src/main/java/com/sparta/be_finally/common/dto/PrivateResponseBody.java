@@ -1,15 +1,9 @@
-package com.sparta.be_finally.config.dto;
+package com.sparta.be_finally.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sparta.be_finally.config.errorcode.CommonStatusCode;
-import com.sparta.be_finally.config.errorcode.StatusCode;
-import com.sparta.be_finally.room.dto.RoomResponseDto;
-import com.sparta.be_finally.room.entity.Room;
+import com.sparta.be_finally.common.errorcode.StatusCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.HashMap;
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor

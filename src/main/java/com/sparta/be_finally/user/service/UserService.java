@@ -1,13 +1,15 @@
 package com.sparta.be_finally.user.service;
 
-import com.sparta.be_finally.config.dto.PrivateResponseBody;
-import com.sparta.be_finally.config.errorcode.CommonStatusCode;
-import com.sparta.be_finally.config.errorcode.StatusCode;
-import com.sparta.be_finally.config.errorcode.UserStatusCode;
-import com.sparta.be_finally.config.exception.RestApiException;
-import com.sparta.be_finally.config.jwt.JwtUtil;
-import com.sparta.be_finally.config.model.AES256;
+
 import com.sparta.be_finally.user.dto.ConfirmRequestDto;
+
+import com.sparta.be_finally.common.dto.PrivateResponseBody;
+import com.sparta.be_finally.common.errorcode.StatusCode;
+import com.sparta.be_finally.common.errorcode.UserStatusCode;
+import com.sparta.be_finally.common.exception.RestApiException;
+import com.sparta.be_finally.config.security.jwt.JwtUtil;
+import com.sparta.be_finally.config.AES256;
+
 import com.sparta.be_finally.user.dto.LoginRequestDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
@@ -21,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

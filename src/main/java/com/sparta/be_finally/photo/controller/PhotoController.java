@@ -1,25 +1,17 @@
 package com.sparta.be_finally.photo.controller;
 
-import com.sparta.be_finally.config.dto.PrivateResponseBody;
-import com.sparta.be_finally.config.errorcode.CommonStatusCode;
+import com.sparta.be_finally.common.dto.PrivateResponseBody;
+import com.sparta.be_finally.common.errorcode.CommonStatusCode;
 import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
-import com.sparta.be_finally.photo.dto.FrameResponseDto;
 import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.service.PhotoService;
-import com.sparta.be_finally.user.dto.KakaoFriendListResponseDto;
-import com.sparta.be_finally.user.service.KakaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import retrofit2.http.Path;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @Api(tags = {"Photo API"})
 @Slf4j
