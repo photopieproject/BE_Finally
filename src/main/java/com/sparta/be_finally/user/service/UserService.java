@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,10 +56,9 @@ public class UserService {
         //유저 데이터베이스에서 휴대폰번호 확인.
         //만약에 저장된 휴대폰번호가 있으면 ->등록된 휴대폰번호라고 알려주기
         //없으면 회원가입 가능
-        // ******************************************************************** 수정하기
-//        if (userRepository.existsByPhoneNumber(newPhoneNumber)){
-//            throw new RestApiException(UserStatusCode.REGISTERED_PHONENUM);
-//        }
+        if (userRepository.existsByPhoneNumber(newPhoneNumber)){
+            throw new RestApiException(UserStatusCode.REGISTERED_PHONENUM);
+        }
 
         // 회원가입
         userRepository.save(new User(requestDto, password, newPhoneNumber));
@@ -120,7 +121,7 @@ public class UserService {
                     }
                     message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요" );
 
-//                SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+                SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
                     return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr, storeId);
 
@@ -155,7 +156,7 @@ public class UserService {
 
             message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
 
-//            this.messageService.sendOne(new SingleMessageSendingRequest(message));
+            this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
             return new PrivateResponseBody(UserStatusCode.SUCCESS_IDENTIFICATION, numStr, userId);
         } else {

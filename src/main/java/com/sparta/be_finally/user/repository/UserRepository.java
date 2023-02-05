@@ -20,10 +20,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByGoogleId(String googleId);
 
     Optional<User> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
+
     boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
 
     Optional<User> findByUserIdAndPassword(String userId, String password);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+    
     @Modifying
     @Query (
             nativeQuery = true,
