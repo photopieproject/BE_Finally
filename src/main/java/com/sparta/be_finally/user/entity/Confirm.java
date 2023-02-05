@@ -25,8 +25,8 @@ public class Confirm {
 
     private String password;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+//    @CreatedDate
+//    private LocalDateTime createdAt;
 
 
 

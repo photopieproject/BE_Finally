@@ -16,6 +16,10 @@ public interface ConfirmRepository extends JpaRepository<Confirm,Long> {
 
     boolean existsByUserIdAndPasswordAndPhoneNum(String userId, String passWord, String PhoneNumber);
 
+    boolean existsByCheckNum(String checkNumber);
+
+    boolean existsByPasswordNull();
+
 
     void deleteByCheckNum(String checkNumber);
 
