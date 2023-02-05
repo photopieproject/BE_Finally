@@ -1,6 +1,5 @@
-package com.sparta.be_finally.config.errorcode;
+package com.sparta.be_finally.common.errorcode;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

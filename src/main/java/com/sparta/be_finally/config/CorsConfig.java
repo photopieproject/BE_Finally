@@ -1,7 +1,6 @@
-package com.sparta.be_finally.config.model;
+package com.sparta.be_finally.config;
 
-import com.sparta.be_finally.config.jwt.JwtUtil;
-import org.springframework.context.annotation.Configuration;
+import com.sparta.be_finally.config.security.jwt.JwtUtil;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
