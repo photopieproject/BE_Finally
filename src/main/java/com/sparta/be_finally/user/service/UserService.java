@@ -218,7 +218,7 @@ public class UserService {
         }
 
 
-        if (confirmRequestDto.getCheckNumber().equals(storeCheckNum)&&passWord==null&& storeId !=null){
+        if (confirmRequestDto.getCheckNumber().equals(storeCheckNum)&&storeId !=null&&storePhoneNum!=null&&passWord ==null){
             confirmRepository.deleteByCheckNum(confirmRequestDto.getCheckNumber());
             return new PrivateResponseBody(UserStatusCode.AGREE_USER_TYPED, storeId);
         } else if (confirmRequestDto.getCheckNumber().isEmpty()) {

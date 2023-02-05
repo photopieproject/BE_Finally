@@ -3,8 +3,10 @@ package com.sparta.be_finally.user.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,6 +24,10 @@ public class Confirm {
     private String userId;
 
     private String password;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
 
 
     public Confirm(String numStr, String newPhoneNumber) {
