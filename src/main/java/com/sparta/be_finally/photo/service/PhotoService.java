@@ -10,11 +10,10 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.sparta.be_finally.config.S3.AwsS3Service;
+import com.sparta.be_finally.common.intercept.AwsS3Service;
 import com.sparta.be_finally.common.dto.PrivateResponseBody;
 import com.sparta.be_finally.common.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.AES256;
-import com.sparta.be_finally.common.util.SecurityUtil;
 import com.sparta.be_finally.common.validator.Validator;
 import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
 import com.sparta.be_finally.photo.dto.FrameResponseDto;
@@ -22,7 +21,6 @@ import com.sparta.be_finally.photo.dto.PhotoRequestDto;
 import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.entity.Room;
-import com.sparta.be_finally.user.entity.User;
 import io.openvidu.java.client.OpenVidu;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,6 @@ import java.io.*;
 import java.net.URL;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
