@@ -25,6 +25,7 @@ public enum CommonStatusCode implements StatusCode {
      FAIL_MAN_ENTER("인원이 초과되어 입장이 불가합니다",HttpStatus.BAD_REQUEST.value()),
      FAIL_NUMBER("잘못된 방코드 입니다.",HttpStatus.BAD_REQUEST.value()),
      FAIL_ENTER2("존재하지 않는 방입니다",HttpStatus.BAD_REQUEST.value()),
+     ROOMCODE_IS_NULL("방 코드를 입력해주세요.", HttpStatus.BAD_REQUEST.value()),
      SUCCESS_ROOM_EXIT("방 나가기 완료", HttpStatus.OK.value()),
      SUCCESS_ROOM_TOTAL_EXIT("방 나가기 완료", HttpStatus.OK.value()),
      CHOICE_FRAME("프레임 선택 완료", HttpStatus.OK.value()),
