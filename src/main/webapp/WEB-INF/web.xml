@@ -1,0 +1,10 @@
+<!-- Security-Constraint(JSP 접근제한) -->
+<security-constraint>
+    <display-name>JSP Pages Protection</display-name>
+    <web-resource-collection>
+        <web-resource-name></web-resource-name>
+        <url-pattern>/api/photo/room/{roomId}/shoot</url-pattern>
+        <http-method>GET</http-method>
+    </web-resource-collection>
+    <auth-constraint/>
+</security-constraint>
