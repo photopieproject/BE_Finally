@@ -1,4 +1,4 @@
-package com.sparta.be_finally.config.dto;
+package com.sparta.be_finally.common.dto;
 
 import lombok.Builder;
 import lombok.Getter;

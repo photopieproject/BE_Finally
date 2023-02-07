@@ -1,7 +1,6 @@
 package com.sparta.be_finally.room.service;
 
-import com.sparta.be_finally.config.S3.AwsS3Configuration;
-import com.sparta.be_finally.config.S3.AwsS3Service;
+import com.sparta.be_finally.common.intercept.AwsS3Service;
 import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.entity.Room;
@@ -12,12 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -29,41 +27,33 @@ public class SchedulerService {
     private final PhotoRepository photoRepository;
     private final AwsS3Service awsS3Service;
 
+    //(fixedRate = 1800000)//
+    //(cron = "0 0 0/1 * * *")// 1시간마다
+    //(fixedRate = 30000) // 30 초
 
     @Scheduled(fixedRate = 1800000)
-            //(fixedRate = 1800000)//
-            //(cron = "0 0 0/1 * * *")// 1시간마다
-            //(fixedRate = 30000) // 30 초
-
+    @Transactional
     public void runAfterTenSecondsRepeatTenSeconds() {
-
-
-        List<Room> roomList = roomRepository.findAll();
+        // List<Room> roomList = roomRepository.findAll();
         LocalDateTime time = LocalDateTime.now().withNano(0);
+        List <Room> roomList = roomRepository.findRooms();
 
         for (Room room : roomList) {
             if (time.isAfter(room.getExpireDate())) {
-                //room.setDeleted(true);
 
-                //Openvidu에서 세션 삭제 (room delete)
-
-
-                Photo photos = photoRepository.findByRoomId(room.getId()).orElse(null);
+                Photo photos = photoRepository.findByRoom(room);
 
                 if (photos != null) {
-                    List<String> photo_url = new ArrayList<>();
-                    photo_url.add(photos.getPhoto_one().split(".com/")[1]);
-                    photo_url.add(photos.getPhoto_two().split(".com/")[1]);
-                    photo_url.add(photos.getPhoto_three().split(".com/")[1]);
-                    photo_url.add(photos.getPhoto_four().split(".com/")[1]);
 
                     //S3 - 이미지 삭제 처리
-                    for (String photo : photo_url) {
-                        awsS3Service.deleteFile(photo);
-                    }
+                    awsS3Service.deleteFolder("CompletePhoto/" + photos.getRoom().getId() + "/");
+                    awsS3Service.deleteFolder("photo/" + photos.getRoom().getId() + "/");
+
+                    //db - photo 삭제 처리
                     photoRepository.delete(photos);
                 }
 
+                //db - room 삭제 처리
                 roomRepository.delete(room);
             }
         }

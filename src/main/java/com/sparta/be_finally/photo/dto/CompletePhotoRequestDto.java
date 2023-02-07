@@ -8,9 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PhotoRequestDto {
-    private MultipartFile photo_1;
-    private MultipartFile photo_2;
-    private MultipartFile photo_3;
-    private MultipartFile photo_4;
+public class CompletePhotoRequestDto {
+    private MultipartFile completePhoto;
 }

@@ -1,15 +1,22 @@
 package com.sparta.be_finally.room.entity;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.be_finally.photo.dto.FrameResponseDto;
+import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.room.dto.FrameRequestDto;
 import com.sparta.be_finally.room.dto.RoomRequestDto;
 import com.sparta.be_finally.user.entity.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.bytebuddy.utility.nullability.MaybeNull;
+import org.springframework.data.jpa.repository.Lock;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -23,23 +30,26 @@ import java.util.UUID;
 @Entity
 public class Room {
     private static final int VALID_HOUR = 24;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String roomName;
 
+    @Column(nullable = false)
     private String roomCode;
-    private int frame = 0;
-    private int userCount =0;
+
+    private int userCount = 0;
+
+    private int frame;
+
+    private String frameUrl;
+
 
     // Openvidu 의 roomId 이라고 생각하면 됨
     private String sessionId;
-
-    // room의 입장 코드라고 생각하면 됨
-    // 입장하는 user 마다 다른 token 값이 발급 되므로 추후 삭제!
-    //private String token;
 
     @NotNull
     private LocalDateTime expireDate;
@@ -51,6 +61,15 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
 
+    public Room(Long id) {
+        this.id = id;
+    }
+
+    public Room(int frameNum, String frameUrl) {
+        this.frame = frameNum;
+        this.frameUrl = String.valueOf(frameUrl);
+    }
+
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
         this.roomCode = roomCodeRequestDto.getRoomCode();
         this.user = user;
@@ -58,32 +77,27 @@ public class Room {
 
     public Room(RoomRequestDto roomRequestDto, User user, String sessionId) {
         this.roomName = roomRequestDto.getRoomName();
-        //this.roomCode = (int)(Math.random()*100000);
         this.roomCode = UUID.randomUUID().toString().substring(0, 5);
         this.user = user;
-        this.userCount ++;
+        this.userCount++;
         this.sessionId = sessionId;
-        this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
+        this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
 
-    //추후 삭제
-    public Room(RoomRequestDto roomRequestDto, User user) {
-        this.roomName = roomRequestDto.getRoomName();
-        //this.roomCode = (int)(Math.random()*100000);
-        this.roomCode = UUID.randomUUID().toString().substring(0, 5);
-        this.user = user;
-        this.userCount ++;
-        this.expireDate = LocalDateTime.now().withNano(0).plusMinutes(VALID_HOUR);
+    public void updateFrame(FrameRequestDto frameRequestDto, String frameUrl) {
+        this.frame = frameRequestDto.getFrame();
+        this.frameUrl = frameUrl;
     }
 
+    // 방 입장
     public void enter() {
         this.userCount++;
     }
 
-    public void updateFrame(FrameRequestDto frameRequestDto) {
-        this.frame = frameRequestDto.getFrame();
+    // 방 나가기
+    public void exit() {
+        this.userCount--;
     }
-
 }
 
 

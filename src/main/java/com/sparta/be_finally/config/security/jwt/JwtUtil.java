@@ -1,4 +1,4 @@
-package com.sparta.be_finally.config.jwt;
+package com.sparta.be_finally.config.security.jwt;
 
 import com.sparta.be_finally.config.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
@@ -64,7 +64,7 @@ public class JwtUtil {
           
           return BEARER_PREFIX +
                Jwts.builder()
-                    // username 넣기
+                    // userId 넣기
                     .setSubject(userId)
                     .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                     .setIssuedAt(date)

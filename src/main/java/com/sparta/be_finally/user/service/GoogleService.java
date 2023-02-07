@@ -3,7 +3,7 @@ package com.sparta.be_finally.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.be_finally.config.jwt.JwtUtil;
+import com.sparta.be_finally.config.security.jwt.JwtUtil;
 import com.sparta.be_finally.config.security.UserDetailsImpl;
 import com.sparta.be_finally.user.dto.GoogleUserInfoDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
@@ -38,12 +38,6 @@ public class GoogleService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    @Value("${google.auth.url}")
-    private String googleAuthUrl;
-
-    @Value("${google.login.url}")
-    private String googleLoginUrl;
-
     @Value("${google.redirect.uri}")
     private String googleRedirectUrl;
 
@@ -52,9 +46,6 @@ public class GoogleService {
 
     @Value("${google.secret}")
     private String googleSecret;
-
-    @Value("${google.auth.scope}")
-    private String scopes;
 
     public LoginResponseDto googleLogin(String code, HttpServletResponse response) throws JsonProcessingException {
         log.info("googleLogin service!!!!!!!");
@@ -68,7 +59,7 @@ public class GoogleService {
         User googleUser = registerGoogleUserIfNeeded(googleUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken = jwtUtil.createToken(googleUser.getNickname());
+        String createToken = jwtUtil.createToken(googleUser.getUserId());
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 
         // 강제로그인

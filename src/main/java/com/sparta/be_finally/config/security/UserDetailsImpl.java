@@ -1,6 +1,7 @@
 package com.sparta.be_finally.config.security;
 
 import com.sparta.be_finally.user.entity.User;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode(of = {"user"})
 public class UserDetailsImpl implements UserDetails {
 
      //인증이 완료된 사용자 추가
@@ -19,14 +21,12 @@ public class UserDetailsImpl implements UserDetails {
      private final String username; // 인증완료된 User의 ID
      private final String password; // 인증완료된 User의 PWD
 
-     
      public UserDetailsImpl(User kakaoUser) {
           this.user = kakaoUser;
           this.username = kakaoUser.getNickname();
           this.password = kakaoUser.getPassword();
      }
-     
-     
+
      //사용자의 권한 GrantedAuthority 로 추상화 및 반환
      @Override
      public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -38,7 +38,7 @@ public class UserDetailsImpl implements UserDetails {
 
           return authorities;
      }
-     ////사용자의 권한 GrantedAuthority 로 추상화 및 반환
+     //사용자의 권한 GrantedAuthority 로 추상화 및 반환
      @Override
      public boolean isAccountNonExpired() {
           return false;
