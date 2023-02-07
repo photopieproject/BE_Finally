@@ -83,8 +83,8 @@ public class WebSecurityConfig {
      }
 
      @Bean
-     public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
-          return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
+     public static ServletListenerRegistrationBean httpSessionEventPublisher() {
+          return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
      }
 
      @Bean
