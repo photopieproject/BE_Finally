@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Api(tags = {"Room API"})
 @Slf4j
 @RestController
@@ -27,7 +29,7 @@ public class RoomController {
     //          각 참가자는 토큰을 사용하여 하나의 연결을 사용하여 연결합니다
     @ApiOperation(value = "방 생성")
     @PostMapping("/room")
-    public PrivateResponseBody createRoom(@RequestBody RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public PrivateResponseBody createRoom(@RequestBody @Valid RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         return new PrivateResponseBody(CommonStatusCode.CREATE_ROOM,roomService.createRoom(roomRequestDto));
     }
 
