@@ -281,6 +281,7 @@ public class UserService {
         }
     }
 
+<<<<<<< HEAD
 
     // 비밀번호 찾기 인증번호보내기
     @Transactional
@@ -310,26 +311,6 @@ public class UserService {
     }
 
 
-
-
-
-    // 비밀번호 재설정
-    public PrivateResponseBody resetPassword(String userId, String password) {
-        Optional<User> user = userRepository.findByUserId(userId);
-
-        // 패스워드 암호화
-        String newPassword = passwordEncoder.encode(password);
-
-        userRepository.pwUpdate(newPassword, userId);
-
-        Optional<User> newUser = userRepository.findByUserIdAndPassword(userId, newPassword);
-
-        if (newUser.equals(user)) {
-            return new PrivateResponseBody(UserStatusCode.FAIL_RESET_PASSWORD);
-        } else {
-            return new PrivateResponseBody(UserStatusCode.SUCCESS_RESET_PASSWORD);
-        }
-    }
 }
 
 
