@@ -102,10 +102,17 @@ public class UserController {
         return userService.findPassword(phoneNumber, findPasswordDto.getUserId());
     }
 
+
     @ApiOperation(value ="비밀번호 찾기 인증번호" )
     @PostMapping("/find-pw/check")
-    public PrivateResponseBody passwordCheckNum(@RequestBody ConfirmRequestDto confirmRequestDto){
+    public PrivateResponseBody passwordCheckNum(@RequestBody ConfirmRequestDto confirmRequestDto) {
         return userService.passwordCheckNum(confirmRequestDto);
     }
 
-}
+        @ApiOperation(value = "비밀번호 재설정")
+        @PutMapping("/reset-pw")
+        public PrivateResponseBody resetPassword (@RequestBody @Valid ResetPasswordRequestDto resetPasswordRequestDto){
+            return userService.resetPassword(resetPasswordRequestDto.getUserId(), resetPasswordRequestDto.getPassword());
+
+        }
+    }
