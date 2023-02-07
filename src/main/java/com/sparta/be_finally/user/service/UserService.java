@@ -280,8 +280,7 @@ public class UserService {
             return new PrivateResponseBody(UserStatusCode.FAIL_IDENTIFICATION);
         }
     }
-
-<<<<<<< HEAD
+    
 
     // 비밀번호 찾기 인증번호보내기
     @Transactional
