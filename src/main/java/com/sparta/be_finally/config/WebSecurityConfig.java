@@ -57,7 +57,8 @@ public class WebSecurityConfig {
                .antMatchers("/api/doc").permitAll()
                .antMatchers("/socket").permitAll()
                .antMatchers("/").permitAll()
-//             .antMatchers("/api/photo/room/{roomId}/shoot").permitAll()
+
+//               .antMatchers("/api/photo/room/{roomId}/shoot").permitAll()
 
 
                .antMatchers("/swagger-ui/**").permitAll() //스웨거 권한설정 X
@@ -66,7 +67,7 @@ public class WebSecurityConfig {
                .antMatchers("/v2/api-docs").permitAll() //스웨거 권한설정 X
                .antMatchers("/v3/api-docs").permitAll() //스웨거 권한설정 X
                .antMatchers("/webjars/**").permitAll() //스웨거 권한설정 X
-               .anyRequest().authenticated()
+      //         .anyRequest().authenticated() // 그 외 모든 요청에는 인증시 접근 가능
                //서버는 JWT 토큰을 검증하고 토큰의 정보를 사용하여 사용자의 인증을 진행해주는 Spring Security 에 등록한 JwtAuthFilter 를 사용하여 인증/인가를 처리한다.
                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
           
