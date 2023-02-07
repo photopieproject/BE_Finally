@@ -16,6 +16,7 @@ public enum UserStatusCode implements StatusCode {
      WRONG_PASSWORD_PATTERN("비밀번호는 최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 합니다.", HttpStatus.BAD_REQUEST.value()),
      FAILE_USERID("본인 인증 실패",HttpStatus.BAD_REQUEST.value()),
      FAILE_INSERT_NUMBER("인증 번호를 입력해주세요",HttpStatus.BAD_REQUEST.value()),
+     WRONG_PHONE_COUNT("올바른 번호를 적어주세요",HttpStatus.BAD_REQUEST.value()),
      WRONG_LOGININFO("아이디 또는 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST.value()),
      WRONG_ADMIN_TOKEN("관리자 암호가 틀려 등록이 불가능합니다.", HttpStatus.BAD_REQUEST.value()),
      OVERLAPPED_USERID("중복된 userId 입니다.", HttpStatus.BAD_REQUEST.value()),
@@ -28,6 +29,7 @@ public enum UserStatusCode implements StatusCode {
      NOT_FOUND_USER("일치하는 유저가 없습니다.", HttpStatus.BAD_REQUEST.value()),
      REGISTERED_PHONENUM("등록된 휴대폰 번호가 있습니다",HttpStatus.BAD_REQUEST.value()),
      FAIL_IDENTIFICATION("본인 인증 실패!", HttpStatus.BAD_REQUEST.value()),
+     FAIL_TIME("인증 유효기간이 지났습니다. 다시 인증을 눌러주세요",HttpStatus.BAD_REQUEST.value()),
      SUCCESS_IDENTIFICATION("인증문자 전송 완료! 코드확인 후 비밀번호를 재설정 해주세요", HttpStatus.OK.value()),
      SUCCESS_RESET_PASSWORD ("비밀번호 변경 완료", HttpStatus.OK.value()),
      FAIL_RESET_PASSWORD ("비밀번호 변경 실패! 이전에 사용했던 비밀번호와 같습니다.", HttpStatus.OK.value());

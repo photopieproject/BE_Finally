@@ -17,37 +17,38 @@ import com.sparta.be_finally.user.entity.Confirm;
 import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.ConfirmRepository;
 import com.sparta.be_finally.user.repository.UserRepository;
-import io.netty.handler.codec.socksx.v5.Socks5PasswordAuthRequestDecoder;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.rmi.registry.LocateRegistry;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
 
     private final ConfirmRepository confirmRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-
-
     private final AES256 aes256;
     private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr");
     ;
     String newPhoneNumber = null;
+
 
     // 회원가입
     public void signUp(SignupRequestDto requestDto) {
@@ -65,12 +66,8 @@ public class UserService {
             e.printStackTrace();
         }
 
-        //유저 데이터베이스에서 휴대폰번호 확인.
-        //만약에 저장된 휴대폰번호가 있으면 ->등록된 휴대폰번호라고 알려주기
-        //없으면 회원가입 가능
 
         if (userRepository.existsByPhoneNumber(newPhoneNumber)) {
-
             throw new RestApiException(UserStatusCode.REGISTERED_PHONENUM);
         }
 
@@ -108,35 +105,44 @@ public class UserService {
 
     //회원가입 시 휴대폰번호로 인증 문자 받기
     public PrivateResponseBody sendOne(String phoneNumber) {
+        LocalDateTime time = LocalDateTime.now().withNano(0).plusMinutes(3);
         Message message = new Message();
         message.setFrom("01023699764");
         message.setTo(phoneNumber);
+        if (phoneNumber.length() == 11) {
 
-        Random random = new Random();
-        String numStr = "";
-        for (int i = 0; i < 6; i++) {
-            String ran = Integer.toString(random.nextInt(10));
-            numStr += ran;
-        }
-        message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
-
-//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        try {
-            newPhoneNumber = aes256.encrypt(phoneNumber);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (!userRepository.existsByPhoneNumber(newPhoneNumber)) {
-            if (!confirmRepository.existsByPhoneNum(newPhoneNumber)) {
-                confirmRepository.save(new Confirm(numStr, newPhoneNumber));
+            Random random = new Random();
+            String numStr = "";
+            for (int i = 0; i < 6; i++) {
+                String ran = Integer.toString(random.nextInt(10));
+                numStr += ran;
             }
-            confirmRepository.checkNumUpdate(numStr, newPhoneNumber);
-            return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS);
+            message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+            //        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+
+
+                try {
+                    newPhoneNumber = aes256.encrypt(phoneNumber);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            if (!userRepository.existsByPhoneNumber(newPhoneNumber)) {
+                if (!confirmRepository.existsByPhoneNum(newPhoneNumber)) {
+                    confirmRepository.save(new Confirm(numStr,newPhoneNumber));
+                }
+
+
+                confirmRepository.checkNumUpdate(numStr,newPhoneNumber);
+                return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS);
+            }
+            return new PrivateResponseBody(UserStatusCode.REGISTERED_PHONENUM);
         }
-        return new PrivateResponseBody(UserStatusCode.REGISTERED_PHONENUM);
+        return new PrivateResponseBody(UserStatusCode.WRONG_PHONE_COUNT);
     }
+
 
 
     //회원가입시 인증문자 확인하기

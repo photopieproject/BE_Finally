@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.Random;
 
 @Api(tags = {"User API"})
@@ -71,7 +72,7 @@ public class UserController {
 
     @ApiOperation(value = "휴대폰 본인 확인")
     @PostMapping("/smsmessage")
-    public PrivateResponseBody sendOne(@RequestParam String phoneNumber) {
+    public PrivateResponseBody sendOne(@RequestParam @Size(min = 11, max = 11) String phoneNumber) {
         return userService.sendOne(phoneNumber);
     }
 
