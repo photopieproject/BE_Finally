@@ -57,9 +57,9 @@ public class WebSecurityConfig {
                .antMatchers("/api/doc").permitAll()
                .antMatchers("/socket").permitAll()
                .antMatchers("/").permitAll()
-               .antMatchers("/api/photo/room/{roomId}/shoot").permitAll()
+//             .antMatchers("/api/photo/room/{roomId}/shoot").permitAll()
 
-                  
+
                .antMatchers("/swagger-ui/**").permitAll() //스웨거 권한설정 X
                .antMatchers("/swagger-resources/**").permitAll() //스웨거 권한설정 X
                .antMatchers("/swagger-ui.html").permitAll() //스웨거 권한설정 X
