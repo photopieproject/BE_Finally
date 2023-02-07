@@ -26,7 +26,7 @@ public class Validator {
             Optional<Room> room = roomRepository.findByRoomCode(roomCode);
             return room.get();
 
-        } else if (roomCode == null) {
+        } else if (roomCode.equals("")) {
             // 코드 입력 하지 않고 방 입장시 코드 입력하라는 에러 메세지 응답
             throw new RestApiException(CommonStatusCode.ROOMCODE_IS_NULL);
 
