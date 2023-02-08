@@ -33,8 +33,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -136,7 +135,6 @@ public class PhotoService {
     // 사진 4장 & 프레임 뿌려주기
     @Transactional(readOnly = true)
     public PrivateResponseBody photoGet(Long roomId) throws IOException {
-
         Room room = validator.existsRoom(roomId);
 
         ObjectListing objectListing = amazonS3Client.listObjects(bucket, "photo/"+ room.getId() + "/");
@@ -145,14 +143,25 @@ public class PhotoService {
         List<String> imgUrlList = Lists.newArrayList();
         List<String> imgTransList = Lists.newArrayList();
 
-        for (S3ObjectSummary s3Object : s3ObjectSummaries) {
-            String imgKey = s3Object.getKey();
-            String imgUrl = amazonS3Client.getResourceUrl(bucket, imgKey);
+        HashMap<Date, String> imgListOrderBy = new HashMap<>();
 
-            String baseList= getBase64(imgUrl);
+        for (S3ObjectSummary s3Object : s3ObjectSummaries) {
+            String imgUrl = amazonS3Client.getResourceUrl(bucket, s3Object.getKey());
+            Date lastModified = s3Object.getLastModified();
+
+            // imgUrl > base64 로 인코딩
+            String imgUrl_base64 = getBase64(imgUrl);
 
             imgUrlList.add(imgUrl);
-            imgTransList.add(baseList);
+
+            imgListOrderBy.put(lastModified, imgUrl_base64);
+        }
+
+        List<Date> keyList = new ArrayList<>(imgListOrderBy.keySet());
+        keyList.sort(Date::compareTo);
+        for (Date key : keyList) {
+            log.info("key : {}, value : {}", key, imgListOrderBy.get(key));
+            imgTransList.add(imgListOrderBy.get(key));
         }
 
         String url = room.getFrameUrl();
