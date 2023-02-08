@@ -10,6 +10,8 @@ import lombok.Setter;
 public class FrameRequestDto {
     private int frame;
 
+    private int maxPeople;
+
     public FrameRequestDto(int frame) {
         this.frame = frame;
     }

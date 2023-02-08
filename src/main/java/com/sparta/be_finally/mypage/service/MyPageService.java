@@ -59,8 +59,8 @@ public class MyPageService {
         User users = SecurityUtil.getCurrentUser();
 
         userRepository.delete(users);
-        // 아래를 추가해줘야 탈퇴시 로그아웃됨
-//        SecurityContextHolder.clearContext();
+//         아래를 추가해줘야 탈퇴시 로그아웃됨
+        SecurityContextHolder.clearContext();
         return new PrivateResponseBody(UserStatusCode.DELETE_USER);
     }
 
