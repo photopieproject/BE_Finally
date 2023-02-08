@@ -30,7 +30,10 @@ public class User{
     private String googleId;
 
     @Column
-    private String token;
+    private String openvidu_token;
+
+    @Column
+    private String access_token;
 
     @Column
     private String phoneNumber;
@@ -56,7 +59,7 @@ public class User{
         this.password = encodedPassword;
     }
 
-    public void update(String token) {
-        this.token = token;
+    public void update(String openvidu_token) {
+        this.openvidu_token = openvidu_token;
     }
 }

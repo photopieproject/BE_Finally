@@ -84,17 +84,17 @@ public class RoomService {
             log.info("세션아이디 확인 / sessionId = " + session.getSessionId());
 
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
-            String token = session.createConnection(connectionProperties).getToken();
+            String openvidu_token = session.createConnection(connectionProperties).getToken();
 
             // Log: 토큰 확인
-            log.info("토큰 확인 / token = " + token);
+            log.info("토큰 확인 / token = " + openvidu_token);
 
             // 방 생성
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
             photoRepository.save(new Photo(room));
 
             // 방장 token update (토큰이 있어야 방에 입장 가능) 오픈비두에서 만들어준 토큰값을 넣어준다.
-            userRepository.update(user.getId(), token);
+            userRepository.update(user.getId(), openvidu_token);
 
             // 방장 방 입장 처리
             roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room, user, "leader"));
@@ -107,7 +107,7 @@ public class RoomService {
                     .roomCode(room.getRoomCode())
                     .userCount(room.getUserCount())
                     .sessionId(session.getSessionId())
-                    .token(token)
+                    .token(openvidu_token)
                     .expireDate(room.getExpireDate())
                     .build();
         }
@@ -220,7 +220,7 @@ public class RoomService {
         List<Connection> activeConnections = session.getActiveConnections();
 
         for (Connection connection : activeConnections) {
-            if (connection.getToken().equals(user.getToken())) {
+            if (connection.getToken().equals(user.getOpenvidu_token())) {
                 session.forceDisconnect(connection); // 세션에 입장한 사용자 연결 끊기
             }
         }
