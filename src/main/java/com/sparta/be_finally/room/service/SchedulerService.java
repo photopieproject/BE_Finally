@@ -31,7 +31,7 @@ public class SchedulerService {
     //(cron = "0 0 0/1 * * *")// 1시간마다
     //(fixedRate = 30000) // 30 초
 
-    @Scheduled(fixedRate = 1800000)
+    @Scheduled(fixedDelay = 1800000)
     @Transactional
     public void runAfterTenSecondsRepeatTenSeconds() {
         // List<Room> roomList = roomRepository.findAll();
@@ -59,5 +59,3 @@ public class SchedulerService {
         }
     }
 }
-
-

@@ -41,4 +41,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query (value = "UPDATE users u SET u.password = :password WHERE u.user_id = :userId", nativeQuery = true)
     void pwUpdate(@Param("password") String password, @Param("userId") String userId);
 
+    //닉네임 수정
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query (value = "UPDATE users u SET u.nickname = :nickname WHERE u.user_id = :userId", nativeQuery = true)
+    void nickNameUpdate(@Param("nickname") String nickname, @Param("userId") String userId);
+
+
 }
