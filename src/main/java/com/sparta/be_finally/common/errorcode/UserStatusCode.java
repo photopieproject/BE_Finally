@@ -31,7 +31,9 @@ public enum UserStatusCode implements StatusCode {
      FAIL_IDENTIFICATION("본인 인증 실패!", HttpStatus.BAD_REQUEST.value()),
      SUCCESS_IDENTIFICATION("인증문자 전송 완료! 코드확인 후 비밀번호를 재설정 해주세요", HttpStatus.OK.value()),
      SUCCESS_RESET_PASSWORD ("비밀번호 변경 완료", HttpStatus.OK.value()),
-     FAIL_RESET_PASSWORD ("비밀번호 변경 실패! 이전에 사용했던 비밀번호와 같습니다.", HttpStatus.OK.value());
+     FAIL_RESET_PASSWORD ("비밀번호 변경 실패! 이전에 사용했던 비밀번호와 같습니다.", HttpStatus.OK.value()),
+     DELETE_USER("유저정보 삭제 완료", HttpStatus.OK.value()),
+     FAIL_FIND_LOGIN_USER("로그인된 유저 정보가 없습니다.", HttpStatus.BAD_REQUEST.value());
 
      private final String statusMsg;
      private final int statusCode;

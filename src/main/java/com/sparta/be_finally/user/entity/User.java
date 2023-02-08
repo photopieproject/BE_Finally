@@ -1,10 +1,13 @@
 package com.sparta.be_finally.user.entity;
 
+import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity (name = "users")
@@ -37,6 +40,9 @@ public class User{
 
     @Column
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Room> rooms = new ArrayList<>();
 
     public User(SignupRequestDto requestDto, String password, String phoneNumber) {
         this.userId = requestDto.getUserId();

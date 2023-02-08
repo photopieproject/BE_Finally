@@ -19,6 +19,8 @@ public class RoomRequestDto {
     @NotBlank
     private String roomName;
 
+    private int maxPeople;
+
     public RoomRequestDto(Room room){
         this.roomName = room.getRoomName();
     }

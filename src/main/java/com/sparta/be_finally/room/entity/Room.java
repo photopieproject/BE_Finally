@@ -54,11 +54,17 @@ public class Room {
     @NotNull
     private LocalDateTime expireDate;
 
+    private int maxPeople;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "photo_id", unique = true)
+    private Photo photo;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
 
     public Room(Long id) {
@@ -77,6 +83,7 @@ public class Room {
 
     public Room(RoomRequestDto roomRequestDto, User user, String sessionId) {
         this.roomName = roomRequestDto.getRoomName();
+        this.maxPeople = roomRequestDto.getMaxPeople();
         this.roomCode = UUID.randomUUID().toString().substring(0, 5);
         this.user = user;
         this.userCount++;

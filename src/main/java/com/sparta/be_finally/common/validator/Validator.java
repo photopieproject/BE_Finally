@@ -19,7 +19,7 @@ public class Validator {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
 
-    // roomcode 로 room 존재 여부 확인 후 Room return
+    // roomCode 로 room 존재 여부 확인 후 Room return
     @Transactional(readOnly = true)
     public Room existsRoom(String roomCode) {
         if (roomRepository.existsByRoomCode(roomCode)) {

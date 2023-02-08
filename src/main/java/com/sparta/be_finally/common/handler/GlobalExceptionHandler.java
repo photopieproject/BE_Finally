@@ -85,8 +85,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
           return handleExceptionInternal(statusCode, interpolatedMessage);
      }
      
-     
-     
      // 그외 에러들 핸들링
      @ExceptionHandler({Exception.class})
      public ResponseEntity<Object> handleAllException(Exception ex) {

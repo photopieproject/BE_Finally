@@ -30,7 +30,7 @@ public class RoomController {
     @ApiOperation(value = "방 생성")
     @PostMapping("/room")
     public PrivateResponseBody createRoom(@RequestBody @Valid RoomRequestDto roomRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
-        return new PrivateResponseBody(CommonStatusCode.CREATE_ROOM,roomService.createRoom(roomRequestDto));
+        return new PrivateResponseBody(CommonStatusCode.CREATE_ROOM, roomService.createRoom(roomRequestDto));
     }
 
     @ApiOperation(value = "방 입장")
