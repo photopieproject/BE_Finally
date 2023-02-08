@@ -26,7 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserIdAndPassword(String userId, String password);
 
     boolean existsByPhoneNumber(String phoneNumber);
-    
+
+    @Transactional
     @Modifying
     @Query (
             nativeQuery = true,
@@ -47,5 +48,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query (value = "UPDATE users u SET u.nickname = :nickname WHERE u.user_id = :userId", nativeQuery = true)
     void nickNameUpdate(@Param("nickname") String nickname, @Param("userId") String userId);
 
-
+    // 로그인시 DB에 Access Token 저장
+    @Transactional
+    @Modifying
+    @Query (
+            nativeQuery = true,
+            value = "UPDATE users " +
+                    "SET access_token = :access_token " +
+                    "WHERE id = :id"
+    )
+    void updateAccessToken(@Param("id") Long Id, @Param("access_token") String access_token);
 }
