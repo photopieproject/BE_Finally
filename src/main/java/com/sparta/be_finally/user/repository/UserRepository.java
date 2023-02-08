@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query (
             nativeQuery = true,
             value = "UPDATE users " +
-                    "SET token = :token " +
+                    "SET openvidu_token = :token " +
                     "WHERE id = :id"
     )
     void update(@Param("id") Long id, @Param("token") String token);
