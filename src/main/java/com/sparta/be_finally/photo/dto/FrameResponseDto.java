@@ -14,6 +14,8 @@ public class FrameResponseDto {
 
     private String frameUrl;
 
+    private int maxPeople;
+
     public FrameResponseDto(int frameNum) {
         this.frameNum = frameNum;
     }
@@ -21,5 +23,11 @@ public class FrameResponseDto {
     public FrameResponseDto(int frameNum, String frameUrl) {
         this.frameNum = frameNum;
         this.frameUrl = String.valueOf(frameUrl);
+    }
+
+    public FrameResponseDto(int frameNum, String frameUrl, int maxPeople) {
+        this.frameNum = frameNum;
+        this.frameUrl = String.valueOf(frameUrl);
+        this.maxPeople = maxPeople;
     }
 }
