@@ -3,10 +3,7 @@ package com.sparta.be_finally.user.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.be_finally.common.dto.PrivateResponseBody;
 import com.sparta.be_finally.common.errorcode.UserStatusCode;
-import com.sparta.be_finally.user.dto.FindPasswordRequestDto;
-import com.sparta.be_finally.user.dto.LoginRequestDto;
-import com.sparta.be_finally.user.dto.ResetPasswordRequestDto;
-import com.sparta.be_finally.user.dto.SignupRequestDto;
+import com.sparta.be_finally.user.dto.*;
 import com.sparta.be_finally.user.service.GoogleService;
 import com.sparta.be_finally.user.service.KakaoService;
 import com.sparta.be_finally.user.service.UserService;
@@ -79,11 +76,19 @@ public class UserController {
             numStr += ran;
         }
 
-        message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+        message.setText("[포토파이(PHOTO-PIE)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
 
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
         return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
+    }
+
+    @ApiOperation(value = "이메일 인증")
+    @PostMapping("/checkEmail")
+    public PrivateResponseBody checkEmail(@RequestBody @Valid EmailConfirmRequestDto emailConfirmRequestDto) throws Exception {
+        String code = userService.checkEmail(emailConfirmRequestDto.getEmail());
+        log.info("인증코드 : " + code);
+        return new PrivateResponseBody(UserStatusCode.EMAIL_SEND_SUCCESS, code);
     }
 
     @ApiOperation(value = "아이디 찾기")
@@ -92,7 +97,6 @@ public class UserController {
         return userService.findUserNum(phoneNumber);
     }
 
-    // 비밀번호 찾기
     @ApiOperation(value = "비밀번호 찾기")
     @PostMapping("/find-pw")
     public PrivateResponseBody findPassword(@RequestParam String phoneNumber, @RequestBody FindPasswordRequestDto findPasswordDto) {
