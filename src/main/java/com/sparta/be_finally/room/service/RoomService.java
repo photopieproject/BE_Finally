@@ -140,10 +140,10 @@ public class RoomService {
         if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, role) != null) {
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
-            String token = validator.getToken(session, user);
+            String openvidu_token = validator.getOpenvidu_Token(session, user);
 
             // Log: 재입장 토큰 확인
-            log.info("재입장 토큰 확인 / token = " + token);
+            log.info("재입장 토큰 확인 / openvidu_token = " + openvidu_token);
 
             return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
                     RoomResponseDto.builder()
@@ -154,13 +154,13 @@ public class RoomService {
                             .roomCode(room.getRoomCode())
                             .userCount(room.getUserCount())
                             .sessionId(room.getSessionId())
-                            .token(token)
+                            .token(openvidu_token)
                             .expireDate(room.getExpireDate())
                             .build());
 
         } // user가 재입장인 경우
         else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, "user") != null) {
-            String token = validator.getToken(session, user);
+            String openvidu_token = validator.getOpenvidu_Token(session, user);
 
             return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
                     RoomResponseDto.builder()
@@ -171,7 +171,7 @@ public class RoomService {
                             .roomCode(room.getRoomCode())
                             .userCount(room.getUserCount())
                             .sessionId(room.getSessionId())
-                            .token(token)
+                            .token(openvidu_token)
                             .expireDate(room.getExpireDate())
                             .build());
 
@@ -179,7 +179,7 @@ public class RoomService {
             // 방 첫 입장
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
-            String token = validator.getToken(session, user);
+            String openvidu_token = validator.getOpenvidu_Token(session, user);
 
             // 방 입장 인원수 +1 업데이트
             room.enter();
@@ -196,7 +196,7 @@ public class RoomService {
                             .roomCode(room.getRoomCode())
                             .userCount(room.getUserCount())
                             .sessionId(room.getSessionId())
-                            .token(token)
+                            .token(openvidu_token)
                             .expireDate(room.getExpireDate())
                             .build());
 
