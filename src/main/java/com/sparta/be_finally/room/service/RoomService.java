@@ -26,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.LockModeType;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -84,17 +86,17 @@ public class RoomService {
             log.info("세션아이디 확인 / sessionId = " + session.getSessionId());
 
             // 생성된 세션과 해당 세션에 연결된 다른 peer 에게 보여줄 data 를 담은 token을 생성
-            String token = session.createConnection(connectionProperties).getToken();
+            String openvidu_token = session.createConnection(connectionProperties).getToken();
 
             // Log: 토큰 확인
-            log.info("토큰 확인 / token = " + token);
+            log.info("토큰 확인 / token = " + openvidu_token);
 
             // 방 생성
             Room room = roomRepository.save(new Room(roomRequestDto, user, session.getSessionId()));
             photoRepository.save(new Photo(room));
 
             // 방장 token update (토큰이 있어야 방에 입장 가능) 오픈비두에서 만들어준 토큰값을 넣어준다.
-            userRepository.update(user.getId(), token);
+            userRepository.update(user.getId(), openvidu_token);
 
             // 방장 방 입장 처리
             roomParticipantRepository.save(RoomParticipant.createRoomParticipant(room, user, "leader"));
@@ -107,7 +109,7 @@ public class RoomService {
                     .roomCode(room.getRoomCode())
                     .userCount(room.getUserCount())
                     .sessionId(session.getSessionId())
-                    .token(token)
+                    .token(openvidu_token)
                     .expireDate(room.getExpireDate())
                     .build();
         }
@@ -140,10 +142,10 @@ public class RoomService {
         if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, role) != null) {
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
-            String token = validator.getToken(session, user);
+            String openvidu_token = validator.getOpenvidu_Token(session, user);
 
             // Log: 재입장 토큰 확인
-            log.info("재입장 토큰 확인 / token = " + token);
+            log.info("재입장 토큰 확인 / openvidu_token = " + openvidu_token);
 
             return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
                     RoomResponseDto.builder()
@@ -154,13 +156,13 @@ public class RoomService {
                             .roomCode(room.getRoomCode())
                             .userCount(room.getUserCount())
                             .sessionId(room.getSessionId())
-                            .token(token)
+                            .token(openvidu_token)
                             .expireDate(room.getExpireDate())
                             .build());
 
         } // user가 재입장인 경우
         else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoomAndRole(user.getUserId(), room, "user") != null) {
-            String token = validator.getToken(session, user);
+            String openvidu_token = validator.getOpenvidu_Token(session, user);
 
             return new PrivateResponseBody(CommonStatusCode.REENTRANCE_ROOM,
                     RoomResponseDto.builder()
@@ -171,7 +173,7 @@ public class RoomService {
                             .roomCode(room.getRoomCode())
                             .userCount(room.getUserCount())
                             .sessionId(room.getSessionId())
-                            .token(token)
+                            .token(openvidu_token)
                             .expireDate(room.getExpireDate())
                             .build());
 
@@ -179,7 +181,7 @@ public class RoomService {
             // 방 첫 입장
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
-            String token = validator.getToken(session, user);
+            String openvidu_token = validator.getOpenvidu_Token(session, user);
 
             // 방 입장 인원수 +1 업데이트
             room.enter();
@@ -196,7 +198,7 @@ public class RoomService {
                             .roomCode(room.getRoomCode())
                             .userCount(room.getUserCount())
                             .sessionId(room.getSessionId())
-                            .token(token)
+                            .token(openvidu_token)
                             .expireDate(room.getExpireDate())
                             .build());
 
@@ -220,7 +222,7 @@ public class RoomService {
         List<Connection> activeConnections = session.getActiveConnections();
 
         for (Connection connection : activeConnections) {
-            if (connection.getToken().equals(user.getToken())) {
+            if (connection.getToken().equals(user.getOpenvidu_token())) {
                 session.forceDisconnect(connection); // 세션에 입장한 사용자 연결 끊기
             }
         }
@@ -381,4 +383,17 @@ public class RoomService {
         return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
     }
 
+    @Transactional
+    public void roomfinds(){
+        LocalDateTime now = LocalDateTime.now().withNano(0);
+        List<Room> roomList = roomRepository.findAll();
+        for (Room r: roomList){
+          LocalDateTime  expire =r.getExpireDate();
+           Long roomId = r.getId();
+
+           if (expire.isAfter(now)){
+               roomRepository.deleteById(roomId);
+           }
+        }
+    }
 }

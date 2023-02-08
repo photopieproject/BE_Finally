@@ -18,6 +18,8 @@ public enum UserStatusCode implements StatusCode {
      WRONG_LOGININFO("아이디 또는 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST.value()),
      WRONG_ADMIN_TOKEN("관리자 암호가 틀려 등록이 불가능합니다.", HttpStatus.BAD_REQUEST.value()),
      OVERLAPPED_USERID("중복된 userId 입니다.", HttpStatus.BAD_REQUEST.value()),
+     OVERLAPPED_NICKNAME("변경 전과 동일한 NICK NAME 입니다",HttpStatus.BAD_REQUEST.value()),
+     CHANGE_NICKNAME("닉네임이 변경되었습니다", HttpStatus.OK.value()),
      AVAILABLE_USERID("사용 가능한 userId 입니다.", HttpStatus.OK.value()),
      PASSWORD_CHECK("입력된 비밀번호가 다릅니다.", HttpStatus.BAD_REQUEST.value()),
      INVALID_TOKEN("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST.value()),

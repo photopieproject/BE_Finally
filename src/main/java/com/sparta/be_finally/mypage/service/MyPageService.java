@@ -3,6 +3,7 @@ package com.sparta.be_finally.mypage.service;
 import com.sparta.be_finally.common.dto.PrivateResponseBody;
 import com.sparta.be_finally.common.errorcode.UserStatusCode;
 import com.sparta.be_finally.common.util.SecurityUtil;
+import com.sparta.be_finally.mypage.dto.NickNameChangeRequestDto;
 import com.sparta.be_finally.user.entity.User;
 import com.sparta.be_finally.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,24 +42,30 @@ public class MyPageService {
         }
     }
 
-    // 닉네임 재설정
-//    public PrivateResponseBody resetNickName(String newNickName) {
-//        User user = SecurityUtil.getCurrentUser();
-//
-//        return new PrivateResponseBody(UserStatusCode.SUCCESS_IDENTIFICATION);
-//    }
+    // 닉네임 수정
+    public PrivateResponseBody changeNickName(NickNameChangeRequestDto nickNameChangeRequestDto){
+        User user = SecurityUtil.getCurrentUser();
+
+        if (user.getNickname().equals(nickNameChangeRequestDto.getChangeNickName())){
+            return new PrivateResponseBody(UserStatusCode.OVERLAPPED_NICKNAME);
+        }
+            userRepository.nickNameUpdate(nickNameChangeRequestDto.getChangeNickName(), user.getUserId());
+        return new PrivateResponseBody(UserStatusCode.CHANGE_NICKNAME,nickNameChangeRequestDto.getChangeNickName());
+    }
 
     // 회원 탈퇴
     @Transactional
     public PrivateResponseBody deleteUser() {
-        User user = SecurityUtil.getCurrentUser();
-        if(user == null) {
+        User users = SecurityUtil.getCurrentUser();
+        if(users == null) {
             return new PrivateResponseBody(UserStatusCode.FAIL_FIND_LOGIN_USER);
         }
 
-        userRepository.delete(user);
+        userRepository.delete(users);
         // 아래를 추가해줘야 탈퇴시 로그아웃됨
 //        SecurityContextHolder.clearContext();
         return new PrivateResponseBody(UserStatusCode.DELETE_USER);
     }
+
+
 }
