@@ -83,7 +83,7 @@ public class Room {
 
     public Room(RoomRequestDto roomRequestDto, User user, String sessionId) {
         this.roomName = roomRequestDto.getRoomName();
-        this.maxPeople = roomRequestDto.getMaxPeople();
+//        this.maxPeople = roomRequestDto.getMaxPeople();
         this.roomCode = UUID.randomUUID().toString().substring(0, 5);
         this.user = user;
         this.userCount++;
@@ -91,9 +91,10 @@ public class Room {
         this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
 
-    public void updateFrame(FrameRequestDto frameRequestDto, String frameUrl) {
-        this.frame = frameRequestDto.getFrame();
+    public void updateFrameAndMaxPeople(FrameRequestDto frameRequestDto, String frameUrl, int maxPeople) {
+        this.frame = frameRequestDto.getFrameNum();
         this.frameUrl = frameUrl;
+        this.maxPeople = maxPeople;
     }
 
     // 방 입장

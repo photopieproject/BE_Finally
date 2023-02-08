@@ -113,7 +113,7 @@ public class RoomService {
                     .sessionId(session.getSessionId())
                     .token(openvidu_token)
                     .expireDate(room.getExpireDate())
-                    .maxPeople(room.getMaxPeople())
+//                    .maxPeople(room.getMaxPeople())
                     .build();
         }
     }
@@ -161,6 +161,7 @@ public class RoomService {
                             .sessionId(room.getSessionId())
                             .token(openvidu_token)
                             .expireDate(room.getExpireDate())
+                            .maxPeople(room.getMaxPeople())
                             .build());
 
         } // user가 재입장인 경우
@@ -178,9 +179,10 @@ public class RoomService {
                             .sessionId(room.getSessionId())
                             .token(openvidu_token)
                             .expireDate(room.getExpireDate())
+                            .maxPeople(room.getMaxPeople())
                             .build());
 
-        } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(), room) == null && room.getUserCount() < 4) {
+        } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(), room) == null && room.getUserCount() < room.getMaxPeople()) {
             // 방 첫 입장
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
@@ -203,6 +205,7 @@ public class RoomService {
                             .sessionId(room.getSessionId())
                             .token(openvidu_token)
                             .expireDate(room.getExpireDate())
+                            .maxPeople(room.getMaxPeople())
                             .build());
 
         } else {
@@ -303,85 +306,90 @@ public class RoomService {
         }
         Room room = roomRepository.findById(roomId).orElse(null);
 
-        int frameNum = frameRequestDto.getFrame();
+        int frameNum = frameRequestDto.getFrameNum();
+
+        int maxPeople = frameRequestDto.getMaxPeople();
 
         // Log: 사용자가 선택한 프레임 번호
         log.info("사용자가 선택한 프레임 번호 / frameNum = " + frameNum);
 
+        // Log: 사용자가 선택한 최대 인원수
+        log.info("사용자가 선택한 최대 인원수 / maxPeople = " + maxPeople);
+
         if (frameNum == 1) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/mint.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 2) {
             String frameUrl =  String.valueOf(amazonS3Client.getUrl(bucket, "frame/purple.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 3) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/deepblue.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 4) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/white.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 5) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/black.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 6) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/aurora.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 7) {
             String frameUrl =String.valueOf (amazonS3Client.getUrl(bucket, "frame/flower.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
-        } else if (frameRequestDto.getFrame() == 8) {
+        } else if (frameNum == 8) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/chan.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 9) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/city.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 10) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/sea.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
         }
         else if(frameNum == 11){
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket,"frame/forest.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
         }
         else if (frameNum == 12){
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket,"frame/high.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
         }
         else if(frameNum ==13){
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket,"frame/snow.png"));
-            room.updateFrame(frameRequestDto,frameUrl);
-            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
         }
         else if(frameNum ==14) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/sunset.png"));
-            room.updateFrame(frameRequestDto, frameUrl);
-            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
         }
         else if (frameNum == 15){
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/tulip.png"));
-            room.updateFrame(frameRequestDto, frameUrl);
-            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl));
+            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
         }
         return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
     }
