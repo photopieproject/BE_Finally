@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@EnableAsync // Async 활성화
+
 @SpringBootApplication
 @EnableScheduling //스케줄링 기능을 enable 함.
 public class BeFinallyApplication {

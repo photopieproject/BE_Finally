@@ -13,11 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -29,54 +27,35 @@ public class SchedulerService {
     private final PhotoRepository photoRepository;
     private final AwsS3Service awsS3Service;
 
-    @RequiredArgsConstructor
-    @Component //추가
-    public class Scheduler {
-        private final RoomService roomService;
-
-        @Scheduled(fixedRate = 10000)
-        public void saveAttend(){
-            roomService.roomfinds();
-            //매일 체크리스트 몇일 연속 퍼센테지 0퍼인 사람 확인 후 삭제
-        }
-    }
-}
-
-
-
     //(fixedRate = 1800000)//
     //(cron = "0 0 0/1 * * *")// 1시간마다
     //(fixedRate = 30000) // 30 초
 
-//    @Scheduled(fixedRate = 1800000)
-//    @Transactional
-//    public void runAfterTenSecondsRepeatTenSeconds() {
-//        // List<Room> roomList = roomRepository.findAll();
-////        LocalDateTime time = LocalDateTime.now().withNano(0);
-////        List <Room> roomList = roomRepository.findRooms();
-//        schedulerTest.deleteRoom();
-//    }
-//}
-////        for (Room room : roomList) {
-//            if (time.isAfter(room.getExpireDate())) {
+    @Scheduled(fixedDelay = 1800000)
+    @Transactional
+    public void runAfterTenSecondsRepeatTenSeconds() {
+        // List<Room> roomList = roomRepository.findAll();
+        LocalDateTime time = LocalDateTime.now().withNano(0);
+        List <Room> roomList = roomRepository.findRooms();
 
-//                Photo photos = photoRepository.findByRoom(room);
-//
-//                if (photos != null) {
-//
-//                    //S3 - 이미지 삭제 처리
-//                    awsS3Service.deleteFolder("CompletePhoto/" + photos.getRoom().getId() + "/");
-//                    awsS3Service.deleteFolder("photo/" + photos.getRoom().getId() + "/");
-//
-//                    //db - photo 삭제 처리
-//                    photoRepository.delete(photos);
-//                }
+        for (Room room : roomList) {
+            if (time.isAfter(room.getExpireDate())) {
+
+                Photo photos = photoRepository.findByRoom(room);
+
+                if (photos != null) {
+
+                    //S3 - 이미지 삭제 처리
+                    awsS3Service.deleteFolder("CompletePhoto/" + photos.getRoom().getId() + "/");
+                    awsS3Service.deleteFolder("photo/" + photos.getRoom().getId() + "/");
+
+                    //db - photo 삭제 처리
+                    photoRepository.delete(photos);
+                }
 
                 //db - room 삭제 처리
-//                roomRepository.delete(room);
-//            }
-//        }
-//    }
-
-
-
+                roomRepository.delete(room);
+            }
+        }
+    }
+}
