@@ -177,9 +177,10 @@ public class RoomService {
                             .sessionId(room.getSessionId())
                             .token(openvidu_token)
                             .expireDate(room.getExpireDate())
+                            .maxPeople(room.getMaxPeople())
                             .build());
 
-        } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(), room) == null && room.getUserCount() < 4) {
+        } else if (roomParticipantRepository.findRoomParticipantByUserIdAndRoom(user.getUserId(), room) == null && room.getUserCount() < room.getMaxPeople()) {
             // 방 첫 입장
 
             // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
@@ -202,6 +203,7 @@ public class RoomService {
                             .sessionId(room.getSessionId())
                             .token(openvidu_token)
                             .expireDate(room.getExpireDate())
+                            .maxPeople(room.getMaxPeople())
                             .build());
 
         } else {
