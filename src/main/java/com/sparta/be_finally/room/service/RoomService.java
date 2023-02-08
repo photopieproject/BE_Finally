@@ -26,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.LockModeType;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -381,4 +383,17 @@ public class RoomService {
         return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
     }
 
+    @Transactional
+    public void roomfinds(){
+        LocalDateTime now = LocalDateTime.now().withNano(0);
+        List<Room> roomList = roomRepository.findAll();
+        for (Room r: roomList){
+          LocalDateTime  expire =r.getExpireDate();
+           Long roomId = r.getId();
+
+           if (expire.isAfter(now)){
+               roomRepository.deleteById(roomId);
+           }
+        }
+    }
 }
