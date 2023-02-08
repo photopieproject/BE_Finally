@@ -34,7 +34,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AES256 aes256;
     private DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSOBIR9F6CDQZZJ", "BGUS4HJRIOXPMGOHDAUO95B7DJXJRV3E", "https://api.coolsms.co.kr" );
-    ;
+
     String newPhoneNumber = null;
 
     // 회원가입
@@ -73,7 +73,7 @@ public class UserService {
         }
     }
 
-    //로그인
+    // 로그인
     public LoginResponseDto.commonLogin login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         // 사용자 확인
         User user = userRepository.findByUserId(loginRequestDto.getUserId()).orElseThrow(
@@ -91,7 +91,7 @@ public class UserService {
         return new LoginResponseDto.commonLogin(user);
     }
 
-    //아이디 찾기(인증번호)
+    // 아이디 찾기(인증번호)
     public PrivateResponseBody findUserNum(String phoneNumber) {
         Message message = new Message();
         message.setFrom("01023699764" );

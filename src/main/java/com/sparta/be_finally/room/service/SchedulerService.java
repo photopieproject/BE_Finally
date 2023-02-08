@@ -45,15 +45,15 @@ public class SchedulerService {
 
                 if (photos != null) {
 
-                    //S3 - 이미지 삭제 처리
-                    awsS3Service.deleteFolder("CompletePhoto/" + photos.getRoom().getId() + "/");
-                    awsS3Service.deleteFolder("photo/" + photos.getRoom().getId() + "/");
+                    // S3 - 이미지 삭제 처리
+                    awsS3Service.deleteFolder("/CompletePhoto/" + photos.getRoom().getId() + "/");
+                    awsS3Service.deleteFolder("/photo/" + photos.getRoom().getId() + "/");
 
-                    //db - photo 삭제 처리
+                    // db - photo 삭제 처리
                     photoRepository.delete(photos);
                 }
 
-                //db - room 삭제 처리
+                // db - room 삭제 처리
                 roomRepository.delete(room);
             }
         }

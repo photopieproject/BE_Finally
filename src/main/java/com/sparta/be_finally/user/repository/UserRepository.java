@@ -26,6 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserIdAndPassword(String userId, String password);
 
     boolean existsByPhoneNumber(String phoneNumber);
+
+    void delete(User user);
     
     @Modifying
     @Query (

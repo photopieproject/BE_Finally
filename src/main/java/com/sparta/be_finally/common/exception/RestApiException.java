@@ -7,7 +7,7 @@ public class RestApiException extends RuntimeException{
      // 필드값
      private final StatusCode statusCode;
 
-     //getter
+     // getter
      public StatusCode getStatusCode(){
           return this.statusCode;
      }
