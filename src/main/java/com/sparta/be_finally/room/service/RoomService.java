@@ -159,6 +159,7 @@ public class RoomService {
                             .sessionId(room.getSessionId())
                             .token(openvidu_token)
                             .expireDate(room.getExpireDate())
+                            .maxPeople(room.getMaxPeople())
                             .build());
 
         } // user가 재입장인 경우
@@ -301,7 +302,7 @@ public class RoomService {
         }
         Room room = roomRepository.findById(roomId).orElse(null);
 
-        int frameNum = frameRequestDto.getFrame();
+        int frameNum = frameRequestDto.getFrameNum();
 
         int maxPeople = frameRequestDto.getMaxPeople();
 
@@ -346,7 +347,7 @@ public class RoomService {
             room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
-        } else if (frameRequestDto.getFrame() == 8) {
+        } else if (frameNum == 8) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/chan.png"));
             room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
@@ -390,7 +391,7 @@ public class RoomService {
     }
 
     @Transactional
-    public void roomfinds(){
+    public void roominds(){
         LocalDateTime now = LocalDateTime.now().withNano(0);
         List<Room> roomList = roomRepository.findAll();
         for (Room r: roomList){

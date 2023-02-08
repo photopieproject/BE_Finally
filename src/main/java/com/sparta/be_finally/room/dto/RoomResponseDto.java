@@ -25,6 +25,6 @@ public class RoomResponseDto {
     private String token;
     private LocalDateTime expireDate;
     private String role;
-//    private int maxPeople;
+    private int maxPeople;
 
 }

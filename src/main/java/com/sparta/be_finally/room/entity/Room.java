@@ -92,7 +92,7 @@ public class Room {
     }
 
     public void updateFrameAndMaxPeople(FrameRequestDto frameRequestDto, String frameUrl, int maxPeople) {
-        this.frame = frameRequestDto.getFrame();
+        this.frame = frameRequestDto.getFrameNum();
         this.frameUrl = frameUrl;
         this.maxPeople = maxPeople;
     }

@@ -8,11 +8,11 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class FrameRequestDto {
-    private int frame;
+    private int frameNum;
 
     private int maxPeople;
 
-    public FrameRequestDto(int frame) {
-        this.frame = frame;
-    }
+//    public FrameRequestDto(int frame) {
+//        this.frame = frame;
+//    }
 }
