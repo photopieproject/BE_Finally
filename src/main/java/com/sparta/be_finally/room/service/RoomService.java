@@ -111,6 +111,7 @@ public class RoomService {
                     .sessionId(session.getSessionId())
                     .token(openvidu_token)
                     .expireDate(room.getExpireDate())
+                    .maxPeople(room.getMaxPeople())
                     .build();
         }
     }
