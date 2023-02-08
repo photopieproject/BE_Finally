@@ -59,7 +59,7 @@ public class Validator {
 
     // 세션(방)에 입장 할 수 있는 토큰 생성 후 입장한 user 에게 토큰 저장
     @Transactional
-    public String getToken(Session session, User user) throws OpenViduJavaClientException, OpenViduHttpException {
+    public String getOpenvidu_Token(Session session, User user) throws OpenViduJavaClientException, OpenViduHttpException {
         //serverData 및 역할을 사용하여 connectionProperties 객체를 빌드합니다.
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
                 .type(ConnectionType.WEBRTC)
