@@ -13,7 +13,6 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 @Getter
-@EqualsAndHashCode(of = {"user"})
 public class UserDetailsImpl implements UserDetails {
 
      //인증이 완료된 사용자 추가

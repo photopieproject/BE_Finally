@@ -44,11 +44,7 @@ public class WebSecurityConfig {
           
           // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
           http.sessionManagement()
-                  .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                  .maximumSessions(1)
-                  .maxSessionsPreventsLogin(true)
-                  .expiredUrl("/login")
-                  .sessionRegistry(sessionRegistry());
+                  .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
           http.authorizeRequests()
                // 토큰검증 필요없는 페이지 설정
@@ -57,11 +53,7 @@ public class WebSecurityConfig {
                .antMatchers("/api/doc").permitAll()
                .antMatchers("/socket").permitAll()
                .antMatchers("/").permitAll()
-
-
-
 //               .antMatchers("/api/photo/room/{roomId}/shoot").permitAll()
-
 
                .antMatchers("/swagger-ui/**").permitAll() //스웨거 권한설정 X
                .antMatchers("/swagger-resources/**").permitAll() //스웨거 권한설정 X
@@ -77,17 +69,6 @@ public class WebSecurityConfig {
 //          http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
           
           return http.build();
-     }
-
-     // logout 후 login할 때 정상동작을 위함
-     @Bean
-     public SessionRegistry sessionRegistry() {
-          return new SessionRegistryImpl();
-     }
-
-     @Bean
-     public static ServletListenerRegistrationBean httpSessionEventPublisher() {
-          return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
      }
 
      @Bean
