@@ -24,7 +24,7 @@ public class Photo {
     @Column(columnDefinition = "LONGTEXT")
     private String qrCode;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "photo", cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Room room;
 
     public Photo(Room room) {

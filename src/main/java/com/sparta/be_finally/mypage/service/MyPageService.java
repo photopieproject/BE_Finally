@@ -57,9 +57,6 @@ public class MyPageService {
     @Transactional
     public PrivateResponseBody deleteUser() {
         User users = SecurityUtil.getCurrentUser();
-        if(users == null) {
-            return new PrivateResponseBody(UserStatusCode.FAIL_FIND_LOGIN_USER);
-        }
 
         userRepository.delete(users);
         // 아래를 추가해줘야 탈퇴시 로그아웃됨
