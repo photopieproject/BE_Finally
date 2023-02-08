@@ -44,6 +44,8 @@ public class RoomService {
     private final Validator validator;
     private OpenVidu openVidu;
 
+    private SchedulerTest schedulerTest;
+
     // OpenVidu 서버가 수신하는 URL
     @Value("${openvidu.url}")
     private String OPENVIDU_URL;
@@ -385,15 +387,16 @@ public class RoomService {
     }
 
     @Transactional
-    public void roomfinds(){
+    public void roomdelete(){
         LocalDateTime now = LocalDateTime.now().withNano(0);
+
         List<Room> roomList = roomRepository.findAll();
-        for (Room r: roomList){
-          LocalDateTime  expire =r.getExpireDate();
-           Long roomId = r.getId();
+        for (Room room: roomList){
+          LocalDateTime  expire =room.getExpireDate();
+           Long roomId = room.getId();
 
            if (expire.isAfter(now)){
-               roomRepository.deleteById(roomId);
+               roomRepository.delete(room);
            }
         }
     }

@@ -24,8 +24,6 @@ public class Photo {
     @Column(columnDefinition = "LONGTEXT")
     private String qrCode;
 
-
-
     @JoinColumn(name = "room_id", unique = true)
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Room room;
