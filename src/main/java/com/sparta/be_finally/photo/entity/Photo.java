@@ -25,8 +25,9 @@ public class Photo {
     private String qrCode;
 
 
+
     @JoinColumn(name = "room_id", unique = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "photo", cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Room room;
 
     public Photo(Room room) {

@@ -60,9 +60,9 @@ public class Room {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "photo_id", unique = true)
-    private Photo photo;
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+//    @JoinColumn(name = "photo_id", unique = true)
+//    private Photo photo;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
