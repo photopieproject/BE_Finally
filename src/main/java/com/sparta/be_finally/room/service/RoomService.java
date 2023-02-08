@@ -234,7 +234,7 @@ public class RoomService {
         }
 
         // room_participant - roomId, userId 로 등록된 데이터 삭제 처리
-        RoomParticipant roomParticipant = roomParticipantRepository.findByUserIdAndRoom(user.getUserId(),room);
+        RoomParticipant roomParticipant = roomParticipantRepository.findByUserIdAndRoom(user.getUserId(), room);
         roomParticipantRepository.delete(roomParticipant);
 
         // 방 입장 인원수 -1 업데이트
@@ -318,94 +318,75 @@ public class RoomService {
 
         if (frameNum == 1) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/mint.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 2) {
-            String frameUrl =  String.valueOf(amazonS3Client.getUrl(bucket, "frame/purple.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/purple.png"));
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 3) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/deepblue.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 4) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/white.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 5) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/black.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 6) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/aurora.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 7) {
-            String frameUrl =String.valueOf (amazonS3Client.getUrl(bucket, "frame/flower.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/flower.png"));
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 8) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/chan.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 9) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/city.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
 
         } else if (frameNum == 10) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/sea.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
-        }
-        else if(frameNum == 11){
-            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket,"frame/forest.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+        } else if (frameNum == 11) {
+            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/forest.png"));
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
-        }
-        else if (frameNum == 12){
-            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket,"frame/high.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+        } else if (frameNum == 12) {
+            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/high.png"));
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
-        }
-        else if(frameNum ==13){
-            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket,"frame/snow.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+        } else if (frameNum == 13) {
+            String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/snow.png"));
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
-        }
-        else if(frameNum ==14) {
+        } else if (frameNum == 14) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/sunset.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
-        }
-        else if (frameNum == 15){
+        } else if (frameNum == 15) {
             String frameUrl = String.valueOf(amazonS3Client.getUrl(bucket, "frame/tulip.png"));
-            room.updateFrameAndMaxPeople(frameRequestDto,frameUrl, maxPeople);
+            room.updateFrameAndMaxPeople(frameRequestDto, frameUrl, maxPeople);
             return new PrivateResponseBody<>(CommonStatusCode.CHOICE_FRAME, new FrameResponseDto(frameNum, frameUrl, maxPeople));
         }
         return new PrivateResponseBody(CommonStatusCode.FAIL_CHOICE_FRAME2);
     }
 
-    @Transactional
-    public void roomdelete(){
-        LocalDateTime now = LocalDateTime.now().withNano(0);
-
-        List<Room> roomList = roomRepository.findAll();
-        for (Room room: roomList){
-          LocalDateTime  expire =room.getExpireDate();
-           Long roomId = room.getId();
-
-           if (expire.isAfter(now)){
-               roomRepository.delete(room);
-           }
-        }
-    }
 }
