@@ -24,7 +24,7 @@ public class Photo {
     @Column(columnDefinition = "LONGTEXT")
     private String qrCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id", unique = true)
     private Room room;
 
