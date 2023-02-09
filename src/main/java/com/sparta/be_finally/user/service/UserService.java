@@ -108,11 +108,6 @@ public class UserService {
         // header 에 토큰추가
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, access_token);
 
-        log.info("JWT TOKEN : {}", access_token);
-
-        // user DB - access_Token 저장
-        userRepository.updateAccessToken(user.getId(), access_token);
-
         return new LoginResponseDto.commonLogin(user);
     }
 
