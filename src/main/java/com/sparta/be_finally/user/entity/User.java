@@ -36,13 +36,13 @@ public class User{
     private String openvidu_token;
 
     @Column
-    private String access_token;
-
-    @Column
     private String phoneNumber;
 
     @Column
     private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Token> tokens = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Room> rooms = new ArrayList<>();
