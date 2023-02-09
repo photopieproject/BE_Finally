@@ -25,6 +25,7 @@ public class Photo {
     private String qrCode;
 
     @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "room_id", unique = true)
     private Room room;
 
     public Photo(Room room) {
