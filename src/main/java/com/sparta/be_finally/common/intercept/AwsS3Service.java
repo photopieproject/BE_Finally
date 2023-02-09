@@ -1,11 +1,10 @@
 package com.sparta.be_finally.common.intercept;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import com.sparta.be_finally.photo.service.PhotoService;
-import com.sparta.be_finally.room.dto.RoomRequestDto;
-import com.sparta.be_finally.room.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -13,9 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,6 +65,28 @@ public class AwsS3Service {
     public void deleteFolder(String folderName) {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, folderName));
     }
+
+
+    public void deletePhotos(List<String> urls, String folderName) {
+        if(urls == null) return;
+        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(this.bucket);
+
+        List<DeleteObjectsRequest.KeyVersion> keyList = new ArrayList<>();
+
+        for(String url : urls) {
+           String[] tmp = url.split("/");
+
+//            keyList.add(new DeleteObjectsRequest.KeyVersion(folderName + "/", url));
+            keyList.add(new DeleteObjectsRequest.KeyVersion(folderName + "/" + tmp[tmp.length - 1]));
+//            keyList.add(new DeleteObjectsRequest.KeyVersion(folderName + "dirName" + "/" + tmp[tmp.length - 1]));
+        }
+        deleteObjectsRequest.setKeys(keyList);
+        amazonS3.deleteObjects(deleteObjectsRequest);
+    }
+
+
+
+
 
     public String createFileName(String fileName) { // 먼저 파일 업로드 시, 파일명을 난수화하기 위해 random으로 돌립니다.
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
