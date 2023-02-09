@@ -1,4 +1,4 @@
-package com.sparta.be_finally.config.scheduler;
+package com.sparta.be_finally.config;
 
 
 import org.springframework.context.annotation.Configuration;
