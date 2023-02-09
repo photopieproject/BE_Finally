@@ -15,9 +15,7 @@ import com.sparta.be_finally.common.dto.PrivateResponseBody;
 import com.sparta.be_finally.common.errorcode.CommonStatusCode;
 import com.sparta.be_finally.config.AES256;
 import com.sparta.be_finally.common.validator.Validator;
-import com.sparta.be_finally.photo.dto.CompletePhotoRequestDto;
-import com.sparta.be_finally.photo.dto.FrameResponseDto;
-import com.sparta.be_finally.photo.dto.PhotoRequestDto;
+import com.sparta.be_finally.photo.dto.*;
 import com.sparta.be_finally.photo.entity.Photo;
 import com.sparta.be_finally.photo.repository.PhotoRepository;
 import com.sparta.be_finally.room.entity.Room;
@@ -284,6 +282,26 @@ public class PhotoService {
         InputStream is = url.openStream();
         byte[] bytes = IOUtils.toByteArray(is);
         return org.apache.commons.codec.binary.Base64.encodeBase64String(bytes);
+    }
+
+    // 프레임 인기 Top5
+    public List<FrameResponseDto.getTop5> getTop5() throws IOException {
+        List<FrameTop5Interface> getTop5s = photoRepository.getTop5();
+
+        List<FrameResponseDto.getTop5> top5s = new ArrayList<>();
+
+        for (FrameTop5Interface top5ResponseDto : getTop5s) {
+            FrameResponseDto.getTop5 top5 = new FrameResponseDto.getTop5();
+
+            top5.setRanking(top5ResponseDto.getRanking());
+            top5.setFrameNum(top5ResponseDto.getFrameNum());
+            top5.setFrameName(top5ResponseDto.getFrameUrl().split("/")[4].split("[.]")[0]);
+            top5.setFrameUrl(getBase64(top5ResponseDto.getFrameUrl()));
+
+            top5s.add(top5);
+        }
+
+        return top5s;
     }
 }
 
