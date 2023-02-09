@@ -55,6 +55,13 @@ public class PhotoController {
     @GetMapping("/room/{roomId}/kakaoUrl")
     public PrivateResponseBody kakaoUrl(@PathVariable Long roomId) {return photoService.kakaoUrl(roomId);}
 
+    @ApiOperation(value = "프레임 인기 순위")
+    @GetMapping("/frameRanking")
+    public PrivateResponseBody getTop5() throws IOException {
+        return new PrivateResponseBody(CommonStatusCode.TOP5_FRAME_RANKING, photoService.getTop5());
+    }
+
+
 }
 
 

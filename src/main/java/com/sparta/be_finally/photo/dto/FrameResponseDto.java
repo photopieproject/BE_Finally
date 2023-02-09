@@ -1,10 +1,10 @@
 package com.sparta.be_finally.photo.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +29,17 @@ public class FrameResponseDto {
         this.frameNum = frameNum;
         this.frameUrl = String.valueOf(frameUrl);
         this.maxPeople = maxPeople;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class getTop5 {
+        private int ranking;
+        private int frameNum;
+        private String frameName;
+        private String frameUrl;
+
     }
 }

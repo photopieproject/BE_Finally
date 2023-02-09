@@ -28,6 +28,7 @@ public enum CommonStatusCode implements StatusCode {
      ROOMCODE_IS_NULL("방 코드를 입력해주세요.", HttpStatus.BAD_REQUEST.value()),
      SUCCESS_ROOM_EXIT("방 나가기 완료", HttpStatus.OK.value()),
      SUCCESS_ROOM_TOTAL_EXIT("방 나가기 완료", HttpStatus.OK.value()),
+     TOP5_FRAME_RANKING("프레임 인기 Top5", HttpStatus.OK.value()),
      CHOICE_FRAME("프레임 선택 완료", HttpStatus.OK.value()),
      CHOICE_FRAME2("선택한 프레임이 맞는지 확인하세요", HttpStatus.OK.value()),
      FAIL_CHOICE_FRAME("방장만 프레임을 선택할 수 있습니다.", HttpStatus.BAD_REQUEST.value()),
