@@ -14,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -64,20 +66,24 @@ public class AwsS3Service {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, folderName));
     }
 
-    public void deleteDirFolder(String key) {
-        try {
-            //Delete 객체 생성
-            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(this.bucket, key);
-            //Delete
-            this.amazonS3Client.deleteObject(deleteObjectRequest);
 
+    public void deletePhotos(List<String> urls, String folderName) {
+        if(urls == null) return;
+        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(this.bucket);
 
-        } catch (AmazonServiceException e) {
-            e.printStackTrace();
-        } catch (SdkClientException e) {
-            e.printStackTrace();
+        List<DeleteObjectsRequest.KeyVersion> keyList = new ArrayList<>();
+
+        for(String url : urls) {
+           String[] tmp = url.split("/");
+
+//            keyList.add(new DeleteObjectsRequest.KeyVersion(folderName + "/", url));
+            keyList.add(new DeleteObjectsRequest.KeyVersion(folderName + "/" + tmp[tmp.length - 1]));
+//            keyList.add(new DeleteObjectsRequest.KeyVersion(folderName + "dirName" + "/" + tmp[tmp.length - 1]));
         }
+        deleteObjectsRequest.setKeys(keyList);
+        amazonS3.deleteObjects(deleteObjectsRequest);
     }
+
 
 
 
