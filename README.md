@@ -1,5 +1,7 @@
-![Header](https://cdn.discordapp.com/attachments/1037267111585792020/1073301454418366654/KakaoTalk_Photo_2023-02-10-02-56-35.jpeg)
+![Header](https://user-images.githubusercontent.com/108880977/217901392-6750c3c6-776d-4d8d-b8a2-95ad2ed09002.jpg)
 <br />
+
+
 
 # Photo-Pie 📷
 
