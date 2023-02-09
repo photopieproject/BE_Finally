@@ -41,6 +41,9 @@ public class User{
     @Column
     private String phoneNumber;
 
+    @Column
+    private String email;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Room> rooms = new ArrayList<>();
 

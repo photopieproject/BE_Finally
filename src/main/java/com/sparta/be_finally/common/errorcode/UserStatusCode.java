@@ -24,6 +24,7 @@ public enum UserStatusCode implements StatusCode {
      PASSWORD_CHECK("입력된 비밀번호가 다릅니다.", HttpStatus.BAD_REQUEST.value()),
      INVALID_TOKEN("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST.value()),
      TEXT_SEND_SUCCESS("문자 전송 완료", HttpStatus.OK.value()),
+     EMAIL_SEND_SUCCESS("이메일에서 인증번호를 확인해주세요", HttpStatus.OK.value()),
      AGREE_USER_TYPED("인증 완료", HttpStatus.OK.value()),
      FAIL_USER_TYPED("인증 실패", HttpStatus.BAD_REQUEST.value()),
      NOT_FOUND_USER("일치하는 유저가 없습니다.", HttpStatus.BAD_REQUEST.value()),
