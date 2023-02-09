@@ -63,8 +63,8 @@ public class SchedulerService {
 
 
                 // S3 - 이미지 삭제 처리
-                ObjectListing completePhotObjectListing = amazonS3Client.listObjects(bucket, "CompletePhoto/" +  photos.getRoom().getId() + "/");
-                ObjectListing photoObjectListing = amazonS3Client.listObjects(bucket, "photo/" +  photos.getRoom().getId() + "/");
+                ObjectListing completePhotObjectListing = amazonS3Client.listObjects(bucket, "CompletePhoto/");
+                ObjectListing photoObjectListing = amazonS3Client.listObjects(bucket, "photo/");
 
 
                 List<S3ObjectSummary> completePhotoObjectListingObjectSummaries = completePhotObjectListing.getObjectSummaries();
@@ -79,13 +79,14 @@ public class SchedulerService {
                     photoImgUrlList.add(photoImgUrl);
                 }
 
+                awsS3Service.deletePhotos(photoImgUrlList, "photo/" + photos.getRoom().getId());
+
                 for (S3ObjectSummary completePhotoS3Object : completePhotoObjectListingObjectSummaries) {
                     String completePhotoImgUrl = amazonS3Client.getResourceUrl(bucket, completePhotoS3Object.getKey());
                     completePhotoImgUrlList.add(completePhotoImgUrl);
 
 
-                    awsS3Service.deletePhotos(photoImgUrlList, "photo/" +  photos.getRoom().getId());
-                    awsS3Service.deletePhotos(completePhotoImgUrlList, "CompletePhoto/" +  photos.getRoom().getId());
+                    awsS3Service.deletePhotos(completePhotoImgUrlList, "CompletePhoto/" + photos.getRoom().getId());
 
                 }
                 roomRepository.delete(room);
@@ -93,14 +94,5 @@ public class SchedulerService {
         }
     }
 }
-
-
-
-
-
-
-
-
-
 
 

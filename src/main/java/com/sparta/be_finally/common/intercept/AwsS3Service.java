@@ -74,7 +74,7 @@ public class AwsS3Service {
         List<DeleteObjectsRequest.KeyVersion> keyList = new ArrayList<>();
 
         for(String url : urls) {
-           String[] tmp = url.split("/");
+            String[] tmp = url.split("/");
 
 //            keyList.add(new DeleteObjectsRequest.KeyVersion(folderName + "/", url));
             keyList.add(new DeleteObjectsRequest.KeyVersion(folderName + "/" + tmp[tmp.length - 1]));
@@ -82,6 +82,9 @@ public class AwsS3Service {
         }
         deleteObjectsRequest.setKeys(keyList);
         amazonS3.deleteObjects(deleteObjectsRequest);
+
+
+
     }
 
 
