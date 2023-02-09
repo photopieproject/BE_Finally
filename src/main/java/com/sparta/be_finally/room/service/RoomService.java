@@ -44,8 +44,6 @@ public class RoomService {
     private final Validator validator;
     private OpenVidu openVidu;
 
-    private SchedulerTest schedulerTest;
-
     // OpenVidu 서버가 수신하는 URL
     @Value("${openvidu.url}")
     private String OPENVIDU_URL;
