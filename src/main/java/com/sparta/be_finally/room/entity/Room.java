@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.bytebuddy.utility.nullability.MaybeNull;
+import org.springframework.data.jpa.repository.Lock;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -31,7 +32,7 @@ public class Room {
     private static final int VALID_HOUR = 24;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -46,22 +47,34 @@ public class Room {
 
     private String frameUrl;
 
+
     // Openvidu 의 roomId 이라고 생각하면 됨
     private String sessionId;
 
     @NotNull
     private LocalDateTime expireDate;
 
+    private int maxPeople;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+//    @JoinColumn(name = "photo_id", unique = true)
+//    private Photo photo;
 
-
-
-
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomParticipant> roomParticipants = new ArrayList<>();
+
+    public Room(Long id) {
+        this.id = id;
+    }
+
+    public Room(int frameNum, String frameUrl) {
+        this.frame = frameNum;
+        this.frameUrl = String.valueOf(frameUrl);
+    }
 
     public Room(RoomRequestDto.RoomCodeRequestDto roomCodeRequestDto, User user) {
         this.roomCode = roomCodeRequestDto.getRoomCode();
@@ -70,47 +83,26 @@ public class Room {
 
     public Room(RoomRequestDto roomRequestDto, User user, String sessionId) {
         this.roomName = roomRequestDto.getRoomName();
+//        this.maxPeople = roomRequestDto.getMaxPeople();
         this.roomCode = UUID.randomUUID().toString().substring(0, 5);
         this.user = user;
         this.userCount++;
         this.sessionId = sessionId;
-
         this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
     }
 
-
-    //추후 삭제
-    public Room(RoomRequestDto roomRequestDto, User user) {
-        this.roomName = roomRequestDto.getRoomName();
-        //this.roomCode = (int)(Math.random()*100000);
-        this.roomCode = UUID.randomUUID().toString().substring(0, 5);
-        this.user = user;
-        this.userCount++;
-        this.expireDate = LocalDateTime.now().withNano(0).plusHours(VALID_HOUR);
+    public void updateFrameAndMaxPeople(FrameRequestDto frameRequestDto, String frameUrl, int maxPeople) {
+        this.frame = frameRequestDto.getFrameNum();
+        this.frameUrl = frameUrl;
+        this.maxPeople = maxPeople;
     }
 
-
-
-
-
-    public Room(int frameNum, String frameUrl) {
-        this.frame = frameNum;
-        this.frameUrl = String.valueOf(frameUrl);
-    }
-
-    public Room(Long id) {
-        this.id = id;
-    }
-
+    // 방 입장
     public void enter() {
         this.userCount++;
     }
 
-    public void updateFrame(FrameRequestDto frameRequestDto, String frameUrl) {
-        this.frame = frameRequestDto.getFrame();
-        this.frameUrl = frameUrl;
-    }
-
+    // 방 나가기
     public void exit() {
         this.userCount--;
     }

@@ -3,7 +3,7 @@ package com.sparta.be_finally.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.be_finally.config.jwt.JwtUtil;
+import com.sparta.be_finally.config.security.jwt.JwtUtil;
 import com.sparta.be_finally.config.security.UserDetailsImpl;
 import com.sparta.be_finally.user.dto.GoogleUserInfoDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;

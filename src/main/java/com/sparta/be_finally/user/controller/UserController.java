@@ -1,12 +1,9 @@
 package com.sparta.be_finally.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sparta.be_finally.config.dto.PrivateResponseBody;
-import com.sparta.be_finally.config.errorcode.UserStatusCode;
-import com.sparta.be_finally.user.dto.FindPasswordRequestDto;
-import com.sparta.be_finally.user.dto.LoginRequestDto;
-import com.sparta.be_finally.user.dto.ResetPasswordRequestDto;
-import com.sparta.be_finally.user.dto.SignupRequestDto;
+import com.sparta.be_finally.common.dto.PrivateResponseBody;
+import com.sparta.be_finally.common.errorcode.UserStatusCode;
+import com.sparta.be_finally.user.dto.*;
 import com.sparta.be_finally.user.service.GoogleService;
 import com.sparta.be_finally.user.service.KakaoService;
 import com.sparta.be_finally.user.service.UserService;
@@ -16,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +59,7 @@ public class UserController {
     @ApiOperation(value = "구글 로그인")
     @GetMapping("/google/callback")
     public PrivateResponseBody googleLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        return new PrivateResponseBody(UserStatusCode.USER_LOGIN_SUCCESS,googleService.googleLogin(code, response));
+        return new PrivateResponseBody(UserStatusCode.USER_LOGIN_SUCCESS, googleService.googleLogin(code, response));
     }
 
     @ApiOperation(value = "휴대폰 본인 확인")
@@ -77,11 +76,19 @@ public class UserController {
             numStr += ran;
         }
 
-        message.setText("[포토파이(PhotoPie)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
+        message.setText("[포토파이(PHOTO-PIE)] 본인확인 인증번호 [" + numStr + "]를 화면에 입력해주세요");
 
-//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
         return new PrivateResponseBody(UserStatusCode.TEXT_SEND_SUCCESS, numStr);
+    }
+
+    @ApiOperation(value = "이메일 인증")
+    @PostMapping("/checkEmail")
+    public PrivateResponseBody checkEmail(@RequestBody @Valid EmailConfirmRequestDto emailConfirmRequestDto) throws Exception {
+        String code = userService.checkEmail(emailConfirmRequestDto.getEmail());
+        log.info("인증코드 : " + code);
+        return new PrivateResponseBody(UserStatusCode.EMAIL_SEND_SUCCESS, code);
     }
 
     @ApiOperation(value = "아이디 찾기")
@@ -90,26 +97,16 @@ public class UserController {
         return userService.findUserNum(phoneNumber);
     }
 
-    // 비밀번호 찾기
     @ApiOperation(value = "비밀번호 찾기")
     @PostMapping("/find-pw")
     public PrivateResponseBody findPassword(@RequestParam String phoneNumber, @RequestBody FindPasswordRequestDto findPasswordDto) {
         return userService.findPassword(phoneNumber, findPasswordDto.getUserId());
     }
 
-    // 비밀번호 재설정
     @ApiOperation(value = "비밀번호 재설정")
     @PutMapping("/reset-pw")
     public PrivateResponseBody resetPassword(@RequestBody @Valid ResetPasswordRequestDto resetPasswordRequestDto) {
         return userService.resetPassword(resetPasswordRequestDto.getUserId(), resetPasswordRequestDto.getPassword());
     }
-
-//    체크 코드
-//    public Boolean checkcode(String checkcode) {
-//        Member member = dao.findByCheckcode(checkcode);
-//        if(member == null)
-//            return false;
-//        return dao.update(Member.builder().username(member.getUsername()).checkcode("0").enabled(true).build())==1;
-//    }
 
 }

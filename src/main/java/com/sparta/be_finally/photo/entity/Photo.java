@@ -13,54 +13,39 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Photo {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String photoOne;
+    private String photoTwo;
+    private String photoThree;
+    private String photoFour;
+    private String completePhoto;
+    @Column(columnDefinition = "LONGTEXT")
+    private String qrCode;
 
-    private String photo_one;
-    private String photo_two;
-    private String photo_three;
-    private String photo_four;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "room_id", unique = true)
     private Room room;
-
-
-    public Photo(Room room, String photo_one_imgUrl) {
-        this.room = room;
-        this.photo_one = photo_one_imgUrl;
-    }
-
-    public Photo(Room room, PutObjectResult photo_one_imgUrl) {
-        this.room = room;
-        this.photo_one = String.valueOf(photo_one_imgUrl);
-    }
-
 
     public Photo(Room room) {
         this.room = room;
     }
 
-    public Photo(String photoOneImgUrl) {
-        this.photo_one = photoOneImgUrl;
-    }
-
     public void photo_one_update(String photo_one_imgUrl){
-        this.photo_one = photo_one_imgUrl;
+        this.photoOne = photo_one_imgUrl;
     }
-
 
     public void photo_two_update(String photo_two_imgUrl) {
-        this.photo_two = photo_two_imgUrl;
+        this.photoTwo = photo_two_imgUrl;
     }
 
     public void photo_three_update(String photo_three_imgUrl) {
-        this.photo_three = photo_three_imgUrl;
+        this.photoThree = photo_three_imgUrl;
     }
 
     public void photo_four_update(String photo_four_imgUrl) {
-        this.photo_four = photo_four_imgUrl;
+        this.photoFour = photo_four_imgUrl;
     }
 
 }

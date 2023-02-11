@@ -15,24 +15,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUserId(String userId);
 
-    boolean existsByPhoneNumber(String phoneNumber);
-
     Optional<User> findByKakaoId(Long kakaoId);
 
     Optional<User> findByGoogleId(String googleId);
 
-    boolean findByPhoneNumber(String phoneNumber);
-
     Optional<User> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
+
     boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
 
     Optional<User> findByUserIdAndPassword(String userId, String password);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    void delete(User user);
+
+    @Transactional
     @Modifying
     @Query (
             nativeQuery = true,
             value = "UPDATE users " +
-                    "SET token = :token " +
+                    "SET openvidu_token = :token " +
                     "WHERE id = :id"
     )
     void update(@Param("id") Long id, @Param("token") String token);
@@ -42,4 +44,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query (value = "UPDATE users u SET u.password = :password WHERE u.user_id = :userId", nativeQuery = true)
     void pwUpdate(@Param("password") String password, @Param("userId") String userId);
 
+    //닉네임 수정
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query (value = "UPDATE users u SET u.nickname = :nickname WHERE u.user_id = :userId", nativeQuery = true)
+    void nickNameUpdate(@Param("nickname") String nickname, @Param("userId") String userId);
+    
 }

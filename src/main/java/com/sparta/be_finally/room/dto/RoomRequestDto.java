@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Map;
 
 
@@ -12,7 +14,12 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 public class RoomRequestDto {
+
+    @Size(min = 1, max = 10)
+    @NotBlank
     private String roomName;
+
+//    private int maxPeople;
 
     public RoomRequestDto(Room room){
         this.roomName = room.getRoomName();

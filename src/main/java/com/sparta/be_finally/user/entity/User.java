@@ -1,10 +1,13 @@
 package com.sparta.be_finally.user.entity;
 
+import com.sparta.be_finally.room.entity.Room;
 import com.sparta.be_finally.user.dto.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity (name = "users")
@@ -30,10 +33,19 @@ public class User{
     private String googleId;
 
     @Column
-    private String token;
+    private String openvidu_token;
 
     @Column
     private String phoneNumber;
+
+    @Column
+    private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Token> tokens = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Room> rooms = new ArrayList<>();
 
     public User(SignupRequestDto requestDto, String password, String phoneNumber) {
         this.userId = requestDto.getUserId();
@@ -56,7 +68,7 @@ public class User{
         this.password = encodedPassword;
     }
 
-    public void update(String token) {
-        this.token = token;
+    public void update(String openvidu_token) {
+        this.openvidu_token = openvidu_token;
     }
 }

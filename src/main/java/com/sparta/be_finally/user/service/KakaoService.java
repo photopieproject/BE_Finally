@@ -3,10 +3,8 @@ package com.sparta.be_finally.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.be_finally.config.jwt.JwtUtil;
+import com.sparta.be_finally.config.security.jwt.JwtUtil;
 import com.sparta.be_finally.config.security.UserDetailsImpl;
-import com.sparta.be_finally.user.dto.KakaoFriendListResponseDto;
-import com.sparta.be_finally.user.dto.KakaoFriendResponseDto;
 import com.sparta.be_finally.user.dto.KakaoUserInfoDto;
 import com.sparta.be_finally.user.dto.LoginResponseDto;
 import com.sparta.be_finally.user.entity.User;
@@ -30,13 +28,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -79,7 +70,8 @@ public class KakaoService {
           MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
           body.add("grant_type", "authorization_code");
           body.add("client_id", KAKAO_REST_API_KEY);
-          body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/api/user/kakao/callback");
+          //body.add("redirect_uri", "https://dev.djcf93g3uh9mz.amplifyapp.com/api/user/kakao/callback");
+          body.add("redirect_uri", "https://photo-pie.store/api/user/kakao/callback");
           //body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
           //body.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
           body.add("code", code);
@@ -124,8 +116,6 @@ public class KakaoService {
           Long id = jsonNode.get("id").asLong();
           String nickname = jsonNode.get("properties")
                .get("nickname").asText();
-          /*String email = jsonNode.get("kakao_account")
-               .get("email").asText();*/
 
           log.info("카카오 사용자 정보: " + id + ", " + nickname);
           return new KakaoUserInfoDto(id, nickname);
