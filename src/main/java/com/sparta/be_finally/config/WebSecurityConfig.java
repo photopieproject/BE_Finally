@@ -51,6 +51,7 @@ public class WebSecurityConfig {
 //               .antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
                .antMatchers("/api/user/**").permitAll()
                .antMatchers("/api/doc").permitAll()
+               .antMatchers("/api/photo/frameRanking").permitAll()
                .antMatchers("/socket").permitAll()
                .antMatchers("/").permitAll()
 //               .antMatchers("/api/photo/room/{roomId}/shoot").permitAll()
