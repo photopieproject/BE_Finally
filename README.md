@@ -8,6 +8,10 @@
 
 ## 주요 기능
 
+#### Page 소개
+
+![pages](https://cdn.discordapp.com/attachments/1037267111585792020/1076240901527056474/photopiepages.gif)
+
 <div>
 <img src="https://cdn.discordapp.com/attachments/1037267111585792020/1073217304961232926/image.png" width="230px"/>
 <img src="https://cdn.discordapp.com/attachments/1037267111585792020/1073217305288380467/image_1.png" width="230px"/>
