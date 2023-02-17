@@ -1,7 +1,10 @@
-![Header](https://cdn.discordapp.com/attachments/1037267111585792020/1073301454418366654/KakaoTalk_Photo_2023-02-10-02-56-35.jpeg)
+![Header](https://user-images.githubusercontent.com/108880977/217901392-6750c3c6-776d-4d8d-b8a2-95ad2ed09002.jpg)
 <br />
 
 # Photo-Pie 📷
+
+<img src="https://cdn.discordapp.com/attachments/1037267111585792020/1076141995963203615/2.jpg"/>
+<br />
 
 ## 주요 기능
 
@@ -91,7 +94,7 @@
 
 ## Photo-Pie Team
 
-#### `Frontend` &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; `Backend`
+#### `Frontend` &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; `Backend`
 
 | [![최삐삐](https://img.shields.io/badge/최___삐___삐-004c8c.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/front-chan) <img src="https://cdn.discordapp.com/attachments/1037267111585792020/1073469818180747385/Photo-Pie.jpg" width="80px" /> | [![햅삐-졍](https://img.shields.io/badge/햅__삐__★졍-ff4081.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/wjddms0501) <img src="https://cdn.discordapp.com/attachments/1037267111585792020/1073469817828409424/KakaoTalk_Photo_2023-02-10-14-05-28.png" width="80px" /> | [![연듀곤듀](https://img.shields.io/badge/연_듀__곤_듀-aeea00.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/OhYeonJu) <img src="https://cdn.discordapp.com/attachments/1037267111585792020/1073469543076347944/KakaoTalk_Photo_2023-02-10-14-04-26.png" width="80px" /> | [![크리스탈황](https://img.shields.io/badge/Crystal.H-bbdefb.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/Hwangbambi) <img src="https://cdn.discordapp.com/attachments/1037267111585792020/1073469542703042580/KakaoTalk_Photo_2023-02-10-14-04-12.png" width="80px" /> | [![레모나킴](https://img.shields.io/badge/레_모_나__킴-ffd54f.svg?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/010me) <img src="https://cdn.discordapp.com/attachments/1037267111585792020/1073470715682095166/KakaoTalk_Image_2023-02-10-14-09-02.png" width="80px" /> |
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -99,9 +102,11 @@
 ## Trouble Shooting
 
 `Front_End`<br />
+<br />
 ![프론트트러블슈팅](https://cdn.discordapp.com/attachments/1037267111585792020/1073285974014054450/2023-02-10_1.54.53.png)
 <br />
 `Back_End`<br />
+<br />
 ![백트러블슈팅](https://cdn.discordapp.com/attachments/1037267111585792020/1073285974274084956/2023-02-10_1.55.09.png)
 
 ## 이후 추가하고 싶은 기능
