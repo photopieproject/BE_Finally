@@ -26,7 +26,7 @@
 > 서로 다른 공간에 있지만 그 순간을 함께 남겨둘 수 있다면 ?<br />
 > 포토 파이에서 일상을 나누는 즐거움을 경험해보세요 !<br />
 > Different spaces, same memory.<br />
-> Experience the joy of sharing your daily moments with Photo Pie.<br /> > &nbsp;
+> Experience the joy of sharing your daily moments with Photo Pie.<br />&nbsp;
 
 📷 [Photo-Pie 구경하러 가기](https://photo-pie.store)<br />
 📒 [Notion: Photo-Pie Project](https://www.notion.so/yjuu/2-e2370506d53d45df9a48424f42dc996b)<br />
